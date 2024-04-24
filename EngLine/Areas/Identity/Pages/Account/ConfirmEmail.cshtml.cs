@@ -17,9 +17,9 @@ namespace EngLine.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<Account> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public ConfirmEmailModel(UserManager<Account> userManager)
+        public ConfirmEmailModel(UserManager<User> userManager)
         {
             _userManager = userManager;
         }

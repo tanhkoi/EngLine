@@ -16,10 +16,10 @@ namespace EngLine.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailChangeModel : PageModel
     {
-        private readonly UserManager<Account> _userManager;
-        private readonly SignInManager<Account> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public ConfirmEmailChangeModel(UserManager<Account> userManager, SignInManager<Account> signInManager)
+        public ConfirmEmailChangeModel(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

@@ -14,13 +14,13 @@ namespace EngLine.Areas.Identity.Pages.Account.Manage
 {
     public class ResetAuthenticatorModel : PageModel
     {
-        private readonly UserManager<Account> _userManager;
-        private readonly SignInManager<Account> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly ILogger<ResetAuthenticatorModel> _logger;
 
         public ResetAuthenticatorModel(
-            UserManager<Account> userManager,
-            SignInManager<Account> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             ILogger<ResetAuthenticatorModel> logger)
         {
             _userManager = userManager;

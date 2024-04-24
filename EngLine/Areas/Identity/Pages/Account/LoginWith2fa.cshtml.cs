@@ -17,13 +17,13 @@ namespace EngLine.Areas.Identity.Pages.Account
 {
     public class LoginWith2faModel : PageModel
     {
-        private readonly SignInManager<Account> _signInManager;
-        private readonly UserManager<Account> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<LoginWith2faModel> _logger;
 
         public LoginWith2faModel(
-            SignInManager<Account> signInManager,
-            UserManager<Account> userManager,
+            SignInManager<User> signInManager,
+            UserManager<User> userManager,
             ILogger<LoginWith2faModel> logger)
         {
             _signInManager = signInManager;

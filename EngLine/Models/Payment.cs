@@ -15,7 +15,7 @@ namespace EngLine.Models
 		public string? StudentId { get; set; }
 		public int? ClassId { get; set; }
 		public PaymentMethod? PaymentMethod { get; set; }
-		public StudentAccount? Student { get; set; }
+		public User? Student { get; set; }
 		public Class? Class { get; set; }
 		public bool IsDelete { get; set; }
 	}

@@ -15,7 +15,7 @@ namespace EngLine.Models
 		public decimal Price { get; set; }
 		public string? TeacherId { get; set; }
 		public int? CourseId { get; set; }
-		public TeacherAccount? Teacher { get; set; }
+		public User? Teacher { get; set; }
 		public Course? Course { get; set; }
 		public List<ClassStudent>? ClassStudents { get; set; }
 		public List<Payment>? Payments { get; set; }

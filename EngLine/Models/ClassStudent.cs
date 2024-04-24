@@ -7,7 +7,7 @@ namespace EngLine.Models
 		public int Id { get; set; }
 		public int? ClassId { get; set; }
 		public string? StudentId { get; set; }
-		public StudentAccount? Student { get; set; }
+		public User? Student { get; set; }
 		public Class? Class { get; set; }
 	}
 }

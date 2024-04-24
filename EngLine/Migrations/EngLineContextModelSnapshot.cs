@@ -22,80 +22,6 @@ namespace EngLine.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EngLine.Models.Account", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Account");
-
-                    b.UseTphMappingStrategy();
-                });
-
             modelBuilder.Entity("EngLine.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -199,12 +125,12 @@ namespace EngLine.Migrations
                     b.Property<int?>("LevelId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TeacherAccountId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Term")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -212,7 +138,7 @@ namespace EngLine.Migrations
 
                     b.HasIndex("LevelId");
 
-                    b.HasIndex("TeacherAccountId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Courses");
                 });
@@ -300,6 +226,105 @@ namespace EngLine.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PaymentMethods");
+                });
+
+            modelBuilder.Entity("EngLine.Models.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Photo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -435,117 +460,13 @@ namespace EngLine.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("EngLine.Models.StaffAccount", b =>
-                {
-                    b.HasBaseType("EngLine.Models.Account");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("StaffAccount");
-                });
-
-            modelBuilder.Entity("EngLine.Models.StudentAccount", b =>
-                {
-                    b.HasBaseType("EngLine.Models.Account");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("AspNetUsers", t =>
-                        {
-                            t.Property("FirstName")
-                                .HasColumnName("StudentAccount_FirstName");
-
-                            t.Property("LastName")
-                                .HasColumnName("StudentAccount_LastName");
-
-                            t.Property("Phone")
-                                .HasColumnName("StudentAccount_Phone");
-                        });
-
-                    b.HasDiscriminator().HasValue("StudentAccount");
-                });
-
-            modelBuilder.Entity("EngLine.Models.TeacherAccount", b =>
-                {
-                    b.HasBaseType("EngLine.Models.Account");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Photo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("AspNetUsers", t =>
-                        {
-                            t.Property("FirstName")
-                                .HasColumnName("TeacherAccount_FirstName");
-
-                            t.Property("LastName")
-                                .HasColumnName("TeacherAccount_LastName");
-
-                            t.Property("Phone")
-                                .HasColumnName("TeacherAccount_Phone");
-                        });
-
-                    b.HasDiscriminator().HasValue("TeacherAccount");
-                });
-
             modelBuilder.Entity("EngLine.Models.Class", b =>
                 {
                     b.HasOne("EngLine.Models.Course", "Course")
                         .WithMany("Classes")
                         .HasForeignKey("CourseId");
 
-                    b.HasOne("EngLine.Models.TeacherAccount", "Teacher")
+                    b.HasOne("EngLine.Models.User", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId");
 
@@ -560,7 +481,7 @@ namespace EngLine.Migrations
                         .WithMany("ClassStudents")
                         .HasForeignKey("ClassId");
 
-                    b.HasOne("EngLine.Models.StudentAccount", "Student")
+                    b.HasOne("EngLine.Models.User", "Student")
                         .WithMany("ClassStudents")
                         .HasForeignKey("StudentId");
 
@@ -579,9 +500,9 @@ namespace EngLine.Migrations
                         .WithMany("Courses")
                         .HasForeignKey("LevelId");
 
-                    b.HasOne("EngLine.Models.TeacherAccount", null)
+                    b.HasOne("EngLine.Models.User", null)
                         .WithMany("Courses")
-                        .HasForeignKey("TeacherAccountId");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Category");
 
@@ -598,7 +519,7 @@ namespace EngLine.Migrations
                         .WithMany("Payments")
                         .HasForeignKey("PaymentMethodId");
 
-                    b.HasOne("EngLine.Models.StudentAccount", "Student")
+                    b.HasOne("EngLine.Models.User", "Student")
                         .WithMany("Payments")
                         .HasForeignKey("StudentId");
 
@@ -620,7 +541,7 @@ namespace EngLine.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("EngLine.Models.Account", null)
+                    b.HasOne("EngLine.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -629,7 +550,7 @@ namespace EngLine.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("EngLine.Models.Account", null)
+                    b.HasOne("EngLine.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -644,7 +565,7 @@ namespace EngLine.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EngLine.Models.Account", null)
+                    b.HasOne("EngLine.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -653,7 +574,7 @@ namespace EngLine.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("EngLine.Models.Account", null)
+                    b.HasOne("EngLine.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -687,16 +608,13 @@ namespace EngLine.Migrations
                     b.Navigation("Payments");
                 });
 
-            modelBuilder.Entity("EngLine.Models.StudentAccount", b =>
+            modelBuilder.Entity("EngLine.Models.User", b =>
                 {
                     b.Navigation("ClassStudents");
 
-                    b.Navigation("Payments");
-                });
-
-            modelBuilder.Entity("EngLine.Models.TeacherAccount", b =>
-                {
                     b.Navigation("Courses");
+
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

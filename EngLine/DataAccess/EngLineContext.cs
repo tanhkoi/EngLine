@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EngLine.DataAccess
 {
-	public class EngLineContext : IdentityDbContext<Account>
+	public class EngLineContext : IdentityDbContext<User>
 	{
 		public EngLineContext(DbContextOptions<EngLineContext> options) : base(options) { }
-		public DbSet<Account> Accounts { get; set; }
+		public DbSet<User> Users { get; set; }
 		public DbSet<Category> Categories { get; set; }
 		public DbSet<Class> Classes { get; set; }
 		public DbSet<ClassStudent> ClassStudents { get; set; }
@@ -15,8 +15,8 @@ namespace EngLine.DataAccess
 		public DbSet<Level> Levels { get; set; }
 		public DbSet<Payment> Payments { get; set; }
 		public DbSet<PaymentMethod> PaymentMethods { get; set; }
-		public DbSet<StaffAccount> StaffAccounts { get; set; }
-		public DbSet<StudentAccount> StudentAccounts { get; set; }
-		public DbSet<TeacherAccount> TeacherAccounts { get; set; }
+		//public DbSet<StaffAccount> StaffAccounts { get; set; }
+		//public DbSet<StudentAccount> StudentAccounts { get; set; }
+		//public DbSet<TeacherAccount> TeacherAccounts { get; set; }
 	}
 }
