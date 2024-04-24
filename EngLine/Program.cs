@@ -3,6 +3,7 @@ using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using EngLine.Models;
+using EngLine.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,12 @@ builder.Services.AddControllersWithViews();
 
 // Database access
 builder.Services.AddDbContext<EngLineContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// sign repositories
+builder.Services.AddScoped<IPaymentRepository, EFPaymentRepository>();
+builder.Services.AddScoped<ICourseRepository, EFCourseRepository>();
+builder.Services.AddScoped<IClassRepository, EFClassRepository>();
+builder.Services.AddScoped<IUserRepository, EFUserRepository>();
 
 // user identity
 builder.Services.AddIdentity<User, IdentityRole>()
@@ -30,7 +37,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
+
+app.MapRazorPages();
 
 app.UseRouting();
 

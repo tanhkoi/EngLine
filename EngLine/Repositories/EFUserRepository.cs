@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace EngLine.Repositories
 {
-	public class EFAccountRepository : IAccountRepository
+	public class EFUserRepository : IUserRepository
 	{
 		private readonly EngLineContext _context;
 
-		public EFAccountRepository(EngLineContext context)
+		public EFUserRepository(EngLineContext context)
 		{
 			_context = context;
 		}

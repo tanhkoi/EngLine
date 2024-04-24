@@ -2,7 +2,7 @@
 
 namespace EngLine.Repositories
 {
-	public interface IAccountRepository
+	public interface IUserRepository
 	{
 		Task<IEnumerable<User>> GetAll();
 		Task<User> GetById(string id);
