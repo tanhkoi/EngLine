@@ -5,9 +5,9 @@ namespace EngLine.Repositories
 	public interface ITeacherRepository
 	{
 		Task<IEnumerable<TeacherAccount>> GetAll();
-		Task<TeacherAccount> GetById(int id);
+		Task<TeacherAccount> GetById(string id);
 		Task Add(TeacherAccount category);
 		Task Update(TeacherAccount category);
-		Task Delete(int id);
+		Task Delete(string id);
 	}
 }
