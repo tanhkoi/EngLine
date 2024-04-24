@@ -17,13 +17,13 @@ namespace EngLine.Repositories
 			_context = context;
 		}
 
-		public async Task Add(Course course)
+		public async Task AddAsync(Course course)
 		{
 			_context.Courses.Add(course);
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task Delete(int id)
+		public async Task DeleteAsync(int id)
 		{
 			var courseToDelete = await _context.Courses.FindAsync(id);
 			if (courseToDelete != null)
@@ -34,17 +34,17 @@ namespace EngLine.Repositories
 			}
 		}
 
-		public async Task<IEnumerable<Course>> GetAll()
+		public async Task<IEnumerable<Course>> GetAllAsync()
 		{
 			return await _context.Courses.ToListAsync();
 		}
 
-		public async Task<Course> GetById(int id)
+		public async Task<Course> GetByIdAsync(int id)
 		{
 			return await _context.Courses.FindAsync(id);
 		}
 
-		public async Task Update(Course course)
+		public async Task UpdateAsync(Course course)
 		{
 			_context.Entry(course).State = EntityState.Modified;
 			await _context.SaveChangesAsync();

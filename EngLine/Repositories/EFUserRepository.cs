@@ -17,13 +17,13 @@ namespace EngLine.Repositories
 			_context = context;
 		}
 
-		public async Task Add(User user)
+		public async Task AddAsync(User user)
 		{
 			_context.Users.Add(user);
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task Delete(string id)
+		public async Task DeleteAsync(string id)
 		{
 			var userToDelete = await _context.Users.FindAsync(id);
 			if (userToDelete != null)
@@ -34,17 +34,17 @@ namespace EngLine.Repositories
 			}
 		}
 
-		public async Task<IEnumerable<User>> GetAll()
+		public async Task<IEnumerable<User>> GetAllAsync()
 		{
 			return await _context.Users.ToListAsync();
 		}
 
-		public async Task<User> GetById(string id)
+		public async Task<User> GetByIdAsync(string id)
 		{
 			return await _context.Users.FindAsync(id);
 		}
 
-		public async Task Update(User user)
+		public async Task UpdateAsync(User user)
 		{
 			_context.Entry(user).State = EntityState.Modified;
 			await _context.SaveChangesAsync();

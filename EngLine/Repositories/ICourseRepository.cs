@@ -4,10 +4,10 @@ namespace EngLine.Repositories
 {
 	public interface ICourseRepository
 	{
-		Task<IEnumerable<Course>> GetAll();
-		Task<Course> GetById(int id);
-		Task Add(Course category);
-		Task Update(Course category);
-		Task Delete(int id);
+		Task<IEnumerable<Course>> GetAllAsync();
+		Task<Course> GetByIdAsync(int id);
+		Task AddAsync(Course category);
+		Task UpdateAsync(Course category);
+		Task DeleteAsync(int id);
 	}
 }

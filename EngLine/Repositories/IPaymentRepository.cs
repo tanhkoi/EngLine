@@ -4,10 +4,10 @@ namespace EngLine.Repositories
 {
 	public interface IPaymentRepository
 	{
-		Task<IEnumerable<Payment>> GetAll();
-		Task<Payment> GetById(int id);
-		Task Add(Payment category);
-		Task Update(Payment category);
-		Task Delete(int id);
+		Task<IEnumerable<Payment>> GetAllAsync();
+		Task<Payment> GetByIdAsync(int id);
+		Task AddAsync(Payment category);
+		Task UpdateAsync(Payment category);
+		Task DeleteAsync(int id);
 	}
 }

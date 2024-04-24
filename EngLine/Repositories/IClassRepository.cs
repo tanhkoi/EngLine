@@ -4,10 +4,10 @@ namespace EngLine.Repositories
 {
 	public interface IClassRepository
 	{
-		Task<IEnumerable<Class>> GetAll();
-		Task<Class> GetById(int id);
-		Task Add(Class category);
-		Task Update(Class category);
-		Task Delete(int id);
+		Task<IEnumerable<Class>> GetAllAsync();
+		Task<Class> GetByIdAsync(int id);
+		Task AddAsync(Class category);
+		Task UpdateAsync(Class category);
+		Task DeleteAsync(int id);
 	}
 }

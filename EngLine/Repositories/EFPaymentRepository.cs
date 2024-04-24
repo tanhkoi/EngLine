@@ -17,13 +17,13 @@ namespace EngLine.Repositories
 			_context = context;
 		}
 
-		public async Task Add(Payment payment)
+		public async Task AddAsync(Payment payment)
 		{
 			_context.Payments.Add(payment);
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task Delete(int id)
+		public async Task DeleteAsync(int id)
 		{
 			var paymentToDelete = await _context.Payments.FindAsync(id);
 			if (paymentToDelete != null)
@@ -34,17 +34,17 @@ namespace EngLine.Repositories
 			}
 		}
 
-		public async Task<IEnumerable<Payment>> GetAll()
+		public async Task<IEnumerable<Payment>> GetAllAsync()
 		{
 			return await _context.Payments.ToListAsync();
 		}
 
-		public async Task<Payment> GetById(int id)
+		public async Task<Payment> GetByIdAsync(int id)
 		{
 			return await _context.Payments.FindAsync(id);
 		}
 
-		public async Task Update(Payment payment)
+		public async Task UpdateAsync(Payment payment)
 		{
 			_context.Entry(payment).State = EntityState.Modified;
 			await _context.SaveChangesAsync();
