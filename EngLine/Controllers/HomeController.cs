@@ -27,21 +27,14 @@ namespace EngLine.Controllers
             _classRepository = classRepository;
         }
 
-        public IActionResult Index()
+		public IActionResult Index()
+		{
+			return View();
+		}
+        public IActionResult About()
         {
             return View();
         }
-
-        public IActionResult HelloWorld()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> Course()
         {
             var courses = await _courseRepository.GetAllAsync();
@@ -57,7 +50,27 @@ namespace EngLine.Controllers
 
             return View(courses);
         }
+        public IActionResult Contact()
+        {
+            return View();
+        }
+		public IActionResult CourseDetails()
+		{
+			return View();
+		}
+		public IActionResult Elements()
+		{
+			return View();
+		}
+		public IActionResult HelloWorld()
+		{
+			return View();
+		}
 
+        public IActionResult Privacy()
+        {
+            return View();
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

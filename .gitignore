@@ -398,3 +398,5 @@ FodyWeavers.xsd
 *.sln.iml
 # Migration
 /EngLine/Migrations/
+EngLine/Migrations/20240424121935_init.cs
+EngLine/Migrations/20240424121935_init.Designer.cs
