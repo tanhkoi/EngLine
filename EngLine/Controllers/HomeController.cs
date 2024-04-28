@@ -17,7 +17,26 @@ namespace EngLine.Controllers
 		{
 			return View();
 		}
-
+        public IActionResult About()
+        {
+            return View();
+        }
+        public IActionResult Courses()
+        {
+            return View();
+        }
+        public IActionResult Contact()
+        {
+            return View();
+        }
+		public IActionResult CourseDetails()
+		{
+			return View();
+		}
+		public IActionResult Elements()
+		{
+			return View();
+		}
 		public IActionResult HelloWorld()
 		{
 			return View();
