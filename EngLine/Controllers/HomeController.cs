@@ -35,7 +35,7 @@ namespace EngLine.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> Course()
+        public async Task<IActionResult> Courses()
         {
             var courses = await _courseRepository.GetAllAsync();
 
