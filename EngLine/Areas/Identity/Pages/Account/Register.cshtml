@@ -1,63 +1,65 @@
 ﻿@page
 @model RegisterModel
-@{
-	Layout = null;
-}
 
-<link rel="stylesheet" type="text/css" href="~/css/util.css">
-<link rel="stylesheet" type="text/css" href="~/css/signin.css">
+@{
+	Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+}
 
 <div class="limiter">
 	<div class="container-login100">
 		<div class="wrap-login100">
-			<form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="login100-form">
+			<form method="post" class="login100-form">
 				<span class="login100-form-title p-b-26">
 					Welcome
 				</span>
-				<div class="wrap-input100 form-group">
-					<input asp-for="Input.Email" class="input100" type="text" name="email">
-					<span asp-validation-for="Input.Email" class="focus-input100" data-placeholder="Email"></span>
+
+				<span class="login100-form-title p-b-48">
+					<a asp-action="Index" asp-controller="Home">
+						<img style="height: 50px !important;" src="/img/logo/png/logo-black-removebg.png" alt="">
+					</a>
+				</span>
+
+				<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+				<div class="wrap-input100">
+					<span asp-validation-for="Input.Email" class="text-danger"></span>
+					<input placeholder="Email" asp-for="Input.Email" class="input100" type="text" aria-required="true">
 				</div>
 
-				<div class="wrap-input100 form-group">
+				<div class="wrap-input100">
 					<span class="btn-show-pass">
 						<i class="zmdi zmdi-eye"></i>
 					</span>
-					<input asp-for="Input.Password" class="input100" type="password" name="pass">
-					<span asp-validation-for="Input.Password" class="focus-input100" data-placeholder="Password"></span>
+					<span asp-validation-for="Input.Password" class="text-danger"></span>
+					<input placeholder="Mật khẩu" asp-for="Input.Password" class="input100" type="password" aria-required="true">
 				</div>
-				<div class="wrap-input100 form-group">
+				
+				<div class="wrap-input100">
 					<span class="btn-show-pass">
 						<i class="zmdi zmdi-eye"></i>
 					</span>
-					<input asp-for="Input.ConfirmPassword" class="input100" type="password" name="pass">
-					<span asp-validation-for="Input.ConfirmPassword" class="focus-input100" data-placeholder="Re-Password"></span>
+					<span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+					<input placeholder="Xác nhận mật khẩu" asp-for="Input.ConfirmPassword" class="input100" type="password" aria-required="true">
 				</div>
 
 				<div class="container-login100-form-btn">
 					<div class="wrap-login100-form-btn">
 						<div class="login100-form-bgbtn"></div>
 						<button id="registerSubmit" type="submit" class="login100-form-btn">
-							Register
+							Đăng ký
 						</button>
 					</div>
 				</div>
 			</form>
+
 			<div class="text-center p-t-115">
 				<span class="txt1">
-					Have an account?
+					Đã có tài khoản?
 				</span>
-
 				<a asp-area="Identity" asp-page="/Account/Login" class="txt2">
-					Sign In
+					Đăng nhập
 				</a>
 			</div>
 		</div>
 	</div>
 </div>
-
-<script src="~/js/signin.js"></script>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

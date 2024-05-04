@@ -9,31 +9,44 @@
 	<div class="container-login100">
 		<div class="wrap-login100">
 			<!--Form here-->
-			<form method="post" class="login100-form validate-form">
+			<form class="login100-form validate-form" method="post">
 				<span class="login100-form-title p-b-26">
 					Welcome
 				</span>
 
+				<span class="login100-form-title p-b-48">
+					<a asp-action="Index" asp-controller="Home">
+						<img style="height: 50px !important;" src="/img/logo/png/logo-black-removebg.png" alt="">
+					</a>
+				</span>
+
+				<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
 				<div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
-					<label asp-for="Input.Email" class="form-label">Email</label>
-					<input asp-for="Input.Email" class="input100" aria-required="true" placeholder="email@example.com" />
-					<span asp-validation-for="Input.Email" class="focus-input100"></span>
+					<input asp-for="Input.Email" class="input100" aria-required="true" placeholder="Email" />
+					<span asp-validation-for="Input.Email" class="text-danger"></span>
 				</div>
 
 				<div class="wrap-input100 validate-input" data-validate="Enter password">
-					<label asp-for="Input.Password" class="form-label">Password</label>
 					<span class="btn-show-pass" style="align-items: end !important; padding-bottom: 12px !important;">
 						<i class="zmdi zmdi-eye"></i>
 					</span>
-					<input asp-for="Input.Password" class="input100" aria-required="true" placeholder="password" type="password" name="pass" />
-					<span asp-validation-for="Input.Password" class="focus-input100"></span>
+					<input asp-for="Input.Password" class="input100" aria-required="true" placeholder="Mật khẩu" type="password" />
+					<span asp-validation-for="Input.Password" class="text-danger"></span>
+				</div>
+
+				<div class="checkbox mb-3" style="margin-left: 22px !important;">
+					<label asp-for="Input.RememberMe" class="form-label">
+						<input class="form-check-input" asp-for="Input.RememberMe" />
+						@Html.DisplayNameFor(m => m.Input.RememberMe)
+					</label>
 				</div>
 
 				<div class="container-login100-form-btn">
 					<div class="wrap-login100-form-btn">
 						<div class="login100-form-bgbtn"></div>
 						<button type="submit" class="login100-form-btn">
-							Login
+							Đăng nhập
 						</button>
 					</div>
 				</div>
@@ -41,10 +54,10 @@
 			<!--End form here-->
 			<div class="text-center p-t-115">
 				<span class="txt1">
-					Don’t have an account?
+					Không có tài khoản?
 				</span>
 				<a asp-area="Identity" asp-page="/Account/Register" class="txt2">
-					Register
+					Đăng ký
 				</a>
 			</div>
 		</div>

@@ -6,23 +6,23 @@
 [ FONT ]*/
 
 @font-face {
-    font-family: Poppins-Regular;
-    src: url('../fonts/poppins/Poppins-Regular.ttf');
+    font-family: Roboto-Regular;
+    src: url('../fonts/Roboto/Roboto-Regular.ttf');
 }
 
 @font-face {
-    font-family: Poppins-Medium;
-    src: url('../fonts/poppins/Poppins-Medium.ttf');
+    font-family: Roboto-Medium;
+    src: url('../fonts/Roboto/Roboto-Medium.ttf');
 }
 
 @font-face {
-    font-family: Poppins-Bold;
-    src: url('../fonts/poppins/Poppins-Bold.ttf');
+    font-family: Roboto-Bold;
+    src: url('../fonts/Roboto/Roboto-Bold.ttf');
 }
 
 @font-face {
-    font-family: Poppins-SemiBold;
-    src: url('../fonts/poppins/Poppins-SemiBold.ttf');
+    font-family: Roboto-SemiBold;
+    src: url('../fonts/Roboto/Roboto-SemiBold.ttf');
 }
 
 
@@ -39,12 +39,12 @@
 
 body, html {
     height: 100%;
-    font-family: Poppins-Regular, sans-serif;
+    font-family: Roboto-Regular, sans-serif;
 }
 
 /*---------------------------------------------*/
 a {
-    font-family: Poppins-Regular;
+    font-family: Roboto-Regular;
     font-size: 14px;
     line-height: 1.7;
     color: #666666;
@@ -74,7 +74,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 p {
-    font-family: Poppins-Regular;
+    font-family: Roboto-Regular;
     font-size: 14px;
     line-height: 1.7;
     color: #666666;
@@ -185,14 +185,14 @@ iframe {
 /*//////////////////////////////////////////////////////////////////
 [ Utility ]*/
 .txt1 {
-    font-family: Poppins-Regular;
+    font-family: Roboto-Regular;
     font-size: 13px;
     color: #666666;
     line-height: 1.5;
 }
 
 .txt2 {
-    font-family: Poppins-Regular;
+    font-family: Roboto-Regular;
     font-size: 13px;
     color: #333333;
     line-height: 1.5;
@@ -244,7 +244,7 @@ iframe {
 
 .login100-form-title {
     display: block;
-    font-family: Poppins-Bold;
+    font-family: Roboto-Bold;
     font-size: 30px;
     color: #333333;
     line-height: 1.2;
@@ -266,7 +266,7 @@ iframe {
 }
 
 .input100 {
-    font-family: Poppins-Regular;
+    font-family: Roboto-Regular;
     font-size: 15px;
     color: #555555;
     line-height: 1.2;
@@ -308,7 +308,7 @@ iframe {
     }
 
     .focus-input100::after {
-        font-family: Poppins-Regular;
+        font-family: Roboto-Regular;
         font-size: 15px;
         color: #999999;
         line-height: 1.2;
@@ -423,7 +423,7 @@ iframe {
 }
 
 .login100-form-btn {
-    font-family: Poppins-Medium;
+    font-family: Roboto-Medium;
     font-size: 15px;
     color: #fff;
     line-height: 1.2;
@@ -479,7 +479,7 @@ iframe {
     transform: translateY(-50%);
     right: 0px;
     pointer-events: none;
-    font-family: Poppins-Regular;
+    font-family: Roboto-Regular;
     color: #c80000;
     font-size: 13px;
     line-height: 1.4;

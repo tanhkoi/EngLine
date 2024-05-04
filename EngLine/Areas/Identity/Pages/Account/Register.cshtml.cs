@@ -83,7 +83,6 @@ namespace EngLine.Areas.Identity.Pages.Account
 			/// </summary>
 			[Required]
 			[EmailAddress]
-			[Display(Name = "Email")]
 			public string Email { get; set; }
 
 			/// <summary>
@@ -91,9 +90,8 @@ namespace EngLine.Areas.Identity.Pages.Account
 			///     directly from your code. This API may change or be removed in future releases.
 			/// </summary>
 			[Required]
-			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[StringLength(100, ErrorMessage = "{0} phải có ít nhất {2} và tối đa {1} ký tự.", MinimumLength = 6)]
 			[DataType(DataType.Password)]
-			[Display(Name = "Password")]
 			public string Password { get; set; }
 
 			/// <summary>
@@ -101,8 +99,7 @@ namespace EngLine.Areas.Identity.Pages.Account
 			///     directly from your code. This API may change or be removed in future releases.
 			/// </summary>
 			[DataType(DataType.Password)]
-			[Display(Name = "Confirm password")]
-			[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+			[Compare("Password", ErrorMessage = "Mật khẩu và mật khẩu xác nhận không khớp nhau.")]
 			public string ConfirmPassword { get; set; }
 
 			public string? Role { get; set; }
@@ -136,7 +133,6 @@ namespace EngLine.Areas.Identity.Pages.Account
 		{
 			returnUrl ??= Url.Content("~/");
 			ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-			_logger.LogInformation("This line is 139");
 			if (ModelState.IsValid)
 			{
 				var user = CreateUser();
@@ -147,7 +143,7 @@ namespace EngLine.Areas.Identity.Pages.Account
 
 				if (result.Succeeded)
 				{
-					_logger.LogInformation("User created a new account with password.");
+					_logger.LogInformation("Người dùng đã tạo tài khoản mới với mật khẩu.");
 
 					if (!String.IsNullOrEmpty(Input.Role))
 					{
@@ -167,8 +163,8 @@ namespace EngLine.Areas.Identity.Pages.Account
 						values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
 						protocol: Request.Scheme);
 
-					await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-						$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+					await _emailSender.SendEmailAsync(Input.Email, "Xác nhận email của bạn.",
+						$"Vui lòng xác nhận tài khoản của bạn bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>nhấn vào đây</a>.");
 
 					if (_userManager.Options.SignIn.RequireConfirmedAccount)
 					{
@@ -208,7 +204,7 @@ namespace EngLine.Areas.Identity.Pages.Account
 		{
 			if (!_userManager.SupportsUserEmail)
 			{
-				throw new NotSupportedException("The default UI requires a user store with email support.");
+				throw new NotSupportedException("Giao diện mặc định yêu cầu người dùng xác nhận email.");
 			}
 			return (IUserEmailStore<User>)_userStore;
 		}

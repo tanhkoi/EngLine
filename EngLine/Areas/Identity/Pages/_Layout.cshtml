@@ -20,9 +20,9 @@
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/loginstyle/css/util.css">
 <link rel="stylesheet" type="text/css" href="/loginstyle/css/main.css">
-<!--===============================================================================================-->
 
 @RenderBody()
+@RenderSection("Scripts", required: false)
 
 <!--Js here-->
 <!--===============================================================================================-->
@@ -41,7 +41,7 @@
 <script src="/loginstyle/vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 <script src="/loginstyle/js/main.js"></script>
-
+<!--===============================================================================================-->
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 }
