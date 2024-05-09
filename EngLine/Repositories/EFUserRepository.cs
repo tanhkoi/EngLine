@@ -1,5 +1,7 @@
 ﻿using EngLine.DataAccess;
 using EngLine.Models;
+using EngLine.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,10 +13,17 @@ namespace EngLine.Repositories
 	public class EFUserRepository : IUserRepository
 	{
 		private readonly EngLineContext _context;
+		private readonly UserManager<User> _userManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
 
-		public EFUserRepository(EngLineContext context)
+		public EFUserRepository(
+			EngLineContext context,
+			UserManager<User> userManager,
+			RoleManager<IdentityRole> roleManager)
 		{
 			_context = context;
+			_userManager = userManager;
+			_roleManager = roleManager;
 		}
 
 		public async Task AddAsync(User user)
@@ -37,6 +46,20 @@ namespace EngLine.Repositories
 		public async Task<IEnumerable<User>> GetAllAsync()
 		{
 			return await _context.Users.ToListAsync();
+		}
+
+		public async Task<IList<User>> GetAllAsyncTeacher()
+		{
+			var teacherRoleExists = await _roleManager.RoleExistsAsync("Teacher");
+
+			if (!teacherRoleExists)
+			{
+				return null;
+			}
+
+			var teachers = await _userManager.GetUsersInRoleAsync("Teacher");
+
+			return teachers;
 		}
 
 		public async Task<User> GetByIdAsync(string id)
