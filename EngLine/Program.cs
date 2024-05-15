@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using EngLine.Models;
 using EngLine.Repositories;
+using EngLine.Utilitys;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,16 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<EngLineContext>();
 builder.Services.AddRazorPages();
 
+// email sender
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+//
+builder.Services.ConfigureApplicationCookie(options => {
+	options.LoginPath = $"/Identity/Account/Login";
+	options.LogoutPath = $"/Identity/Account/Logout";
+	options.LogoutPath = $"/Identity/Account/AccessDenied";
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,6 +57,14 @@ app.MapRazorPages();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+	endpoints.MapControllerRoute(
+	  name: "areas",
+	  pattern: "{area:exists}/{controller=Manage}/{action=Index}/{id?}"
+	);
+});
 
 app.MapControllerRoute(
 	name: "default",
