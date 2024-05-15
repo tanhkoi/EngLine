@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using EngLine.Models;
 using EngLine.Repositories;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +38,15 @@ if (!app.Environment.IsDevelopment())
 	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
 }
+
+//Cloudinary
+Account account = new Account(
+  "dcrftc3n9",
+  "744696573532998",
+  "oOULAD1ok4pjf4K-Cv0ITpIttMw");
+
+Cloudinary cloudinary = new Cloudinary(account);
+cloudinary.Api.Secure = true;
 
 app.UseHttpsRedirection();
 
