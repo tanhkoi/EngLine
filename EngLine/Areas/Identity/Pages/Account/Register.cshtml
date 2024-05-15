@@ -1,88 +1,65 @@
 ﻿@page
 @model RegisterModel
+
 @{
-	Layout = null;
+	Layout = "/Areas/Identity/Pages/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>Register</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/css/util.css">
-	<link rel="stylesheet" type="text/css" href="/css/signin.css">
-	<!--===============================================================================================-->
-</head>
-<body>
+<div class="limiter">
+	<div class="container-login100">
+		<div class="wrap-login100">
+			<form method="post" class="login100-form">
+				<span class="login100-form-title p-b-26">
+					Welcome
+				</span>
 
-	<div class="limiter">
-		<div class="container-login100">
-			<div class="wrap-login100">
-				<form class="login100-form validate-form">
-					<span class="login100-form-title p-b-26">
-						Welcome
+				<span class="login100-form-title p-b-48">
+					<a asp-action="Index" asp-controller="Home" asp-area="default">
+						<img style="height: 50px !important;" src="/img/logo/png/logo-black-removebg.png" alt="">
+					</a>
+				</span>
+
+				<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+				<div class="wrap-input100">
+					<span asp-validation-for="Input.Email" class="text-danger"></span>
+					<input placeholder="Email" asp-for="Input.Email" class="input100" type="text" aria-required="true">
+				</div>
+
+				<div class="wrap-input100">
+					<span class="btn-show-pass">
+						<i class="zmdi zmdi-eye"></i>
 					</span>
-					<span class="login100-form-title p-b-48">
-						<i class="zmdi zmdi-font"></i>
+					<span asp-validation-for="Input.Password" class="text-danger"></span>
+					<input placeholder="Mật khẩu" asp-for="Input.Password" class="input100" type="password" aria-required="true">
+				</div>
+				
+				<div class="wrap-input100">
+					<span class="btn-show-pass">
+						<i class="zmdi zmdi-eye"></i>
 					</span>
+					<span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+					<input placeholder="Xác nhận mật khẩu" asp-for="Input.ConfirmPassword" class="input100" type="password" aria-required="true">
+				</div>
 
-					<div class="wrap-input100 validate-input" data-validate="Valid email is: a@b.c">
-						<input class="input100" type="text" name="email">
-						<span class="focus-input100" data-placeholder="Email"></span>
+				<div class="container-login100-form-btn">
+					<div class="wrap-login100-form-btn">
+						<div class="login100-form-bgbtn"></div>
+						<button id="registerSubmit" type="submit" class="login100-form-btn">
+							Đăng ký
+						</button>
 					</div>
+				</div>
+			</form>
 
-					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<span class="btn-show-pass">
-							<i class="zmdi zmdi-eye"></i>
-						</span>
-						<input class="input100" type="password" name="pass">
-						<span class="focus-input100" data-placeholder="Password"></span>
-					</div>
-					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<span class="btn-show-pass">
-							<i class="zmdi zmdi-eye"></i>
-						</span>
-						<input class="input100" type="password" name="pass">
-						<span class="focus-input100" data-placeholder="Re-Password"></span>
-					</div>
-
-					<div class="container-login100-form-btn">
-						<div class="wrap-login100-form-btn">
-							<div class="login100-form-bgbtn"></div>
-							<button class="login100-form-btn">
-								Register
-							</button>
-						</div>
-					</div>
-
-					<div class="text-center p-t-115">
-						<span class="txt1">
-							Have an account?
-						</span>
-
-						<a class="txt2" href="#">
-							Sign In
-						</a>
-					</div>
-				</form>
+			<div class="text-center p-t-115">
+				<span class="txt1">
+					Đã có tài khoản?
+				</span>
+				<a asp-area="Identity" asp-page="/Account/Login" class="txt2">
+					Đăng nhập
+				</a>
 			</div>
 		</div>
 	</div>
-
-
-	<div id="dropDownSelect1"></div>
-
-	<!--===============================================================================================-->
-	<script src="/js/vendor/jquery-3.2.1.min.js"></script>
-	<!--===============================================================================================-->
-	<script src="/js/signin.js"></script>
-	<!--===============================================================================================-->
-
-</body>
-</html>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+</div>

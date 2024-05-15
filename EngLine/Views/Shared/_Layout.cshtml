@@ -1,13 +1,4 @@
-﻿@* @{
-	string html = ;
-
-	if (html.Length > 0 && html[0] == '\uFEFF')
-	{
-		html = html.Substring(1);
-	}
-}
- *@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -29,7 +20,7 @@
 	<link rel="stylesheet" href="~/css/animate.css">
 	<link rel="stylesheet" href="~/css/slicknav.css">
 	<link rel="stylesheet" href="~/css/style.css">
-
+	<link rel="stylesheet" href="~/horizontal/style.css">
 
 </head>
 
@@ -41,8 +32,8 @@
 					<div class="row align-items-center no-gutters">
 						<div class="col-xl-1 col-lg-1">
 							<div class="logo-img">
-								<a href="index.html">
-									<img src="/img/Remove-bg.ai_1713884519024.png" alt="">
+								<a asp-action="Index" asp-controller="Home">
+									<img style="height: 50px !important;" src="/img/logo/png/logo-no-background.png" alt="">
 								</a>
 							</div>
 						</div>
@@ -50,7 +41,7 @@
 							<div class="main-menu  d-none d-lg-block">
 								<nav>
 									<ul id="navigation">
-										<li>@Html.ActionLink("Home", "index", "Home", null, new { @class = "nav-link" })</li>
+										<li>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
 										<li>@Html.ActionLink("Courses", "Courses", "Home", null, new { @class = "nav-link" })</li>
 										<li>
 											@Html.ActionLink("Pages", "CourseDetails", "Home", null, new { @class = "ti-angle-down" })
@@ -66,7 +57,7 @@
 							</div>
 						</div>
 						<div class="col-xl-3 col-lg-3 d-none d-lg-block">
-							<div class="log_chat_area d-flex align-items-center">
+							<div class="log_chat_area d-flex align-items-center" style="font-size: 15px !important; font-family: ' Poppins', sans-serif !important;">
 								<partial name="_LoginPartial" />
 							</div>
 						</div>
@@ -398,7 +389,10 @@
 
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="~/js/site.js" asp-append-version="true"></script>
+
+	@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script> *@
+
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
