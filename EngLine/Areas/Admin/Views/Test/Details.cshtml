@@ -1,0 +1,22 @@
+﻿@model EngLine.ViewModels.TestDetailsViewModel
+
+<h2>@Model.TestTitle</h2>
+
+@foreach (var question in Model.Questions)
+{
+	<div>
+		<h4>@question.QuestionContent</h4>
+		<ul>
+			@foreach (var answer in question.AnswerOptions)
+			{
+				<li>
+					@answer.AnswerContent
+					@if (answer.IsCorrectOption)
+					{
+						<strong>(Correct)</strong>
+					}
+				</li>
+			}
+		</ul>
+	</div>
+}
