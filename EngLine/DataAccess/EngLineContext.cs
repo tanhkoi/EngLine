@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EngLine.DataAccess
 {
-	public class EngLineContext : DbContext
+	public class EngLineContext : IdentityDbContext
 	{
 		public EngLineContext(DbContextOptions<EngLineContext> options)
 			: base(options)
 		{
 		}
-
+		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 		public DbSet<Teacher> Teachers { get; set; }
 		public DbSet<Student> Students { get; set; }
 		public DbSet<Certificate> Certificates { get; set; }
