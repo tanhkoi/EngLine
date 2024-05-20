@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/testielts.css">
+</head>
+<body>
+    <div class="container-fluid d-flex flex-column vh-100" style="height: 712px">
+        <!-- Header Part -->
+        <header class="row bg-light p-3 border-bottom align-items-center">
+            <div class="col text-left"></div>
+            <div class="col text-center">   
+                <h4>Time Left: <span id="timer">15:00</span></h4>
+            </div>
+            <div class="col text-right">
+                <button id="nextButton" class="btn btn-primary" onclick="redirectToNextPage()">Next</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="row flex-grow-1">
+            @RenderBody()
+        </main>
+        <footer class="row bg-light p-3 border-top">
+            <div class="col text-center">
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="scrollToQuestion(1)">1</button>
+                    <button class="btn btn-secondary" onclick="scrollToQuestion(2)">2</button>
+                    <button class="btn btn-secondary" onclick="scrollToQuestion(3)">3</button>
+                    <!-- Add more buttons as needed -->
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const sections = ['Reading', 'Listening', 'Writing'];
+        const nextButton = document.getElementById('nextButton');
+        const wordCountDisplay = document.getElementById('wordCount');
+
+        function getCurrentSection() {
+            for (let section of sections) {
+                if (window.location.href.toLowerCase().includes(section.toLowerCase())) {
+                    return section;
+                }
+            }
+            return null;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var textarea = document.getElementById("myTextarea");
+            var wordCountSpan = document.getElementById("wordCount");
+
+            textarea.addEventListener("input", function () {
+                var text = textarea.value;
+                // Split the input text into words using whitespace as delimiter
+                var words = text.trim().split(/\s+/);
+                // Count the number of words
+                var wordCount = words.length;
+                wordCountSpan.textContent = wordCount;
+            });
+        });
+
+        function updateButton() {
+            const currentSection = getCurrentSection();
+            if (currentSection === 'Reading') {
+                nextButton.textContent = 'Next Writing';
+                nextButton.onclick = () => redirectToSection('Writing');
+            } else if (currentSection === 'Listening') {
+                nextButton.textContent = 'Next Reading';
+                nextButton.onclick = () => redirectToSection('Reading');
+            } else if (currentSection === 'Writing') {
+                nextButton.textContent = 'Submit';
+                nextButton.onclick = () => alert('Submit your answers');
+            }
+        }
+
+        function redirectToSection(section) {
+            window.location.href = `${section.toLowerCase()}`;
+        }
+
+        function startTimer(duration, display) {
+            let timer = duration, minutes, seconds;
+            const interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    alert('Time is up!');
+                    redirectToNextPage();
+                }
+            }, 1000);
+        }
+
+        function redirectToNextPage() {
+            const currentSection = getCurrentSection();
+            if (currentSection === 'Reading') {
+                redirectToSection('Writing');
+            } else if (currentSection === 'Listening') {
+                redirectToSection('Reading');
+            } else if (currentSection === 'Writing') {
+                alert('Submit your answers');
+            }
+        }
+
+        window.onload = function () {
+            const fifteenMinutes = 15 * 60; // 15 minutes
+            const display = document.querySelector('#timer');
+            startTimer(fifteenMinutes, display);
+            updateButton();
+        };
+    </script>
+</body>
+</html>
