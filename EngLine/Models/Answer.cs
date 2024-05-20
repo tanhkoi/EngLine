@@ -1,14 +1,14 @@
 ﻿namespace EngLine.Models
 {
-	public class Answer
-	{
-		public string Id { get; set; }
-		public string QuestionId { get; set; }
-		public string Content { get; set; }
-		public string SelectedAnswerId { get; set; }
-		public string StudentResponseId { get; set; }
+    public class Answer
+    {
+        public int Id { get; set; }
+        public int QuestionId { get; set; }
+        public string Content { get; set; }
+        public int SelectedAnswerId { get; set; }
+        public int StudentResponseId { get; set; }
 
-		public StudentResponse StudentResponse { get; set; }
-	}
+        public StudentResponse StudentResponse { get; set; }
+    }
 
 }

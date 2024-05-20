@@ -2,7 +2,7 @@
 {
 	public class TutorLesson
 	{
-		public string Id { get; set; }
+		public int Id { get; set; }
 		public string TeacherId { get; set; }
 		public decimal MinScore { get; set; }
 		public decimal MaxScore { get; set; }

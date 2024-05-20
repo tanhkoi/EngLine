@@ -2,10 +2,10 @@
 {
 	public class BookingPayment
 	{
-		public string Id { get; set; }
-		public string PaymentMethodId { get; set; }
+		public int Id { get; set; }
+		public int PaymentMethodId { get; set; }
 		public DateTime PayTime { get; set; }
-		public string BookingId { get; set; }
+		public int BookingId { get; set; }
 
 		public PaymentMethod PaymentMethod { get; set; }
 		public Booking Booking { get; set; }

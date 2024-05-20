@@ -2,9 +2,9 @@
 {
 	public class Order
 	{
-		public string Id { get; set; }
+		public int Id { get; set; }
 		public string StudentId { get; set; }
-		public string CourseId { get; set; }
+		public int CourseId { get; set; }
 		public DateTime OrderTime { get; set; }
 		public decimal Amount { get; set; }
 		public string Status { get; set; }

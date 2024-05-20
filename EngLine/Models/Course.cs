@@ -4,7 +4,7 @@ namespace EngLine.Models
 {
 	public class Course
 	{
-		public string Id { get; set; }
+		public int Id { get; set; }
 		public string TeacherId { get; set; }
 		public decimal Price { get; set; }
 		public string Description { get; set; }
