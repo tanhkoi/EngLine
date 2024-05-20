@@ -1,16 +1,16 @@
-﻿@model EngLine.ViewModels.TestDetailsViewModel
+﻿@model EngLine.ViewModels.TestEditViewModel
 
-<h2>@Model.TestTitle</h2>
+<h2>@Model.Title</h2>
 
 @foreach (var question in Model.Questions)
 {
 	<div>
-		<h4>@question.QuestionContent</h4>
+		<h4>@question.Content</h4>
 		<ul>
 			@foreach (var answer in question.AnswerOptions)
 			{
 				<li>
-					@answer.AnswerContent
+					@answer.Content
 					@if (answer.IsCorrectOption)
 					{
 						<strong>(Correct)</strong>

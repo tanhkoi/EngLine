@@ -20,6 +20,7 @@ builder.Services.AddDbContext<EngLineContext>(options => options.UseSqlServer(bu
 //builder.Services.AddScoped<IClassRepository, EFClassRepository>();
 //builder.Services.AddScoped<IUserRepository, EFUserRepository>();
 builder.Services.AddScoped<ITestRepository, EFTestRepository>();
+builder.Services.AddScoped<IQuestionRepository, EFQuestionRepository>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 // user identity
