@@ -22,7 +22,7 @@ namespace EngLine.Repositories.EF
 			throw new NotImplementedException();
 		}
 
-		public Task AddQuestionAsync(Question quenstion)
+		public Task AddQuestionAsync(Question question)
 		{
 			throw new NotImplementedException();
 		}
@@ -39,7 +39,7 @@ namespace EngLine.Repositories.EF
 			await _context.SaveChangesAsync();
 		}
 
-		public Task UpdateQuestionAsync(Question quenstion)
+		public Task UpdateQuestionAsync(Question question)
 		{
 			throw new NotImplementedException();
 		}

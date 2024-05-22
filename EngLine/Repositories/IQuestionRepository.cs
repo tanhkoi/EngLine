@@ -2,12 +2,12 @@
 
 namespace EngLine.Repositories
 {
-    public interface IQuestionRepository
-    {
-        Task<IEnumerable<Question>> GetAllQuestionAsync();
-        Task<Question> GetQuestionByIdAsync(int id);
-        Task AddQuestionAsync(Question quenstion);
-        Task UpdateQuestionAsync(Question quenstion);
-        Task DeleteQuestionAsync(int id);
-    }
+	public interface IQuestionRepository
+	{
+		Task<IEnumerable<Question>> GetAllQuestionAsync();
+		Task<Question> GetQuestionByIdAsync(int id);
+		Task AddQuestionAsync(Question question);
+		Task UpdateQuestionAsync(Question question);
+		Task DeleteQuestionAsync(int id);
+	}
 }
