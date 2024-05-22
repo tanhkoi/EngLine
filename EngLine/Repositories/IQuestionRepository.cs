@@ -1,6 +1,6 @@
 ﻿using EngLine.Models;
 
-namespace EngLine.Areas.Admin.Repositories
+namespace EngLine.Repositories
 {
     public interface IQuestionRepository
     {

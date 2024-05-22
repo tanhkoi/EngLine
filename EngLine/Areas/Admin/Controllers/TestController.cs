@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EngLine.Models;
 using EngLine.DataAccess;
-using EngLine.Areas.Admin.Repositories;
 using EngLine.ViewModels;
+using EngLine.Repositories;
 
 namespace EngLine.Areas.Admin.Controllers
 {
