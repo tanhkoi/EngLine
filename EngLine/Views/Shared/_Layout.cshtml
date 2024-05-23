@@ -44,10 +44,10 @@
 										<li>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
 										<li>@Html.ActionLink("Courses", "Courses", "Home", null, new { @class = "nav-link" })</li>
 										<li>
-											@Html.ActionLink("Pages", "CourseDetails", "Home", null, new { @class = "ti-angle-down" })
+											@Html.ActionLink("Pages", "", "Home", null, new { @class = "ti-angle-down" })
 											<ul class="submenu">
-												<li><a href="course_details.html">course details</a></li>
-												<li><a href="elements.html">elements</a></li>
+												<li>@Html.ActionLink("course details", "CourseDetails", "Home")</li>
+												<li>@Html.ActionLink("elements", "Elements", "Home")</li>
 											</ul>
 										</li>
 										<li>@Html.ActionLink("About", "About", "Home", null, new { @class = "nav-link" })</li>
@@ -116,7 +116,7 @@
 						<div class="footer_widget">
 							<div class="footer_logo">
 								<a href="#">
-									<img src="/img/Remove-bg.ai_1713884519024.png" alt="">
+									<img style="height: 50px !important;" src="/img/logo/png/logo-no-background.png" alt="">
 								</a>
 							</div>
 							<p>
@@ -175,8 +175,8 @@
 								<li><a href="#">Free Adobe XD</a></li>
 								<li><a href="#">Tutorials</a></li>
 								<li><a href="#">About</a></li>
-								<li><a href="#"> About</a></li>
-								<li><a href="#"> Contact</a></li>
+								<li>@Html.ActionLink("About", "About", "Home")</li>
+								<li>@Html.ActionLink("Contact", "Contact", "Home")</li>
 							</ul>
 						</div>
 					</div>
@@ -186,9 +186,9 @@
 								Address
 							</h3>
 							<p>
-								200, D-block, Green lane USA <br>
-								+10 367 467 8934 <br>
-								edumark@contact.com
+								Xa Lộ Hà Nội, Hiệp Phú, Thủ Đức <br>
+								028 5445 2222 <br>
+								noreply@hutech.edu.vn
 							</p>
 						</div>
 					</div>
