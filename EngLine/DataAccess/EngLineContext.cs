@@ -1,6 +1,7 @@
 ﻿using EngLine.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using EngLine.ViewModels;
 
 namespace EngLine.DataAccess
 {
@@ -31,6 +32,7 @@ namespace EngLine.DataAccess
 		public DbSet<Order> Orders { get; set; }
 	    public DbSet<TeacherViewModel> TeacherViewModel { get; set; } = default!;
 	    public DbSet<StudentViewModel> StudentViewModel { get; set; } = default!;
+	    public DbSet<EngLine.ViewModels.TestEditViewModel> TestEditViewModel { get; set; } = default!;
 
 	}
 }

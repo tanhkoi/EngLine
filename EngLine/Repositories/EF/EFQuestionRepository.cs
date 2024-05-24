@@ -1,5 +1,6 @@
 ﻿using EngLine.DataAccess;
 using EngLine.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EngLine.Repositories.EF
 {
@@ -12,14 +13,22 @@ namespace EngLine.Repositories.EF
 			_context = context;
 		}
 
-		public Task<IEnumerable<Question>> GetAllQuestionAsync()
+		public async Task<IEnumerable<Question>> GetAllQuestionAsync()
 		{
-			throw new NotImplementedException();
+			var engLineContext = _context.Questions.Include(q => q.Test);
+			return await engLineContext.ToListAsync();
 		}
 
-		public Task<Question> GetQuestionByIdAsync(int id)
+		public async Task<Question> GetQuestionByIdAsync(int id)
 		{
-			throw new NotImplementedException();
+			var question = await _context.Questions
+				.Include(q => q.Test)
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (question == null)
+			{
+				return null;
+			}
+			return question;
 		}
 
 		public Task AddQuestionAsync(Question question)

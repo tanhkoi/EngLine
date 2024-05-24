@@ -1,0 +1,28 @@
+﻿@model EngLine.Models.StudentResponse
+
+@{
+	ViewData["Title"] = "Result";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="background-color: #6b2dae; width: 100%; height: 93px;"></div>
+
+<div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); margin: 25px 50px;">
+	<div class="card-header">
+		Result
+	</div>
+	<div class="card-body">
+		<h5 class="card-title">Student Response</h5>
+		<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+		<dl class="row">
+			<dt class="col-sm-3">Score</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.Score)</dd>
+
+			<dt class="col-sm-3">Student ID</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.Student.Id)</dd>
+
+			<dt class="col-sm-3">Test ID</dt>
+			<dd class="col-sm-9">@Html.DisplayFor(model => model.Test.Id) <a href="#" class="btn btn-primary">Go somewhere</a></dd>
+		</dl>
+	</div>
+</div>

@@ -17,9 +17,9 @@ builder.Services.AddDbContext<EngLineContext>(options => options.UseSqlServer(bu
 
 // Add services: Repositories
 //builder.Services.AddScoped<IPaymentRepository, EFPaymentRepository>();
-//builder.Services.AddScoped<ICourseRepository, EFCourseRepository>();
 //builder.Services.AddScoped<IClassRepository, EFClassRepository>();
 //builder.Services.AddScoped<IUserRepository, EFUserRepository>();
+builder.Services.AddScoped<ICourseRepository, EFCourseRepository>();
 builder.Services.AddScoped<ITestRepository, EFTestRepository>();
 builder.Services.AddScoped<IQuestionRepository, EFQuestionRepository>();
 builder.Services.AddScoped<ITeacherRepository, EFTeacherRepository>();
