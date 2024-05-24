@@ -5,21 +5,25 @@ using EngLine.Models;
 using EngLine.DataAccess;
 using EngLine.ViewModels;
 using EngLine.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EngLine.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	[Authorize]
 	public class TestController : Controller
 	{
 		private readonly ITestRepository _testRepository;
 		private readonly IQuestionRepository _questionRepository;
-		private readonly EngLineContext _context;
+		private readonly IAnswerOptionRepository _answerOptionRepository;
 
-		public TestController(ITestRepository testRepository, EngLineContext context, IQuestionRepository questionRepository)
+		public TestController(ITestRepository testRepository,
+		IQuestionRepository questionRepository,
+		IAnswerOptionRepository answerRepository)
 		{
 			_testRepository = testRepository;
-			_context = context;
 			_questionRepository = questionRepository;
+			_answerOptionRepository = answerRepository;
 		}
 
 		// GET: Admin/Test
@@ -82,8 +86,7 @@ namespace EngLine.Areas.Admin.Controllers
 					}).ToList()
 				};
 
-				_context.Add(test);
-				await _context.SaveChangesAsync();
+				await _testRepository.AddTestAsync(test);
 				return RedirectToAction(nameof(Index));
 			}
 			return View(viewModel);
@@ -168,7 +171,7 @@ namespace EngLine.Areas.Admin.Controllers
 							{
 								if (question != null)
 								{
-									_context.Questions.Remove(question);
+									await _questionRepository.DeleteQuestionAsync(question.Id);
 								}
 							}
 							else
@@ -197,7 +200,7 @@ namespace EngLine.Areas.Admin.Controllers
 											{
 												if (answerOption != null)
 												{
-													_context.AnswerOptions.Remove(answerOption);
+													await _answerOptionRepository.AddAnswerOptionAsync(answerOption);
 												}
 											}
 											else
@@ -214,17 +217,16 @@ namespace EngLine.Areas.Admin.Controllers
 							}
 						}
 					}
-					await _context.SaveChangesAsync();
 				}
 				catch (DbUpdateConcurrencyException)
 				{
 					if (!TestExists(viewModel.Id))
 					{
-						return NotFound();
+						throw;
 					}
 					else
 					{
-						throw;
+						return NotFound();
 					}
 				}
 				return RedirectToAction(nameof(Index));
@@ -250,7 +252,11 @@ namespace EngLine.Areas.Admin.Controllers
 
 		private bool TestExists(int id)
 		{
-			return _context.Tests.Any(e => e.Id == id);
+			var test = _testRepository.GetTestByIdAsync(id);
+			if (test != null)
+				return true;
+			else
+				return false;
 		}
 	}
 }

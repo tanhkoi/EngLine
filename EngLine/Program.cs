@@ -16,14 +16,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<EngLineContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services: Repositories
-//builder.Services.AddScoped<IPaymentRepository, EFPaymentRepository>();
-//builder.Services.AddScoped<IClassRepository, EFClassRepository>();
-//builder.Services.AddScoped<IUserRepository, EFUserRepository>();
 builder.Services.AddScoped<ICourseRepository, EFCourseRepository>();
 builder.Services.AddScoped<ITestRepository, EFTestRepository>();
 builder.Services.AddScoped<IQuestionRepository, EFQuestionRepository>();
 builder.Services.AddScoped<ITeacherRepository, EFTeacherRepository>();
 builder.Services.AddScoped<IStudentRepository, EFStudentRepository>();
+builder.Services.AddScoped<IStudentResponseRepository, EFStudentResponseRepository>();
+builder.Services.AddScoped<IAnswerRepository, EFAnswerRepository>();
+builder.Services.AddScoped<IAnswerOptionRepository, EFAnswerOptionRepository>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 // Add services: User Identity

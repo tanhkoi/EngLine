@@ -1,60 +1,61 @@
-﻿using EngLine.DataAccess;
+﻿using System.Security.Claims;
+using EngLine.DataAccess;
 using EngLine.Models;
 using EngLine.Repositories;
 using EngLine.ViewModels;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EngLine.Controllers
 {
+	[Authorize]
 	public class TestController : Controller
 	{
-		private readonly EngLineContext _context;
 		private readonly IStudentRepository _studentRepository;
+		private readonly ITestRepository _testRepository;
+		private readonly IStudentResponseRepository _studentResponseRepository;
+		private readonly IAnswerRepository _answerRepository;
 
-		public TestController(EngLineContext context, IStudentRepository studentRepository)
+		public TestController(
+		IStudentRepository studentRepository,
+		ITestRepository testRepository,
+		IStudentResponseRepository studentResponseRepository,
+		IAnswerRepository answerRepository
+		)
 		{
-			_context = context;
 			_studentRepository = studentRepository;
+			_testRepository = testRepository;
+			_studentResponseRepository = studentResponseRepository;
+			_answerRepository = answerRepository;
 		}
 
-		public IActionResult TakeTest(int testId = 1)
+		public async Task<IActionResult> TakeTest(int testId = 1)
 		{
-			var test = _context.Tests
-				.Include(t => t.Questions)
-				.ThenInclude(q => q.AnswerOptions)
-				.FirstOrDefault(t => t.Id == testId);
-
-			if (test == null)
-			{
-				return NotFound();
-			}
+			var test = await _testRepository.GetTestByIdAsync(testId);
 
 			var viewModel = new TestViewModel
 			{
 				Test = test,
 				Questions = test.Questions.ToList()
 			};
-
 			return View(viewModel);
 		}
 
 		[HttpPost]
-		public IActionResult SubmitTest(IFormCollection form)
+		public async Task<IActionResult> SubmitTest(IFormCollection form, int testId)
 		{
-			var studentId = "1";
-			//var testId = int.Parse(form["TestId"]);
-			var testId = 1;
-			var response = new StudentResponse
+			var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+			var response = new StudentResponse()
 			{
 				StudentId = studentId,
 				TestId = testId,
-				Score = 0 // Calculate the score based on answers
+				Score = 0
 			};
 
-			_context.StudentResponses.Add(response);
-			_context.SaveChanges();
+			await _studentResponseRepository.AddStudentResponseAsync(response);
 
 			foreach (var key in form.Keys)
 			{
@@ -70,28 +71,20 @@ namespace EngLine.Controllers
 						SelectedAnswerId = selectedAnswerId,
 						StudentResponseId = response.Id
 					};
-
-					_context.Answers.Add(answer);
+					await _answerRepository.AddAnswerAsync(answer);
 				}
 			}
 
-			_context.SaveChanges();
+			response.Score = await _studentResponseRepository.CalculateScore(studentId, testId, response.Id);
+			_studentResponseRepository.UpdateStudentResponseAsync(response);
 
 			// Redirect to a result page or confirmation page
 			return RedirectToAction("Result", new { id = response.Id });
 		}
 
-		public IActionResult Result(int id)
+		public async Task<IActionResult> Result(int id)
 		{
-			var response = _context.StudentResponses
-				.Include(r => r.Answers)
-				.FirstOrDefault(r => r.Id == id);
-
-			if (response == null)
-			{
-				return NotFound();
-			}
-
+			var response = await _studentResponseRepository.GetStudentResponseByIdAsync(id);
 			return View(response);
 		}
 
