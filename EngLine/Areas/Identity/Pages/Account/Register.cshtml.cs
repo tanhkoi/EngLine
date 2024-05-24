@@ -134,7 +134,7 @@ namespace EngLine.Areas.Identity.Pages.Account
 			ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 			if (ModelState.IsValid)
 			{
-				var user = new Student { Email = Input.Email, UserName = Input.Email};
+				var user = new Student { Email = Input.Email, UserName = Input.Email };
 
 				var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -154,9 +154,9 @@ namespace EngLine.Areas.Identity.Pages.Account
 					}
 
 					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-					
+
 					code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-					
+
 					var callbackUrl = Url.Page(
 						"/Account/ConfirmEmail",
 						pageHandler: null,
