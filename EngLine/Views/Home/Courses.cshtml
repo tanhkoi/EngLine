@@ -1,8 +1,8 @@
-﻿@model IList<EngLine.Models.Student>
+﻿@model IEnumerable<EngLine.Models.Course>;
 
 <!-- bradcam_area_start -->
 <div class="bradcam_area breadcam_bg overlay2">
-	<h3>Our Courses</h3>
+	<h3>Các Khóa Học</h3>
 </div>
 <!-- bradcam_area_end -->
 <!-- popular_courses_start -->
@@ -11,10 +11,10 @@
 		<div class="row">
 			<div class="col-xl-12">
 				<div class="section_title text-center mb-100">
-					<h3>Popular Courses</h3>
+					<h3>Khóa học phổ biến</h3>
 					<p>
-						Your domain control panel is designed for ease-of-use and <br> allows for all aspects of your
-						domains.
+						Các khóa học phổ biến <br>
+						dành cho bạn
 					</p>
 				</div>
 			</div>
@@ -24,21 +24,38 @@
 		<div class="container">
 			<div class="tab-content" id="myTabContent">
 				<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-					<div class="row" style="justify-content: space-between !important;">
+					<div class="row">
+						@* style="justify-content: space-between !important;"*@
 						@if (Model != null)
 						{
 							@foreach (var item in Model)
 							{
-								<div class="card bg-primary-subtle mt-4" style="background-color: white;">
-									<img src="https://codingyaar.com/wp-content/uploads/chair-image.jpg" class="card-img-top" alt="...">
-									<div class="card-body">
-										<div class="text-section">
-											<h5 class="card-title fw-bold">Card title</h5>
-											<p class="card-text">Some quick example text to build on the card's content.</p>
+								<div class="col-xl-4 col-lg-4 col-md-6">
+									<div class="single_courses">
+										<div class="thumb">
+											<a asp-route-id="@item.Id" asp-area="default" asp-action="CourseDetails" asp-controller="Home">
+												<img src="@item.CoverPhoto" alt="@item.CoverPhoto">
+											</a>
 										</div>
-										<div class="cta-section">
-											<div>$129.00</div>
-											<a href="#" class="btn btn-info">Buy Now</a>
+										<div class="courses_info">
+											<span>@item.Teacher.FirstName</span>
+											<h3>
+												<a asp-route-id="@item.Id" asp-area="default" asp-action="CourseDetails" asp-controller="Home">
+													@item.CourseName
+												</a>
+											</h3>
+											<div class="star_prise d-flex justify-content-between">
+												@* <div class="star">
+										<i class="flaticon-mark-as-favorite-star"></i>
+										<span>(4.5)</span>
+										</div> *@
+												<div class="prise">
+													<span class="offer">$89.00</span>
+													<span class="active_prise">
+														@item.Price
+													</span>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -47,7 +64,7 @@
 					</div>
 					<div class="col-xl-12">
 						<div class="more_courses text-center">
-							<a href="#" class="boxed_btn_rev">More Courses</a>
+							<a href="#" class="boxed_btn_rev">Xem thêm</a>
 						</div>
 					</div>
 				</div>
@@ -56,51 +73,3 @@
 	</div>
 </div>
 <!-- popular_courses_end-->
-<!-- testimonial_area_start -->
-<div class="testimonial_area testimonial_bg_1 overlay">
-	<div class="testmonial_active owl-carousel">
-		<div class="single_testmoial">
-			<div class="container">
-				<div class="row">
-					<div class="col-xl-12">
-						<div class="testmonial_text text-center">
-							<div class="author_img">
-								<img src="/img/testmonial/author_img.png" alt="">
-							</div>
-							<p>
-								"Working in conjunction with humanitarian aid <br> agencies we have supported
-								programmes to <br>
-								alleviate.
-								human suffering.
-
-							</p>
-							<span>- Jquileen</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="single_testmoial">
-			<div class="container">
-				<div class="row">
-					<div class="col-xl-12">
-						<div class="testmonial_text text-center">
-							<div class="author_img">
-								<img src="/img/testmonial/author_img.png" alt="">
-							</div>
-							<p>
-								"Working in conjunction with humanitarian aid <br> agencies we have supported
-								programmes to <br>
-								alleviate.
-								human suffering.
-
-							</p>
-							<span>- Jquileen</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- testimonial_area_end -->

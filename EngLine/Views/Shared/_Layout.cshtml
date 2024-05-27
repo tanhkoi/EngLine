@@ -31,7 +31,7 @@
 					<div class="row align-items-center no-gutters">
 						<div class="col-xl-1 col-lg-1">
 							<div class="logo-img">
-								<a asp-action="Index" asp-controller="Home">
+								<a asp-area="default" asp-action="Index" asp-controller="Home">
 									<img style="height: 50px !important;" src="/img/logo/png/logo-no-background.png" alt="">
 								</a>
 							</div>
@@ -39,18 +39,24 @@
 						<div class="col-xl-7 col-lg-7">
 							<div class="main-menu  d-none d-lg-block">
 								<nav>
-									<ul id="navigation">
-										<li>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
-										<li>@Html.ActionLink("Courses", "Courses", "Home", null, new { @class = "nav-link" })</li>
-										<li>
-											@Html.ActionLink("Pages", "", "Home", null, new { @class = "ti-angle-down" })
-											<ul class="submenu">
-												<li>@Html.ActionLink("course details", "CourseDetails", "Home")</li>
-												<li>@Html.ActionLink("elements", "Elements", "Home")</li>
-											</ul>
-										</li>
-										<li>@Html.ActionLink("About", "About", "Home", null, new { @class = "nav-link" })</li>
-										<li>@Html.ActionLink("Contact", "Contact", "Home", null, new { @class = "nav-link" })</li>
+									<ul id="navigation" style="margin-left: 65px;">
+										<li><a asp-area="default" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+										<li><a asp-area="default" asp-controller="Home" asp-action="Courses">Khóa học</a></li>
+										@* <li>
+										@Html.ActionLink("Pages", "", "Home", null, new { @class = "ti-angle-down" })
+										<ul class="submenu">
+										<li>@Html.ActionLink("course details", "CourseDetails", "Home")</li>
+										<li>@Html.ActionLink("elements", "Elements", "Home")</li>
+										</ul>
+										</li> *@
+										<li><a asp-area="default" asp-controller="Home" asp-action="About">Về chúng tôi</a></li>
+										<li><a asp-area="default" asp-controller="Home" asp-action="Contact">Liên hệ</a></li>
+										@{
+											if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+											{
+												<li><a asp-area="Teacher" asp-controller="Manage" asp-action="Profile">Quản lý(GV)</a></li>
+											}
+										}
 									</ul>
 								</nav>
 							</div>
@@ -302,6 +308,8 @@
 
 	@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script> *@
+
+	<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
 
 	@await RenderSectionAsync("Scripts", required: false)
 </body>

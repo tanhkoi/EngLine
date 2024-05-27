@@ -1,43 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EngLine.DataAccess;
 using EngLine.Models;
+using EngLine.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using EngLine.Utilitys;
+using EngLine.Repositories;
 
 namespace EngLine.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Teacher)]
 	public class CoursesController : Controller
 	{
-		private readonly EngLineContext _context;
+		private readonly ICourseRepository _courseRepository;
+		private readonly ITeacherRepository _teacherRepository;
 
-		public CoursesController(EngLineContext context)
+		public CoursesController(ICourseRepository courseRepository, ITeacherRepository teacherRepository)
 		{
-			_context = context;
+			_courseRepository = courseRepository;
+			_teacherRepository = teacherRepository;
 		}
 
 		// GET: Admin/Courses
 		public async Task<IActionResult> Index()
 		{
-			var engLineContext = _context.Courses.Include(c => c.Teacher);
-			return View(await engLineContext.ToListAsync());
+			return View(await _courseRepository.GetAllCourseAsync());
 		}
 
 		// GET: Admin/Courses/Details/5
-		public async Task<IActionResult> Details(int? id)
+		public async Task<IActionResult> Details(int id)
 		{
-			if (id == null)
-			{
-				return NotFound();
-			}
-
-			var course = await _context.Courses
-				.Include(c => c.Teacher)
-				.FirstOrDefaultAsync(m => m.Id == id);
+			var course = await _courseRepository.GetCourseByIdAsync(id);
 			if (course == null)
 			{
 				return NotFound();
@@ -47,9 +42,10 @@ namespace EngLine.Areas.Admin.Controllers
 		}
 
 		// GET: Admin/Courses/Create
-		public IActionResult Create()
+		public async Task<IActionResult> CreateAsync()
 		{
-			ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "Id");
+			var teachers = await _teacherRepository.GetAllTeacherAsync();
+			ViewData["TeacherId"] = new SelectList(teachers, "Id", "Id");
 			return View();
 		}
 
@@ -58,32 +54,44 @@ namespace EngLine.Areas.Admin.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,TeacherId,Price,Description")] Course course)
+		public async Task<IActionResult> Create(CreateCourseViewModel model)
 		{
 			if (ModelState.IsValid)
 			{
-				_context.Add(course);
-				await _context.SaveChangesAsync();
+				var course = new Course
+				{
+					TeacherId = model.TeacherId,
+					Price = model.Price,
+					Description = model.Description,
+					CourseName = model.CourseName,
+					CoverPhoto = model.CoverPhoto,
+					Lessons = model.Lessons.Select(l => new Lesson
+					{
+						Name = l.Name,
+						Description = l.Description,
+						Photo = l.Photo,
+						Video = l.Video,
+						Content = l.Content
+					}).ToList()
+				};
+				await _courseRepository.AddCourseAsync(course);
 				return RedirectToAction(nameof(Index));
 			}
-			ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "Id", course.TeacherId);
-			return View(course);
+			return View(model);
 		}
 
-		// GET: Admin/Courses/Edit/5
-		public async Task<IActionResult> Edit(int? id)
-		{
-			if (id == null)
-			{
-				return NotFound();
-			}
 
-			var course = await _context.Courses.FindAsync(id);
+		// GET: Admin/Courses/Edit/5
+		public async Task<IActionResult> Edit(int id)
+		{
+			var course = await _courseRepository.GetCourseByIdAsync(id);
 			if (course == null)
 			{
 				return NotFound();
 			}
-			ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "Id", course.TeacherId);
+
+			var teachers = await _teacherRepository.GetAllTeacherAsync();
+			ViewData["TeacherId"] = new SelectList(teachers, "Id", "Id", course.TeacherId);
 			return View(course);
 		}
 
@@ -103,12 +111,12 @@ namespace EngLine.Areas.Admin.Controllers
 			{
 				try
 				{
-					_context.Update(course);
-					await _context.SaveChangesAsync();
+					await _courseRepository.UpdateCourseAsync(course);
 				}
 				catch (DbUpdateConcurrencyException)
 				{
-					if (!CourseExists(course.Id))
+					var isExist = await _courseRepository.GetCourseByIdAsync(id);
+					if (isExist == null)
 					{
 						return NotFound();
 					}
@@ -119,21 +127,16 @@ namespace EngLine.Areas.Admin.Controllers
 				}
 				return RedirectToAction(nameof(Index));
 			}
-			ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "Id", course.TeacherId);
+			var teachers = await _teacherRepository.GetAllTeacherAsync();
+
+			ViewData["TeacherId"] = new SelectList(teachers, "Id", "Id", course.TeacherId);
 			return View(course);
 		}
 
 		// GET: Admin/Courses/Delete/5
-		public async Task<IActionResult> Delete(int? id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			if (id == null)
-			{
-				return NotFound();
-			}
-
-			var course = await _context.Courses
-				.Include(c => c.Teacher)
-				.FirstOrDefaultAsync(m => m.Id == id);
+			var course = await _courseRepository.GetCourseByIdAsync(id);
 			if (course == null)
 			{
 				return NotFound();
@@ -147,19 +150,13 @@ namespace EngLine.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			var course = await _context.Courses.FindAsync(id);
+			var course = await _courseRepository.GetCourseByIdAsync(id);
 			if (course != null)
 			{
-				_context.Courses.Remove(course);
+				await _courseRepository.DeleteCourseAsync(id);
 			}
 
-			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
-		}
-
-		private bool CourseExists(int id)
-		{
-			return _context.Courses.Any(e => e.Id == id);
 		}
 	}
 }

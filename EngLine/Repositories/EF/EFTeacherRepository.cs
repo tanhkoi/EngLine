@@ -1,5 +1,7 @@
 ﻿using EngLine.DataAccess;
 using EngLine.Models;
+using EngLine.Utilitys;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace EngLine.Repositories.EF
@@ -7,10 +9,12 @@ namespace EngLine.Repositories.EF
 	public class EFTeacherRepository : ITeacherRepository
 	{
 		private readonly EngLineContext _context;
+		private readonly UserManager<ApplicationUser> _userManager;
 
-		public EFTeacherRepository(EngLineContext context)
+		public EFTeacherRepository(EngLineContext context, UserManager<ApplicationUser> userManager)
 		{
 			_context = context;
+			_userManager = userManager;
 		}
 
 		public async Task<IEnumerable<Teacher>> GetAllTeacherAsync()
@@ -26,6 +30,7 @@ namespace EngLine.Repositories.EF
 		{
 			_context.Teachers.Add(teacher);
 			await _context.SaveChangesAsync();
+			await _userManager.AddToRoleAsync(teacher, SD.Role_Student);
 		}
 
 		public async Task UpdateTeacherAsync(Teacher teacher)

@@ -1,4 +1,5 @@
 using EngLine.Models;
+using EngLine.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,11 +8,15 @@ namespace EngLine.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
+		private readonly ICourseRepository _courseRepository;
 
 		public HomeController(
-			ILogger<HomeController> logger)
+			ILogger<HomeController> logger,
+			ICourseRepository courseRepository
+			)
 		{
 			_logger = logger;
+			_courseRepository = courseRepository;
 		}
 
 		public IActionResult Index()
@@ -24,19 +29,22 @@ namespace EngLine.Controllers
 			return View();
 		}
 
-		//public async Task<IActionResult> Courses()
-		//{
-		//	return View(await _userRepository.GetAllAsyncTeacher());
-		//}
+		public async Task<IActionResult> Courses()
+		{
+			var courses = await _courseRepository.GetAllCourseAsync();
+			return View(courses);
+		}
 
 		public IActionResult Contact()
 		{
 			return View();
 		}
 
-		public IActionResult CourseDetails()
+		public async Task<IActionResult> CourseDetails(int id)
 		{
-			return View();
+			var course = await _courseRepository.GetCourseByIdAsync(id);
+			ViewBag.Lessons = course.Lessons;
+			return View(course);
 		}
 
 		public IActionResult Elements()
@@ -53,6 +61,7 @@ namespace EngLine.Controllers
 		{
 			return View();
 		}
+
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{

@@ -1,5 +1,7 @@
 ﻿using EngLine.DataAccess;
 using EngLine.Models;
+using EngLine.Utilitys;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace EngLine.Repositories.EF
@@ -7,10 +9,12 @@ namespace EngLine.Repositories.EF
 	public class EFStudentRepository : IStudentRepository
 	{
 		private readonly EngLineContext _context;
+		private readonly UserManager<ApplicationUser> _userManager;
 
-		public EFStudentRepository(EngLineContext context)
+		public EFStudentRepository(EngLineContext context, UserManager<ApplicationUser> userManager)
 		{
 			_context = context;
+			_userManager = userManager;
 		}
 
 		public async Task<IEnumerable<Student>> GetAllStudentAsync()
@@ -26,6 +30,7 @@ namespace EngLine.Repositories.EF
 		{
 			_context.Students.Add(student);
 			await _context.SaveChangesAsync();
+			await _userManager.AddToRoleAsync(student, SD.Role_Student);
 		}
 
 		public async Task UpdateStudentAsync(Student student)

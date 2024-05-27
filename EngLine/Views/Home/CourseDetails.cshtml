@@ -1,33 +1,34 @@
-﻿<!-- bradcam_area_start -->
+﻿@model EngLine.Models.Course;
+
+<!-- bradcam_area_start -->
 <div class="courses_details_banner">
 	<div class="container">
 		<div class="row">
 			<div class="col-xl-6">
 				<div class="course_text">
-					<h3>UI/UX design with <br> Adobe XD with</h3>
+					<h3>@Model.CourseName</h3>
 					<div class="prise">
 						<span class="inactive">$89.00</span>
-						<span class="active">$49</span>
+						<span class="active">@Model.Price</span>
 					</div>
-					<div class="rating">
-						<i class="fa-solid fa-star"></i>
-						<i class="fa-solid fa-star"></i>
-						<i class="fa-solid fa-star"></i>
-						<i class="fa-solid fa-star"></i>
-						<i class="fa-solid fa-star"></i>
-						<span>(4.5)</span>
+					@* <div class="rating">
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<span>(4.5)</span>
+					</div> *@
+					@* <div class="hours">
+					<div class="video">
+					<div class="single_video">
+					<i class="fa fa-clock-o"></i> <span>12 Videos</span>
 					</div>
-					<div class="hours">
-						<div class="video">
-							<div class="single_video">
-								<i class="fa fa-clock-o"></i> <span>12 Videos</span>
-							</div>
-							<div class="single_video">
-								<i class="fa fa-play-circle-o"></i> <span>9 Hours</span>
-							</div>
-
-						</div>
+					<div class="single_video">
+					<i class="fa fa-play-circle-o"></i> <span>9 Hours</span>
 					</div>
+					</div>
+					</div> *@
 				</div>
 			</div>
 		</div>
@@ -41,89 +42,34 @@
 			<div class="col-xl-7 col-lg-7">
 				<div class="single_courses">
 					<h3>Objectives</h3>
-					<p>Our set he for firmament morning sixth subdue darkness creeping gathered divide our let god moving. Moving in fourth air night bring upon you’re it beast let you dominion likeness open place day great wherein heaven sixth lesser subdue fowl male signs his day face waters itself and make be to our itself living. Fish in thing lights moveth. Over god spirit morning, greater had man years green multiply creature, form them in, likeness him behold two cattle for divided. Fourth darkness had. Living light there place moved divide under earth. Light face, fly dry us </p>
+					<p>@Model.Description</p>
 					<h3 class="second_title">Course Outline</h3>
 				</div>
 				<div class="outline_courses_info">
 					<div id="accordion">
-						<div class="card">
-							<div class="card-header" id="headingTwo">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-										<i class="fa fa-question-circle-o"></i> Is WordPress hosting worth it?
-									</button>
-								</h5>
-							</div>
-							<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-								<div class="card-body">
-									Our set he for firmament morning sixth subdue darkness creeping gathered divide our
-									let god moving. Moving in fourth air night bring upon
+						@{
+							foreach (var item in ViewBag.Lessons)
+							{
+								<div class="card">
+									<div class="card-header" id="heading_5">
+										<h5 class="mb-0">
+											<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse_5" aria-expanded="false" aria-controls="collapse_5">
+												<i class="fa fa-question-circle-o"></i> How do I get started <span>
+													with Shared
+													Hosting?
+												</span>
+											</button>
+										</h5>
+									</div>
+									<div id="collapse_5" class="collapse" aria-labelledby="heading_5" data-parent="#accordion">
+										<div class="card-body">
+											Our set he for firmament morning sixth subdue darkness creeping gathered divide our
+											let god moving. Moving in fourth air night bring upon
+										</div>
+									</div>
 								</div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-header" id="headingOne">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-										<i class="fa fa-question-circle-o"></i>Basic Classes</span>
-									</button>
-								</h5>
-							</div>
-							<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="">
-								<div class="card-body">
-									Our set he for firmament morning sixth subdue darkness creeping gathered divide our
-									let god moving. Moving in fourth air night bring upon
-								</div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-header" id="headingThree">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-										<i class="fa fa-question-circle-o"></i> Will you transfer my site?
-									</button>
-								</h5>
-							</div>
-							<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-								<div class="card-body">
-									Our set he for firmament morning sixth subdue darkness creeping gathered divide our
-									let god moving. Moving in fourth air night bring upon
-								</div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-header" id="heading_4">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse_4" aria-expanded="false" aria-controls="collapse_4">
-										<i class="fa fa-question-circle-o"></i> Why should I host with Hostza?
-									</button>
-								</h5>
-							</div>
-							<div id="collapse_4" class="collapse" aria-labelledby="heading_4" data-parent="#accordion">
-								<div class="card-body">
-									Our set he for firmament morning sixth subdue darkness creeping gathered divide our
-									let god moving. Moving in fourth air night bring upon
-								</div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-header" id="heading_5">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse_5" aria-expanded="false" aria-controls="collapse_5">
-										<i class="fa fa-question-circle-o"></i> How do I get started <span>
-											with Shared
-											Hosting?
-										</span>
-									</button>
-								</h5>
-							</div>
-							<div id="collapse_5" class="collapse" aria-labelledby="heading_5" data-parent="#accordion">
-								<div class="card-body">
-									Our set he for firmament morning sixth subdue darkness creeping gathered divide our
-									let god moving. Moving in fourth air night bring upon
-								</div>
-							</div>
-						</div>
+							}
+						}
 					</div>
 				</div>
 			</div>
@@ -176,83 +122,3 @@
 		</div>
 	</div>
 </div>
-
-
-
-<!-- testimonial_area_start -->
-<div class="testimonial_area testimonial_bg_1 overlay">
-	<div class="testmonial_active owl-carousel">
-		<div class="single_testmoial">
-			<div class="container">
-				<div class="row">
-					<div class="col-xl-12">
-						<div class="testmonial_text text-center">
-							<div class="author_img">
-								<img src="img/testmonial/author_img.png" alt="">
-							</div>
-							<p>
-								"Working in conjunction with humanitarian aid <br> agencies we have supported
-								programmes to <br>
-								alleviate.
-								human suffering.
-
-							</p>
-							<span>- Jquileen</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="single_testmoial">
-			<div class="container">
-				<div class="row">
-					<div class="col-xl-12">
-						<div class="testmonial_text text-center">
-							<div class="author_img">
-								<img src="img/testmonial/author_img.png" alt="">
-							</div>
-							<p>
-								"Working in conjunction with humanitarian aid <br> agencies we have supported
-								programmes to <br>
-								alleviate.
-								human suffering.
-
-							</p>
-							<span>- Jquileen</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- testimonial_area_end -->
-
-<!-- JS here -->
-<script src="~/js/vendor/modernizr-3.5.0.min.js"></script>
-<script src="~/js/vendor/jquery-1.12.4.min.js"></script>
-<script src="~/js/popper.min.js"></script>
-<script src="~/js/bootstrap.min.js"></script>
-<script src="~/js/owl.carousel.min.js"></script>
-<script src="~/js/isotope.pkgd.min.js"></script>
-<script src="~/js/ajax-form.js"></script>
-<script src="~/js/waypoints.min.js"></script>
-<script src="~/js/jquery.counterup.min.js"></script>
-<script src="~/js/imagesloaded.pkgd.min.js"></script>
-<script src="~/js/scrollIt.js"></script>
-<script src="~/js/jquery.scrollUp.min.js"></script>
-<script src="~/js/wow.min.js"></script>
-<script src="~/js/nice-select.min.js"></script>
-<script src="~/js/jquery.slicknav.min.js"></script>
-<script src="~/js/jquery.magnific-popup.min.js"></script>
-<script src="~/js/plugins.js"></script>
-<script src="~/js/gijgo.min.js"></script>
-
-<!--contact js-->
-<script src="~/js/contact.js"></script>
-<script src="~/js/jquery.ajaxchimp.min.js"></script>
-<script src="~/js/jquery.form.js"></script>
-<script src="~/js/jquery.validate.min.js"></script>
-<script src="~/js/mail-script.js"></script>
-
-<script src="js/main.js"></script>

@@ -6,6 +6,8 @@ namespace EngLine.Models
 	{
 		public int Id { get; set; }
 		public string TeacherId { get; set; }
+		public string CourseName { get; set; }
+		public string CoverPhoto { get; set; }
 		public decimal Price { get; set; }
 		public string Description { get; set; }
 

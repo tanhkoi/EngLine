@@ -1,5 +1,6 @@
 using EngLine.DataAccess;
 using EngLine.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EngLine.Repositories.EF
 {
@@ -12,29 +13,41 @@ namespace EngLine.Repositories.EF
 			_context = context;
 		}
 
-		public Task AddCourseAsync(Course course)
+		public async Task AddCourseAsync(Course course)
 		{
-			throw new NotImplementedException();
+			_context.Courses.Add(course);
+			await _context.SaveChangesAsync();
 		}
 
-		public Task DeleteCourseAsync(int id)
+		public async Task DeleteCourseAsync(int id)
 		{
-			throw new NotImplementedException();
+			var course = await _context.Courses.Include(c => c.Teacher).Include(c => c.Lessons).FirstOrDefaultAsync(m => m.Id == id);
+			if (course != null)
+			{
+				_context.Courses.Remove(course);
+				await _context.SaveChangesAsync();
+			}
 		}
 
-		public Task<IEnumerable<Course>> GetAllCourseAsync()
+		public async Task<IEnumerable<Course>> GetAllCourseAsync()
 		{
-			throw new NotImplementedException();
+			return await _context.Courses.Include(c => c.Teacher).Include(c => c.Lessons).ToListAsync();
 		}
 
-		public Task<Course> GetCourseByIdAsync(int id)
+		public async Task<IEnumerable<Course>> GetAllCourseByIdTeacherAsync(string id)
 		{
-			throw new NotImplementedException();
+			return await _context.Courses.Where(c => c.TeacherId == id).Take(5).ToListAsync();
 		}
 
-		public Task UpdateCourseAsync(Course course)
+		public async Task<Course> GetCourseByIdAsync(int id)
 		{
-			throw new NotImplementedException();
+			return await _context.Courses.Include(c => c.Lessons).Include(c => c.Teacher).FirstOrDefaultAsync(m => m.Id == id);
+		}
+
+		public async Task UpdateCourseAsync(Course course)
+		{
+			_context.Courses.Update(course);
+			await _context.SaveChangesAsync();
 		}
 	}
 }
