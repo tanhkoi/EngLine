@@ -6,6 +6,7 @@ using EngLine.Utilitys;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using EngLine.Repositories;
 using EngLine.Repositories.EF;
+using EngLine.Models.Services;
 //using CloudinaryDotNet;
 //using CloudinaryDotNet.Actions;
 //using EngLine.Repositories;
@@ -16,15 +17,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<EngLineContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services: Repositories
-builder.Services.AddScoped<ICourseRepository, EFCourseRepository>();
-builder.Services.AddScoped<ITestRepository, EFTestRepository>();
-builder.Services.AddScoped<IQuestionRepository, EFQuestionRepository>();
-builder.Services.AddScoped<ITeacherRepository, EFTeacherRepository>();
-builder.Services.AddScoped<IStudentRepository, EFStudentRepository>();
-builder.Services.AddScoped<IStudentResponseRepository, EFStudentResponseRepository>();
-builder.Services.AddScoped<IAnswerRepository, EFAnswerRepository>();
-builder.Services.AddScoped<IAnswerOptionRepository, EFAnswerOptionRepository>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddSingleton<IVnPayService, VnPayService>();
+builder.Services.AddScoped<ITestRepository, EFTestRepository>();
+builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
+builder.Services.AddScoped<IAnswerRepository, EFAnswerRepository>();
+builder.Services.AddScoped<ICourseRepository, EFCourseRepository>();
+builder.Services.AddScoped<IStudentRepository, EFStudentRepository>();
+builder.Services.AddScoped<ITeacherRepository, EFTeacherRepository>();
+builder.Services.AddScoped<IQuestionRepository, EFQuestionRepository>();
+builder.Services.AddScoped<IAnswerOptionRepository, EFAnswerOptionRepository>();
+builder.Services.AddScoped<IPaymentMethodRepository, EFPaymentMethodRepository>();
+builder.Services.AddScoped<IStudentResponseRepository, EFStudentResponseRepository>();
+
 
 // Add services: User Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
