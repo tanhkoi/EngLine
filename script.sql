@@ -2,7 +2,6 @@ USE DBDACS;
 DBCC CHECKIDENT ('Tests', RESEED, 0);
 DBCC CHECKIDENT ('Questions', RESEED, 0);
 DBCC CHECKIDENT ('AnswerOptions', RESEED, 0);
-
 -- Insert into tests table
 INSERT INTO Tests (Title, TimeLimit)
 VALUES ('Sample Test 1', '2024-05-20 10:00:00'),
@@ -31,11 +30,8 @@ VALUES ('Paris', 1, 1),
     ('100°C', 4, 1),
     ('110°C', 4, 0),
     ('120°C', 4, 0);
-
-SELECT sr.Id AS StudentResponseId, SUM(q.Point) AS TotalScore
-FROM StudentResponses sr
-JOIN Answers a ON sr.Id = a.StudentResponseId
-JOIN Questions q ON a.QuestionId = q.Id
-JOIN AnswerOptions ao ON a.SelectedAnswerId = ao.Id
-WHERE ao.IsCorrectOption = 1 AND sr.StudentId = '7216648d-16c2-4d1b-8a77-03d291208fa7' AND sr.TestId = 1
-GROUP BY sr.Id;
+-- Insert into method payments
+INSERT INTO PaymentMethods(Name)
+VALUES('MOMO'),
+    ('VNPAY'),
+    ('CREDIT CARD')

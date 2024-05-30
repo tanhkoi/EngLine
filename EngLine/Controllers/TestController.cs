@@ -46,8 +46,6 @@ namespace EngLine.Controllers
 		public async Task<IActionResult> SubmitTest(IFormCollection form, int testId)
 		{
 			var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-
 			var response = new StudentResponse()
 			{
 				StudentId = studentId,
@@ -76,7 +74,7 @@ namespace EngLine.Controllers
 			}
 
 			response.Score = await _studentResponseRepository.CalculateScore(studentId, testId, response.Id);
-			_studentResponseRepository.UpdateStudentResponseAsync(response);
+			await _studentResponseRepository.UpdateStudentResponseAsync(response);
 
 			// Redirect to a result page or confirmation page
 			return RedirectToAction("Result", new { id = response.Id });
