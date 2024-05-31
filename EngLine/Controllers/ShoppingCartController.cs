@@ -90,7 +90,9 @@ namespace EngLine.Controllers
 			order.Status = "Success";
 			await _orderRepository.UpdateOrderAsync(order);
 
-			return View("Success");
+			TempData["OrderSuccessMessage"] = "Thanh toán thành công!";
+
+			return RedirectToAction("CourseDetails", "Home", new { id = order.CourseId });
 		}
 
 		public IActionResult PaymentFail()
