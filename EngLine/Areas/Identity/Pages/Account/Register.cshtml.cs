@@ -135,6 +135,7 @@ namespace EngLine.Areas.Identity.Pages.Account
 			if (ModelState.IsValid)
 			{
 				var user = new Student { Email = Input.Email, UserName = Input.Email };
+				user.IsActive = true;
 
 				var result = await _userManager.CreateAsync(user, Input.Password);
 
