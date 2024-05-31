@@ -1,0 +1,114 @@
+﻿@* <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Online Course Template</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		.course-content {
+			max-height: 500px;
+			overflow-y: auto;
+		}
+
+		.video-section {
+			position: relative;
+			padding-bottom: 56.25%; /* 16:9 */
+			height: 0;
+			overflow: hidden;
+			max-width: 100%;
+			background: #000;
+		}
+
+			.video-section iframe {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+	</style>
+</head>
+<body>
+	<div class="container mt-5">
+		<!-- Course Overview -->
+		<div class="row">
+			<div class="col-md-8">
+				<!-- Video Section -->
+				<div class="video-section mb-4">
+					<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				</div>
+				<!-- Course Title -->
+				<h2>Learn Android 14 App Development</h2>
+				<p class="text-muted">From Beginner to Advanced Developer. Build Apps like Trello, 7Min Workout, Weather App</p>
+				<p><strong>Last updated:</strong> May 2024</p>
+				<!-- Course Meta -->
+				<div class="d-flex align-items-center">
+					<span class="badge badge-primary mr-2">4.5 <i class="fa fa-star"></i></span>
+					<span class="mr-2">81,030 Students</span>
+					<span>66.5 hours</span>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<!-- Course Content -->
+				<div class="card course-content">
+					<div class="card-header">
+						Course Content
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item">
+							<strong>Section 1:</strong> Day 1 - Setting Everything Up
+							<span class="badge badge-secondary float-right">1hr 33min</span>
+						</li>
+						<li class="list-group-item">
+							<strong>Section 2:</strong> Rock Paper Scissors and Kotlin Basics
+							<span class="badge badge-secondary float-right">1hr 55min</span>
+						</li>
+						<li class="list-group-item">
+							<strong>Section 3:</strong> Functions, Objects, and Coffee Machines
+							<span class="badge badge-secondary float-right">1hr 20min</span>
+						</li>
+						<!-- More sections as needed -->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+ *@
+
+@model EngLine.ViewModels.CourseViewModel;
+
+<div class="course-details">
+	<h1>@Model.CourseName</h1>
+	<img src="@Model.CoverPhoto" alt="@Model.CourseName" />
+	<p>@Model.Description</p>
+</div>
+
+<div class="lessons">
+	<h2>Lessons</h2>
+	@foreach (var lesson in Model.Lessons)
+	{
+		<div class="lesson">
+			<h3>@lesson.Name</h3>
+			<p>@lesson.Description</p>
+			@if (!string.IsNullOrEmpty(lesson.Photo))
+			{
+				<img src="@lesson.Photo" alt="@lesson.Name" />
+			}
+			@if (!string.IsNullOrEmpty(lesson.Video))
+			{
+				<video controls>
+					<source src="@lesson.Video" type="video/mp4" />
+					Your browser does not support the video tag.
+				</video>
+			}
+			<div>@Html.Raw(lesson.Content)</div>
+		</div>
+	}
+</div>
