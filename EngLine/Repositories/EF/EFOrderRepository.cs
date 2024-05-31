@@ -33,13 +33,28 @@ namespace EngLine.Repositories.EF
 
 		public async Task<IEnumerable<Order>> GetAllOrderAsync()
 		{
-			return await _context.Orders.ToListAsync();
+			return await _context.Orders
+				.Include(o => o.Course)
+				.Where(o => !o.Course.IsDelete)
+				.ToListAsync();
 		}
 
 		public async Task<Order> GetOrderByIdAsync(int id)
 		{
-			return await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
+			return await _context.Orders
+				.Include(o => o.Course)
+				.FirstOrDefaultAsync(o => o.Id == id && !o.Course.IsDelete);
 		}
+
+
+		public async Task<bool> isBought(string studentId, int courseId)
+		{
+			var order = await _context.Orders
+									.FirstOrDefaultAsync(o => o.StudentId == studentId
+									&& o.CourseId == courseId);
+			return order != null;
+		}
+
 
 		public async Task UpdateOrderAsync(Order order)
 		{
