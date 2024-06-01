@@ -21,27 +21,42 @@ namespace EngLine.Repositories.EF
 
 		public async Task DeleteCourseAsync(int id)
 		{
-			var course = await _context.Courses.Include(c => c.Teacher).Include(c => c.Lessons).FirstOrDefaultAsync(m => m.Id == id);
+			var course = await _context.Courses
+				.Include(c => c.Teacher)
+				.Include(c => c.Lessons)
+				.FirstOrDefaultAsync(m => m.Id == id);
 			if (course != null)
 			{
-				_context.Courses.Remove(course);
+				course.IsDelete = true;
 				await _context.SaveChangesAsync();
 			}
 		}
 
 		public async Task<IEnumerable<Course>> GetAllCourseAsync()
 		{
-			return await _context.Courses.Include(c => c.Teacher).Include(c => c.Lessons).ToListAsync();
+			return await _context.Courses
+				.Include(c => c.Teacher)
+				.Include(c => c.Lessons)
+				.Where(c => !c.IsDelete)
+				.ToListAsync();
 		}
 
 		public async Task<IEnumerable<Course>> GetAllCourseByIdTeacherAsync(string id)
 		{
-			return await _context.Courses.Where(c => c.TeacherId == id).Take(5).ToListAsync();
+			return await _context.Courses
+				.Where(c => c.TeacherId == id && !c.IsDelete)
+				.Include(c => c.Teacher)
+				.Include(c => c.Lessons)
+				.Take(5)
+				.ToListAsync();
 		}
 
 		public async Task<Course> GetCourseByIdAsync(int id)
 		{
-			return await _context.Courses.Include(c => c.Lessons).Include(c => c.Teacher).FirstOrDefaultAsync(m => m.Id == id);
+			return await _context.Courses
+				.Include(c => c.Lessons)
+				.Include(c => c.Teacher)
+				.FirstOrDefaultAsync(c => c.Id == id && !c.IsDelete);
 		}
 
 		public async Task UpdateCourseAsync(Course course)

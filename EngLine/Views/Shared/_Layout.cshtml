@@ -19,8 +19,6 @@
 	<link rel="stylesheet" href="~/css/animate.css">
 	<link rel="stylesheet" href="~/css/slicknav.css">
 	<link rel="stylesheet" href="~/css/style.css">
-	<link rel="stylesheet" href="~/horizontal/style.css">
-
 </head>
 
 <body>
@@ -200,7 +198,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="copy-right_text">
+		@* <div class="copy-right_text">
 			<div class="container">
 				<div class="footer_border"></div>
 				<div class="row">
@@ -213,7 +211,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> *@
 	</footer>
 	<!-- form itself end-->
 	<form id="test-form" class="white-popup-block mfp-hide">
@@ -310,6 +308,8 @@
 	<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script> *@
 
 	<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 	@await RenderSectionAsync("Scripts", required: false)
 </body>

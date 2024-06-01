@@ -1,7 +1,10 @@
 using EngLine.Models;
 using EngLine.Repositories;
+using EngLine.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace EngLine.Controllers
 {
@@ -9,14 +12,23 @@ namespace EngLine.Controllers
 	{
 		private readonly ILogger<HomeController> _logger;
 		private readonly ICourseRepository _courseRepository;
+		private readonly IStudentRepository _studentRepository;
+		private readonly IOrderRepository _orderRepository;
+		private readonly ITeacherRepository _teacherRepository;
 
 		public HomeController(
 			ILogger<HomeController> logger,
-			ICourseRepository courseRepository
-			)
+			ICourseRepository courseRepository,
+			IStudentRepository studentRepository,
+			IOrderRepository orderRepository,
+			ITeacherRepository teacherRepository
+		)
 		{
 			_logger = logger;
 			_courseRepository = courseRepository;
+			_studentRepository = studentRepository;
+			_orderRepository = orderRepository;
+			_teacherRepository = teacherRepository;
 		}
 
 		public IActionResult Index()
@@ -43,9 +55,51 @@ namespace EngLine.Controllers
 		public async Task<IActionResult> CourseDetails(int id)
 		{
 			var course = await _courseRepository.GetCourseByIdAsync(id);
+			if (course == null)
+			{
+				return NotFound();
+			}
+
 			ViewBag.Lessons = course.Lessons;
+
+			ViewBag.isBought = await _orderRepository.isBought(User.FindFirstValue(ClaimTypes.NameIdentifier), id);
+
+			ViewBag.Teacher = await _teacherRepository.GetTeacherByIdAsync(course.TeacherId);
+
+			ViewBag.OrderSuccessMessage = TempData["OrderSuccessMessage"] as string;
+
 			return View(course);
 		}
+
+		public async Task<IActionResult> Study(int courseId)
+		{
+			var course = await _courseRepository.GetCourseByIdAsync(courseId);
+
+			if (course == null)
+			{
+				return NotFound();
+			}
+
+			var viewModel = new CourseViewModel
+			{
+				CourseId = course.Id,
+				CourseName = course.CourseName,
+				Description = course.Description,
+				CoverPhoto = course.CoverPhoto,
+				Lessons = course.Lessons.Select(l => new LessonViewModel
+				{
+					LessonId = l.Id,
+					Name = l.Name,
+					Description = l.Description,
+					Photo = l.Photo,
+					Video = l.Video,
+					Content = l.Content
+				}).ToList()
+			};
+
+			return View(viewModel);
+		}
+
 
 		public IActionResult Elements()
 		{

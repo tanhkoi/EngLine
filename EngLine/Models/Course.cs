@@ -10,6 +10,7 @@ namespace EngLine.Models
 		public string CoverPhoto { get; set; }
 		public decimal Price { get; set; }
 		public string Description { get; set; }
+		public bool IsDelete { get; set; }
 
 		public Teacher Teacher { get; set; }
 		public ICollection<Lesson> Lessons { get; set; }

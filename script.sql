@@ -2,7 +2,7 @@ USE DBDACS;
 DBCC CHECKIDENT ('Tests', RESEED, 0);
 DBCC CHECKIDENT ('Questions', RESEED, 0);
 DBCC CHECKIDENT ('AnswerOptions', RESEED, 0);
-
+DBCC CHECKIDENT ('Courses', RESEED, 0);
 -- Insert into tests table
 INSERT INTO Tests (Title, TimeLimit)
 VALUES ('Sample Test 1', '2024-05-20 10:00:00'),
@@ -31,11 +31,50 @@ VALUES ('Paris', 1, 1),
     ('100°C', 4, 1),
     ('110°C', 4, 0),
     ('120°C', 4, 0);
+-- Insert into method payments
+INSERT INTO PaymentMethods(Name)
+VALUES('MOMO'),
+    ('VNPAY'),
+    ('CREDIT CARD')
 
-SELECT sr.Id AS StudentResponseId, SUM(q.Point) AS TotalScore
-FROM StudentResponses sr
-JOIN Answers a ON sr.Id = a.StudentResponseId
-JOIN Questions q ON a.QuestionId = q.Id
-JOIN AnswerOptions ao ON a.SelectedAnswerId = ao.Id
-WHERE ao.IsCorrectOption = 1 AND sr.StudentId = '7216648d-16c2-4d1b-8a77-03d291208fa7' AND sr.TestId = 1
-GROUP BY sr.Id;
+-- Insert courses
+INSERT INTO Courses (TeacherId, Price, Description, CourseName, CoverPhoto, IsDelete)
+VALUES
+('3482a329-f6c0-4d62-8771-c2a2e6ce6a83', 299000, 'Description of Course 1', 'Course 1', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 0),
+('3482a329-f6c0-4d62-8771-c2a2e6ce6a83', 279000, 'Description of Course 2', 'Course 2', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 0),
+('3482a329-f6c0-4d62-8771-c2a2e6ce6a83', 259000, 'Description of Course 3', 'Course 3', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 0),
+('3482a329-f6c0-4d62-8771-c2a2e6ce6a83', 249000, 'Description of Course 4', 'Course 4', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 0),
+('3482a329-f6c0-4d62-8771-c2a2e6ce6a83', 239000, 'Description of Course 5', 'Course 5', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 0);
+
+-- Insert lessons for Course 1
+INSERT INTO Lessons (CourseId, Name, Description, Photo, Video, [Content])
+VALUES
+(1, 'Lesson 1.1', 'Description of Lesson 1.1', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 1.1'),
+(1, 'Lesson 1.2', 'Description of Lesson 1.2', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 1.2'),
+(1, 'Lesson 1.3', 'Description of Lesson 1.3', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 1.3');
+
+-- Insert lessons for Course 2
+INSERT INTO Lessons (CourseId, Name, Description, Photo, Video, [Content])
+VALUES
+(2, 'Lesson 2.1', 'Description of Lesson 2.1', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 2.1'),
+(2, 'Lesson 2.2', 'Description of Lesson 2.2', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 2.2');
+
+-- Insert lessons for Course 3
+INSERT INTO Lessons (CourseId, Name, Description, Photo, Video, [Content])
+VALUES
+(3, 'Lesson 3.1', 'Description of Lesson 3.1', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 3.1'),
+(3, 'Lesson 3.2', 'Description of Lesson 3.2', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 3.2'),
+(3, 'Lesson 3.3', 'Description of Lesson 3.3', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 3.3');
+
+-- Insert lessons for Course 4
+INSERT INTO Lessons (CourseId, Name, Description, Photo, Video, [Content])
+VALUES
+(4, 'Lesson 4.1', 'Description of Lesson 4.1', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 4.1'),
+(4, 'Lesson 4.2', 'Description of Lesson 4.2', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 4.2');
+
+-- Insert lessons for Course 5
+INSERT INTO Lessons (CourseId, Name, Description, Photo, Video, [Content])
+VALUES
+(5, 'Lesson 5.1', 'Description of Lesson 5.1', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 5.1'),
+(5, 'Lesson 5.2', 'Description of Lesson 5.2', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 5.2'),
+(5, 'Lesson 5.3', 'Description of Lesson 5.3', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 5.3');

@@ -30,9 +30,5 @@ namespace EngLine.DataAccess
 		public DbSet<Course> Courses { get; set; }
 		public DbSet<Lesson> Lessons { get; set; }
 		public DbSet<Order> Orders { get; set; }
-	    public DbSet<TeacherViewModel> TeacherViewModel { get; set; } = default!;
-	    public DbSet<StudentViewModel> StudentViewModel { get; set; } = default!;
-	    public DbSet<EngLine.ViewModels.TestEditViewModel> TestEditViewModel { get; set; } = default!;
-
 	}
 }
