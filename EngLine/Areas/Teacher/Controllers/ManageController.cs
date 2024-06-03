@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using EngLine.Models;
 using EngLine.Repositories;
+using EngLine.Repositories.EF;
 using EngLine.Utilitys;
 using EngLine.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -13,11 +14,13 @@ public class ManageController : Controller
 {
 	private readonly ITeacherRepository _teacherRepository;
 	private readonly ICourseRepository _courseRepository;
+	private readonly ITestRepository _testRepository;
 
-	public ManageController(ITeacherRepository teacherRepository, ICourseRepository courseRepository)
+	public ManageController(ITeacherRepository teacherRepository, ICourseRepository courseRepository, ITestRepository testRepository)
 	{
 		_teacherRepository = teacherRepository;
 		_courseRepository = courseRepository;
+		_testRepository = testRepository;
 	}
 
 	public async Task<IActionResult> Profile()
@@ -77,5 +80,39 @@ public class ManageController : Controller
 			return RedirectToAction(nameof(Profile));
 		}
 		return View(model);
+	}
+
+	public IActionResult AddTest()
+	{
+		ViewBag.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		return View();
+	}
+
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> AddTest(TestEditViewModel viewModel)
+	{
+		if (ModelState.IsValid)
+		{
+			var test = new Test
+			{
+				Title = viewModel.Title,
+				TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+				TimeLimit = viewModel.TimeLimit,
+				Questions = viewModel.Questions.Select(q => new Question
+				{
+					Content = q.Content,
+					AnswerOptions = q.AnswerOptions.Select(ao => new AnswerOption
+					{
+						Content = ao.Content,
+						IsCorrectOption = ao.IsCorrectOption
+					}).ToList()
+				}).ToList()
+			};
+
+			await _testRepository.AddTestAsync(test);
+			return RedirectToAction(nameof(Index));
+		}
+		return View(viewModel);
 	}
 }

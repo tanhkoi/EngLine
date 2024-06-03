@@ -185,9 +185,14 @@ namespace EngLine.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TeacherId");
+
+                    b.HasIndex("TestId");
 
                     b.ToTable("Courses");
                 });
@@ -398,14 +403,20 @@ namespace EngLine.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("TimeLimit")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("TeacherId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("TimeLimit")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("Tests");
                 });
@@ -776,7 +787,15 @@ namespace EngLine.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("EngLine.Models.Test", "Test")
+                        .WithMany()
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Teacher");
+
+                    b.Navigation("Test");
                 });
 
             modelBuilder.Entity("EngLine.Models.Lesson", b =>
@@ -873,6 +892,17 @@ namespace EngLine.Migrations
                         .IsRequired();
 
                     b.Navigation("Certificate");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("EngLine.Models.Test", b =>
+                {
+                    b.HasOne("EngLine.Models.Teacher", "Teacher")
+                        .WithMany("Tests")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Teacher");
                 });
@@ -1003,6 +1033,8 @@ namespace EngLine.Migrations
                     b.Navigation("Courses");
 
                     b.Navigation("TeacherCertificates");
+
+                    b.Navigation("Tests");
 
                     b.Navigation("TutorLessons");
                 });

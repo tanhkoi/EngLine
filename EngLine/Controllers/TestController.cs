@@ -30,7 +30,7 @@ namespace EngLine.Controllers
 			_answerRepository = answerRepository;
 		}
 
-		public async Task<IActionResult> TakeTest(int testId = 1)
+		public async Task<IActionResult> TakeTest(int testId = 3)
 		{
 			var test = await _testRepository.GetTestByIdAsync(testId);
 

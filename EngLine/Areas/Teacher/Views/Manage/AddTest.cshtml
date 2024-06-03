@@ -1,0 +1,131 @@
+﻿@model EngLine.ViewModels.TestEditViewModel;
+<style>
+	.base {
+		max-width: 650px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.form-inline {
+		display: flex;
+		align-items: center;
+	}
+
+	.mw-450 {
+		min-width: 450px;
+	}
+
+	.ms-2 {
+		margin-left: 16px;
+	}
+
+	.ms-5 {
+		margin-left: 5px;
+	}
+
+</style>
+<div style="background-color: #6b2dae; width: 100%; height: 93px;"></div>
+<div class="base">
+	<h1>Tạo bài test</h1>
+	<h4>Bài test</h4>
+	<hr />
+	<div class="row">
+		<div class="col-md-12">
+			<form asp-action="AddTest">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="card">
+					<div class="card-body">
+						<div class="form-group">
+							<label asp-for="Title" class="control-label">Tên bài test</label>
+							<input asp-for="Title" class="form-control" />
+							<span asp-validation-for="Title" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="TimeLimit" class="control-label">Thời gian làm bài (phút)</label>
+							<input asp-for="TimeLimit" class="form-control" />
+							<span asp-validation-for="TimeLimit" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+				<hr />
+				<div class="card">
+					<div class="card-body">
+						<h4>Câu hỏi</h4>
+						<div id="questions-container">
+						</div>
+					</div>
+					<button type="button" class="btn btn-secondary" id="add-question">Thêm câu hỏi</button>
+				</div>
+				<button type="submit" class="btn btn-primary">Lưu</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+		$(document).ready(function () {
+			let questionIndex = 0;
+
+			// Function to add a new question form
+			$('#add-question').click(function () {
+				const newQuestionForm = `
+				<div class="question-form" data-index="${questionIndex}">
+					<div class="card mt-4">
+						<div class="card-body">
+							<div class="form-group form-inline">
+								<label for="Questions_${questionIndex}__Content" class="control-label">Câu hỏi ${questionIndex + 1}</label>
+								<input type="text" name="Questions[${questionIndex}].Content" class="form-control mw-450 ms-5" />
+								<button type="button" class="btn btn-danger delete-question ms-2">X</button>
+								<span class="text-danger field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Content" data-valmsg-replace="true"></span>
+							</div>
+							<h5>Đáp án</h5>
+							<div class="answer-options-container"></div>
+							<button type="button" class="btn btn-secondary add-answer-option">Thêm đáp án</button>
+						</div>
+					</div>
+				</div>
+				`;
+				$('#questions-container').append(newQuestionForm);
+				questionIndex++;
+			});
+
+			// Function to add a new answer option form within a question form
+			$(document).on('click', '.add-answer-option', function () {
+				const questionForm = $(this).closest('.question-form');
+				const questionIndex = questionForm.data('index');
+				const answerOptionsContainer = questionForm.find('.answer-options-container');
+				const answerOptionIndex = answerOptionsContainer.children().length;
+
+				const newAnswerOptionForm = `
+				<div class="answer-option-form" data-index="${answerOptionIndex}">
+						<div class="form-group form-inline">
+						<label for="Questions_${questionIndex}__AnswerOptions_${answerOptionIndex}__Content" class="control-label">Đáp án ${questionIndex + 1}</label>
+						<input type="text" name="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].Content" class="form-control mw-450 ms-5" />
+						<button type="button" class="btn btn-danger delete-answer-option ms-2">X</button>
+						<span class="text-danger field-validation-valid" data-valmsg-for="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].Content" data-valmsg-replace="true"></span>
+					</div>
+					<div class="form-group form-check">
+						<input type="checkbox" name="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].IsCorrectOption" value="true" class="form-check-input" />
+						<label for="Questions_${questionIndex}__AnswerOptions_${answerOptionIndex}__IsCorrectOption" class="form-check-label">Đáp án đúng?</label>
+					</div>
+				</div>
+				`;
+				answerOptionsContainer.append(newAnswerOptionForm);
+			});
+
+			// Function to delete a question form
+			$(document).on('click', '.delete-question', function () {
+				$(this).closest('.question-form').remove();
+			});
+
+			// Function to delete an answer option formmw-450
+			$(document).on('click', '.delete-answer-option', function () {
+				$(this).closest('.answer-option-form').remove();
+			});
+		});
+	</script>
+}

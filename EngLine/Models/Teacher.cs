@@ -11,6 +11,7 @@ namespace EngLine.Models
 		public ICollection<TeacherCertificate> TeacherCertificates { get; set; }
 		public ICollection<TutorLesson> TutorLessons { get; set; }
 		public ICollection<Course> Courses { get; set; }
+		public ICollection<Test> Tests { get; set; }
 	}
 
 }
