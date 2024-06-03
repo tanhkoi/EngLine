@@ -1,114 +1,248 @@
-﻿@* <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Online Course Template</title>
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-	<style>
-		.course-content {
-			max-height: 500px;
-			overflow-y: auto;
+﻿@model EngLine.ViewModels.CourseViewModel
+
+<style>
+	.course-content {
+		max-height: 415px;
+		min-height: 415px;
+		overflow-y: auto;
+	}
+
+	.video-container {
+		position: relative;
+		padding-bottom: 56.25%; /* 16:9 */
+		height: 0;
+		overflow: hidden;
+		max-width: 100%;
+		background: #000;
+	}
+
+		.video-container video {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
 		}
 
-		.video-section {
-			position: relative;
-			padding-bottom: 56.25%; /* 16:9 */
-			height: 0;
-			overflow: hidden;
-			max-width: 100%;
-			background: #000;
+	.video-controls {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background: #333;
+		color: #fff;
+		padding: 10px;
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+		.video-controls button,
+		.video-controls input {
+			background: none;
+			border: none;
+			color: #fff;
+			cursor: pointer;
+			margin: 0 5px;
 		}
 
-			.video-section iframe {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
+			.video-controls input[type=range] {
+				width: 100px;
 			}
-	</style>
-</head>
-<body>
-	<div class="container mt-5">
-		<!-- Course Overview -->
-		<div class="row">
-			<div class="col-md-8">
-				<!-- Video Section -->
-				<div class="video-section mb-4">
-					<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-				</div>
-				<!-- Course Title -->
-				<h2>Learn Android 14 App Development</h2>
-				<p class="text-muted">From Beginner to Advanced Developer. Build Apps like Trello, 7Min Workout, Weather App</p>
-				<p><strong>Last updated:</strong> May 2024</p>
-				<!-- Course Meta -->
-				<div class="d-flex align-items-center">
-					<span class="badge badge-primary mr-2">4.5 <i class="fa fa-star"></i></span>
-					<span class="mr-2">81,030 Students</span>
-					<span>66.5 hours</span>
+
+	.badge-primary {
+		background-color: #007bff;
+	}
+
+	.badge-secondary {
+		background-color: #6c757d;
+	}
+
+	.mt-5 {
+		margin-top: 3rem;
+	}
+
+	.current-lesson {
+		background-color: #f0f0f0;
+		font-weight: bold;
+	}
+
+		.current-lesson a {
+			color: #6b2dae;
+		}
+</style>
+
+<div style="background-color: #6b2dae; width: 100%; height: 93px;"></div>
+<div class="container mt-5">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="video-container">
+				<video id="lessonVideo">
+					<source src="@Model.Lessons.ElementAt(0).Video" type="video/mp4">
+					Your browser does not support the video tag.
+				</video>
+				<div class="video-controls">
+					<button id="playPause"><i class="fa-solid fa-play"></i></button>
+					<button id="rewind"><i class="fa-solid fa-backward"></i></button>
+					<button id="fastForward"><i class="fa-solid fa-forward"></i></button>
+					<button id="muteToggle"><i class="fa-solid fa-volume-high"></i></button>
+					<button id="fullScreenToggle"><i class="fa-solid fa-expand"></i></button>
+					<select id="playbackRate">
+						<option value="0.5">0.5x</option>
+						<option value="1" selected>1x</option>
+						<option value="1.5">1.5x</option>
+						<option value="2">2x</option>
+					</select>
 				</div>
 			</div>
-			<div class="col-md-4">
-				<!-- Course Content -->
-				<div class="card course-content">
-					<div class="card-header">
-						Course Content
-					</div>
-					<ul class="list-group list-group-flush">
-						<li class="list-group-item">
-							<strong>Section 1:</strong> Day 1 - Setting Everything Up
-							<span class="badge badge-secondary float-right">1hr 33min</span>
-						</li>
-						<li class="list-group-item">
-							<strong>Section 2:</strong> Rock Paper Scissors and Kotlin Basics
-							<span class="badge badge-secondary float-right">1hr 55min</span>
-						</li>
-						<li class="list-group-item">
-							<strong>Section 3:</strong> Functions, Objects, and Coffee Machines
-							<span class="badge badge-secondary float-right">1hr 20min</span>
-						</li>
-						<!-- More sections as needed -->
-					</ul>
+		</div>
+		<div class="col-md-4">
+			<div class="card course-content">
+				<div class="card-header" style="background-color: #6b2dae!important; color: white!important;">
+					Nội dung khóa học
 				</div>
+				<aside class="course-content">
+					<ul class="list-group list-group-flush">
+						@foreach (var lesson in Model.Lessons)
+						{
+							<li class="list-group-item lesson-item">
+								<a href="#" data-video="@lesson.Video" data-lesson-id="@lesson.LessonId"><strong>@lesson.Name</strong></a>
+								<span class="badge badge-secondary float-right"></span>
+							</li>
+						}
+					</ul>
+				</aside>
 			</div>
 		</div>
 	</div>
-
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
- *@
-
-@model EngLine.ViewModels.CourseViewModel;
-
-<div class="course-details">
-	<h1>@Model.CourseName</h1>
-	<img src="@Model.CoverPhoto" alt="@Model.CourseName" />
-	<p>@Model.Description</p>
-</div>
-
-<div class="lessons">
-	<h2>Lessons</h2>
-	@foreach (var lesson in Model.Lessons)
-	{
-		<div class="lesson">
-			<h3>@lesson.Name</h3>
-			<p>@lesson.Description</p>
-			@if (!string.IsNullOrEmpty(lesson.Photo))
-			{
-				<img src="@lesson.Photo" alt="@lesson.Name" />
-			}
-			@if (!string.IsNullOrEmpty(lesson.Video))
-			{
-				<video controls>
-					<source src="@lesson.Video" type="video/mp4" />
-					Your browser does not support the video tag.
-				</video>
-			}
-			<div>@Html.Raw(lesson.Content)</div>
+	<div class="row mt-4 mb-4">
+		<div class="col-md-8">
+			<h2>@Model.CourseName</h2>
+			<p class="text-muted">@Model.Description</p>
+			<p><strong>Cập nhật lần cuối:</strong> Tháng 5 2024</p>
+			<div class="d-flex align-items-center">
+				<span class="badge badge-primary mr-2">4.5 <i class="fa fa-star"></i></span>
+				<span class="mr-2">81,030 học sinh</span>
+				<span>66.5 giờ</span>
+			</div>
 		</div>
-	}
+		<div class="col-md-4">
+			<div class="author_info">
+				<div class="auhor_header">
+					<div class="thumb">
+						<img src="@ViewBag.Teacher.Photo" alt="" style="height: 50px!important;">
+					</div>
+					<div class="name">
+						<h3>@ViewBag.Teacher.FirstName</h3>
+						@* <p>UI/UX Designer</p> *@
+					</div>
+				</div>
+				<p class="text_info">
+					@ViewBag.Teacher.Description
+				</p>
+			</div>
+		</div>
+	</div>
 </div>
+
+@section Scripts {
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const links = document.querySelectorAll('.course-content a');
+			const video = document.getElementById('lessonVideo');
+			const playPauseButton = document.getElementById('playPause');
+			const rewindButton = document.getElementById('rewind');
+			const fastForwardButton = document.getElementById('fastForward');
+			const muteToggleButton = document.getElementById('muteToggle');
+			const fullScreenToggleButton = document.getElementById('fullScreenToggle');
+			const playbackRateSelect = document.getElementById('playbackRate');
+
+			let currentLesson = null;
+			let watchedLessons = new Set();
+
+			links.forEach(link => {
+				link.addEventListener('click', function (event) {
+					event.preventDefault();
+					const videoSrc = this.getAttribute('data-video');
+					video.querySelector('source').setAttribute('src', videoSrc);
+					video.load();
+					video.play();
+					playPauseButton.innerHTML = '<i class="fa-solid fa-pause"></i>';
+
+					if (currentLesson) {
+						currentLesson.classList.remove('current-lesson');
+					}
+					this.parentElement.classList.add('current-lesson');
+					currentLesson = this.parentElement;
+				});
+			});
+
+			playPauseButton.addEventListener('click', function () {
+				if (video.paused || video.ended) {
+					video.play();
+					playPauseButton.innerHTML = '<i class="fa-solid fa-pause"></i>';
+				} else {
+					video.pause();
+					playPauseButton.innerHTML = '<i class="fa-solid fa-play"></i>';
+				}
+			});
+
+			rewindButton.addEventListener('click', function () {
+				video.currentTime -= 10;
+			});
+
+			fastForwardButton.addEventListener('click', function () {
+				video.currentTime += 10;
+			});
+
+			muteToggleButton.addEventListener('click', function () {
+				video.muted = !video.muted;
+				muteToggleButton.innerHTML = video.muted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+			});
+
+			fullScreenToggleButton.addEventListener('click', function () {
+				if (video.requestFullscreen) {
+					video.requestFullscreen();
+				} else if (video.mozRequestFullScreen) { /* Firefox */
+					video.mozRequestFullScreen();
+				} else if (video.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+					video.webkitRequestFullscreen();
+				} else if (video.msRequestFullscreen) { /* IE/Edge */
+					video.msRequestFullscreen();
+				}
+			});
+
+			playbackRateSelect.addEventListener('change', function () {
+				video.playbackRate = this.value;
+			});
+
+			video.addEventListener('ended', function () {
+				if (currentLesson) {
+					const lessonId = currentLesson.querySelector('a').getAttribute('data-lesson-id');
+					watchedLessons.add(lessonId);
+
+					const nextLesson = currentLesson.nextElementSibling;
+					if (nextLesson) {
+						const nextVideoSrc = nextLesson.querySelector('a').getAttribute('data-video');
+						video.querySelector('source').setAttribute('src', nextVideoSrc);
+						video.load();
+						video.play();
+
+						currentLesson.classList.remove('current-lesson');
+						nextLesson.classList.add('current-lesson');
+						currentLesson = nextLesson;
+						playPauseButton.innerHTML = '<i class="fa-solid fa-pause"></i>';
+					} else if (watchedLessons.size === links.length) {
+						Swal.fire({
+							title: "Success!",
+							text: "Chúc mừng bạn đã hoàn thành khóa học",
+							icon: "success",
+							confirmButtonText: "OK"
+						});
+					}
+				}
+			});
+		});
+
+	</script>
+}

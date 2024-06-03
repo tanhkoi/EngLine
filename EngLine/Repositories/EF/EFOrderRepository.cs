@@ -51,7 +51,7 @@ namespace EngLine.Repositories.EF
 		{
 			var order = await _context.Orders
 									.FirstOrDefaultAsync(o => o.StudentId == studentId
-									&& o.CourseId == courseId);
+									&& o.CourseId == courseId && o.Status == "Success");
 			return order != null;
 		}
 

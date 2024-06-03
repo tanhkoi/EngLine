@@ -90,7 +90,7 @@
 					<div class="author_info">
 						<div class="auhor_header">
 							<div class="thumb">
-								<img src="@ViewBag.Teacher.Photo" alt="">
+								<img src="@ViewBag.Teacher.Photo" alt="" style="height: 50px!important;">
 							</div>
 							<div class="name">
 								<h3>@ViewBag.Teacher.FirstName</h3>
@@ -140,9 +140,21 @@
 		{
 			<text>
 				Swal.fire({
-					title: "Success!",
-					text: "@TempData["OrderSuccessMessage"]",
+					title: "Thành công!",
+					text: "Thanh toán thành công",
 					icon: "success",
+					confirmButtonText: "OK"
+				});
+			</text>
+		}
+
+		@if (TempData["OrderFailedMessage"] != null)
+		{
+			<text>
+				Swal.fire({
+					title: "Opps...!",
+					text: "Thanh toán thất bại",
+					icon: "error",
 					confirmButtonText: "OK"
 				});
 			</text>

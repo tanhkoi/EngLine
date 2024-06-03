@@ -80,6 +80,8 @@ namespace EngLine.Controllers
 				return NotFound();
 			}
 
+			ViewBag.Teacher = await _teacherRepository.GetTeacherByIdAsync(course.TeacherId);
+
 			var viewModel = new CourseViewModel
 			{
 				CourseId = course.Id,
