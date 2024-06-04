@@ -3,6 +3,7 @@ DBCC CHECKIDENT ('Tests', RESEED, 0);
 DBCC CHECKIDENT ('Questions', RESEED, 0);
 DBCC CHECKIDENT ('AnswerOptions', RESEED, 0);
 DBCC CHECKIDENT ('Courses', RESEED, 0);
+SET IDENTITY_INSERT Orders ON
 -- Insert into tests table
 INSERT INTO Tests (Title, TimeLimit, TeacherId)
 VALUES ('Sample Test 1', 5, '02b83a50-870f-49c1-bc5d-4ba4bfcac68f'),

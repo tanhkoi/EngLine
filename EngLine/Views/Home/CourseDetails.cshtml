@@ -108,11 +108,11 @@
 					</div>
 					@if (ViewBag.isBought == false)
 					{
-						<a asp-route-courseid="@Model.Id" asp-area="default" asp-action="Checkout" asp-controller="ShoppingCart" class="boxed_btn">Mua Khóa Học</a>
+						<a asp-route-id="@Model.Id" asp-area="default" asp-action="Checkout" asp-controller="ShoppingCart" class="boxed_btn">Mua Khóa Học</a>
 					}
 					else
 					{
-						<a asp-route-courseid="@Model.Id" asp-area="default" asp-action="Study" asp-controller="Home" class="boxed_btn">Vào học</a>
+						<a asp-route-id="@Model.Id" asp-area="default" asp-action="Study" asp-controller="Home" class="boxed_btn">Vào học</a>
 					}
 					@* <div class="feedback_info">
 					<h3>Write your feedback</h3>

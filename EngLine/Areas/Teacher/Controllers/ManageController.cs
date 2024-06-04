@@ -15,12 +15,18 @@ public class ManageController : Controller
 	private readonly ITeacherRepository _teacherRepository;
 	private readonly ICourseRepository _courseRepository;
 	private readonly ITestRepository _testRepository;
+	private readonly CloudinaryService _cloudinaryService;
 
-	public ManageController(ITeacherRepository teacherRepository, ICourseRepository courseRepository, ITestRepository testRepository)
+	public ManageController(
+		ITeacherRepository teacherRepository,
+		ICourseRepository courseRepository,
+		ITestRepository testRepository,
+		CloudinaryService cloudinaryService)
 	{
 		_teacherRepository = teacherRepository;
 		_courseRepository = courseRepository;
 		_testRepository = testRepository;
+		_cloudinaryService = cloudinaryService;
 	}
 
 	public async Task<IActionResult> Profile()
@@ -28,12 +34,13 @@ public class ManageController : Controller
 		var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (id == null)
 			return NotFound();
-		else
-		{
-			ViewBag.TeacherCourse = await _courseRepository.GetAllCourseByIdTeacherAsync(id);
-			var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
-			return View(teacher);
-		}
+
+		ViewBag.TeacherCourse = await _courseRepository.GetAllCourseByIdTeacherAsync(id);
+		ViewBag.TeacherTest = await _testRepository.GetAllTestByIdTeacherAsync(id);
+
+		var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+
+		return View(teacher);
 	}
 
 	public async Task<IActionResult> AddCertificates()
@@ -48,39 +55,60 @@ public class ManageController : Controller
 		}
 	}
 
-	public IActionResult AddCourse()
+	public async Task<IActionResult> AddCourse()
 	{
 		ViewBag.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		ViewBag.Test = await _testRepository.GetAllTestsAsync();
 		return View();
 	}
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> AddCourse(CreateCourseViewModel model)
+	public async Task<IActionResult> AddCourse(CreateCourseViewModel model, IFormFile coverPhotoFile, IFormFile[] lessonPhotoFiles, IFormFile[] lessonVideoFiles)
 	{
-		if (ModelState.IsValid)
+		var course = new Course
 		{
-			var course = new Course
+			TeacherId = model.TeacherId,
+			TestId = model.TestId,
+			Price = model.Price,
+			Description = model.Description,
+			CourseName = model.CourseName,
+			CoverPhoto = null, // Placeholder
+			Lessons = model.Lessons.Select(lesson => new Lesson
 			{
-				TeacherId = model.TeacherId,
-				Price = model.Price,
-				Description = model.Description,
-				CourseName = model.CourseName,
-				CoverPhoto = model.CoverPhoto,
-				Lessons = model.Lessons.Select(l => new Lesson
-				{
-					Name = l.Name,
-					Description = l.Description,
-					Photo = l.Photo,
-					Video = l.Video,
-					Content = l.Content
-				}).ToList()
-			};
-			await _courseRepository.AddCourseAsync(course);
-			return RedirectToAction(nameof(Profile));
+				Name = lesson.Name,
+				Description = lesson.Description,
+				Photo = null, // Placeholder
+				Video = null, // Placeholder
+				Content = lesson.Content
+			}).ToList()
+		};
+
+		string coverPhotoUrl = null;
+		if (coverPhotoFile != null)
+		{
+			coverPhotoUrl = _cloudinaryService.UploadImageAsync(coverPhotoFile);
+			course.CoverPhoto = coverPhotoUrl;
 		}
-		return View(model);
+
+		int index = 0;
+		foreach (var lesson in course.Lessons)
+		{
+			if (lessonPhotoFiles.Length > index && lessonPhotoFiles[index] != null)
+			{
+				lesson.Photo = _cloudinaryService.UploadImageAsync(lessonPhotoFiles[index]);
+			}
+			if (lessonVideoFiles.Length > index && lessonVideoFiles[index] != null)
+			{
+				lesson.Video = _cloudinaryService.UploadVideoAsync(lessonVideoFiles[index]);
+			}
+			index++;
+		}
+
+		await _courseRepository.AddCourseAsync(course);
+		return RedirectToAction(nameof(Profile));
 	}
+
 
 	public IActionResult AddTest()
 	{

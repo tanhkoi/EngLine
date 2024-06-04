@@ -1,58 +1,52 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using EngLine.Utilitys;
-using Microsoft.Extensions.Options;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 public class CloudinaryService
 {
 	private readonly Cloudinary _cloudinary;
 
-	public CloudinaryService(IOptions<CloudinarySettings> cloudinaryConfig)
+	public CloudinaryService(IConfiguration configuration)
 	{
-		var config = cloudinaryConfig.Value;
-		_cloudinary = new Cloudinary(new Account(
-			config.CloudName,
-			config.ApiKey,
-			config.ApiSecret));
+		var cloudName = configuration["Cloudinary:CloudName"];
+		var apiKey = configuration["Cloudinary:ApiKey"];
+		var apiSecret = configuration["Cloudinary:ApiSecret"];
+
+		var account = new Account(cloudName, apiKey, apiSecret);
+		_cloudinary = new Cloudinary(account);
 	}
 
-	public async Task<ImageUploadResult> UploadImageAsync(IFormFile file)
+	public String UploadImageAsync(IFormFile file)
 	{
-		var uploadResult = new ImageUploadResult();
-
-		if (file.Length > 0)
+		try
 		{
-			using (var stream = file.OpenReadStream())
+			var uploadParams = new ImageUploadParams()
 			{
-				var uploadParams = new ImageUploadParams()
-				{
-					File = new FileDescription(file.FileName, stream)
-				};
-				uploadResult = await _cloudinary.UploadAsync(uploadParams);
-			}
+				File = new FileDescription(file.FileName, file.OpenReadStream())
+			};
+			var uploadResult = _cloudinary.Upload(uploadParams);
+			return uploadResult.Uri.ToString();
 		}
-
-		return uploadResult;
-	}
-
-	public async Task<RawUploadResult> UploadAudioAsync(IFormFile file)
-	{
-		var uploadResult = new RawUploadResult();
-
-		if (file.Length > 0)
+		catch (Exception ex)
 		{
-			using (var stream = file.OpenReadStream())
-			{
-				var uploadParams = new RawUploadParams()
-				{
-					File = new FileDescription(file.FileName, stream)
-				};
-				uploadResult = await _cloudinary.UploadAsync(uploadParams);
-			}
+			throw new Exception("Image upload failed", ex);
 		}
-
-		return uploadResult;
 	}
 
+	public String UploadVideoAsync(IFormFile file)
+	{
+		try
+		{
+			var uploadParams = new VideoUploadParams()
+			{
+				File = new FileDescription(file.FileName, file.OpenReadStream())
+			};
+			var uploadResult = _cloudinary.Upload(uploadParams);
+			return uploadResult.Uri.ToString();
+		}
+		catch (Exception ex)
+		{
+			throw new Exception("Video upload failed", ex);
+		}
+	}
 }

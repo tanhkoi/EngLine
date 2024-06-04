@@ -3,6 +3,7 @@
 	public class CreateCourseViewModel
 	{
 		public string TeacherId { get; set; }
+		public int TestId { get; set; }
 		public long Price { get; set; }
 		public string CourseName { get; set; }
 		public string CoverPhoto { get; set; }

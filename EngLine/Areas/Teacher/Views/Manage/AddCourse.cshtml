@@ -2,38 +2,86 @@
 
 @{
 	var teacherId = ViewBag.TeacherId as string;
+	var tests = ViewBag.Test;
 }
 
+<style>
+	.base {
+		max-width: 800px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.form-inline {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 16px;
+	}
+
+	.mw-450 {
+		min-width: 450px;
+	}
+
+	.ms-2 {
+		margin-left: 16px;
+	}
+
+	.ms-5 {
+		margin-left: 5px;
+	}
+
+	.preview {
+		margin-top: 10px;
+		max-width: 100%;
+	}
+
+</style>
+
 <div style="background-color: #6b2dae; width: 100%; height: 93px;"></div>
-<h1 class="text-center mt-2">Tạo Khóa Học</h1>
-<form asp-action="AddCourse" method="post" style="margin: 25px auto!important; width: 75%;">
-	<input type="hidden" name="TeacherId" value="@teacherId" />
-
-	<div class="row">
-		<div class="col">
-			<label class="control-label" asp-for="CourseName">Tên Khóa Học</label>
-			<input class="form-control" asp-for="CourseName" />
+<div class="base">
+	<h1 class="text-center mt-2">Tạo Khóa Học</h1>
+	<form asp-action="AddCourse" method="post" enctype="multipart/form-data" style="margin: 25px auto!important; width: 75%;">
+		<input type="hidden" asp-for="TeacherId" value="@teacherId" />
+		<select class="form-select" aria-label="Chọn bài kiểm tra đầu vào" asp-for="TestId">
+			<option selected>Chọn bài kiểm tra đầu vào</option>
+			@{
+				foreach (var item in tests)
+				{
+					<option value="@item.Id">@item.Title</option>
+				}
+			}
+		</select>
+		<div class="row">
+			<div class="col">
+				<label class="control-label" asp-for="CourseName">Tên Khóa Học</label>
+				<input class="form-control" asp-for="CourseName" />
+			</div>
+			<div class="col">
+				<label class="control-label" asp-for="Price">Giá</label>
+				<input class="form-control" asp-for="Price" />
+			</div>
 		</div>
-		<div class="col">
-			<label class="control-label" asp-for="Price">Giá</label>
-			<input class="form-control" asp-for="Price" />
+		<div class="form-group">
+			<label class="control-label" asp-for="CoverPhoto">Ảnh bìa</label>
+			<input class="form-control file-input" type="file" name="coverPhotoFile" accept="image/*">
+			<img class="preview" id="coverPhotoPreview" src="#" alt="Cover Photo Preview" style="display: none;" />
 		</div>
-	</div>
-	<div class="form-group">
-		<label class="control-label" asp-for="CoverPhoto">Ảnh bìa</label>
-		<input class="form-control" asp-for="CoverPhoto">
-	</div>
-	<div class="form-group">
-		<label class="control-label" asp-for="Description">Mô Tả</label>
-		<textarea class="form-control" style="height: 200px;" asp-for="Description"></textarea>
-	</div>
-
-	<div id="lessons">
-	</div>
-	<button class="btn btn-primary" type="button" id="add-lesson-button">Thêm Bài Học</button>
-	<hr>
-	<button class="btn btn-primary" type="submit">Tạo Mới</button>
-</form>
+		<div class="form-group">
+			<label class="control-label" asp-for="Description">Mô Tả</label>
+			<textarea class="form-control" style="height: 200px;" asp-for="Description"></textarea>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div id="lessons">
+				</div>
+			</div>
+			<button type="button" class="btn btn-secondary" id="add-lesson-button">Thêm Bài Học</button>
+		</div>
+		<hr>
+		<button class="btn btn-primary" type="submit">Tạo</button>
+	</form>
+</div>
 
 @section Scripts {
 	<script>
@@ -41,30 +89,83 @@
 			let lessonIndex = 0;
 			$('#add-lesson-button').click(function () {
 				const newLesson = `
-									<h3>Bài Học ${lessonIndex}</h3>
-									<div class="form-group">
-										<label class="control-label" for="Lessons_${lessonIndex}__Name">Tên Bài Học</label>
-										<input class="form-control" name="Lessons[${lessonIndex}].Name" />
+									<div class="lesson-form" data-index="${lessonIndex}">
+										<div class="card mt-4">
+											<div class="form-inline">
+												<h3>Bài Học ${lessonIndex + 1}</h3>
+												<button class="btn btn-primary toggle-icon" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample${lessonIndex}" aria-expanded="false" aria-controls="collapseExample${lessonIndex}">
+													<i class="fa-solid fa-caret-up"></i>
+												</button>
+											</div>
+											<div id="collapseExample${lessonIndex}" class="card-body collapse show">
+												<div class="form-group">
+													<label class="control-label" for="Lessons_${lessonIndex}__Name">Tên Bài Học</label>
+													<input class="form-control" name="Lessons[${lessonIndex}].Name" />
+												</div>
+												<div class="form-group">
+													<label class="control-label" for="Lessons_${lessonIndex}__Description">Mô tả</label>
+													<textarea style="height: 200px" class="form-control" name="Lessons[${lessonIndex}].Description"></textarea>
+												</div>
+												<div class="form-group">
+													<label class="control-label">Ảnh</label>
+													<input class="form-control file-input" type="file" name="lessonPhotoFiles" accept="image/*" />
+													<img class="preview" id="photoPreview${lessonIndex}" src="#" alt="Image Preview" style="display: none;"/>
+												</div>
+												<div class="form-group">
+													<label class="control-label">Video</label>
+													<input class="form-control file-input" type="file" name="lessonVideoFiles" accept="video/*" />
+													<video class="preview" id="videoPreview${lessonIndex}" controls style="display: none;">
+														<source src="#" type="video/mp4">
+													</video>
+												</div>
+												<div class="form-group">
+													<label class="control-label" for="Lessons_${lessonIndex}__Content">Nội dung</label>
+													<textarea style="height: 200px" class="form-control" name="Lessons[${lessonIndex}].Content"></textarea>
+												</div>
+											</div>
+										</div>
 									</div>
-									<div class="form-group">
-										<label class="control-label" for="Lessons_${lessonIndex}__Description">Mô tả</label>
-										<textarea style="height: 200px;" class="form-control" name="Lessons[${lessonIndex}].Description"></textarea>
-									</div>
-									<div class="form-group">
-										<label class="control-label" for="Lessons_${lessonIndex}__Photo">Ảnh</label>
-										<input class="form-control" name="Lessons[${lessonIndex}].Photo" />
-									</div>
-									<div class="form-group">
-										<label class="control-label" for="Lessons_${lessonIndex}__Video">Video</label>
-										<input class="form-control" name="Lessons[${lessonIndex}].Video" />
-									</div>
-									<div class="form-group">
-										<label class="control-label" for="Lessons_${lessonIndex}__Content">Nội dung</label>
-										<textarea style="height: 200px;" class="form-control" name="Lessons[${lessonIndex}].Content"></textarea>
-									</div>`;
+									`;
 				$('#lessons').append(newLesson);
 				lessonIndex++;
-			})
-		})
+			});
+
+			$(document).on('click', '.toggle-icon', function () {
+				$(this).find('i').toggleClass('fa-caret-up fa-caret-down');
+			});
+
+			$(document).on('change', '.file-input', function () {
+				const file = this.files[0];
+				const inputName = $(this).attr('name');
+				let previewElement;
+
+				if (inputName === 'coverPhotoFile') {
+					previewElement = $('#coverPhotoPreview');
+				} else if (inputName === 'lessonPhotoFiles') {
+					const lessonIndex = $(this).closest('.lesson-form').data('index');
+					previewElement = $(`#photoPreview${lessonIndex}`);
+				} else if (inputName === 'lessonVideoFiles') {
+					const lessonIndex = $(this).closest('.lesson-form').data('index');
+					previewElement = $(`#videoPreview${lessonIndex}`);
+				}
+
+				if (file && previewElement) {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						if (file.type.startsWith('image/')) {
+							previewElement.attr('src', e.target.result);
+							previewElement.show();
+						} else if (file.type.startsWith('video/')) {
+							previewElement.find('source').attr('src', e.target.result);
+							previewElement.show();
+							previewElement[0].load();
+						}
+					}
+					reader.readAsDataURL(file);
+				} else if (previewElement) {
+					previewElement.hide();
+				}
+			});
+		});
 	</script>
 }

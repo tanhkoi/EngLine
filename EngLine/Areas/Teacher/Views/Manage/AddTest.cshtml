@@ -26,8 +26,7 @@
 </style>
 <div style="background-color: #6b2dae; width: 100%; height: 93px;"></div>
 <div class="base">
-	<h1>Tạo bài test</h1>
-	<h4>Bài test</h4>
+	<h1 class="text-center ">Tạo bài test</h1>
 	<hr />
 	<div class="row">
 		<div class="col-md-12">
@@ -79,7 +78,7 @@
 							<div class="form-group form-inline">
 								<label for="Questions_${questionIndex}__Content" class="control-label">Câu hỏi ${questionIndex + 1}</label>
 								<input type="text" name="Questions[${questionIndex}].Content" class="form-control mw-450 ms-5" />
-								<button type="button" class="btn btn-danger delete-question ms-2">X</button>
+								<button type="button" class="btn btn-danger delete-question"><i class="fa-solid fa-trash"></i></button>
 								<span class="text-danger field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Content" data-valmsg-replace="true"></span>
 							</div>
 							<h5>Đáp án</h5>
@@ -103,9 +102,9 @@
 				const newAnswerOptionForm = `
 				<div class="answer-option-form" data-index="${answerOptionIndex}">
 						<div class="form-group form-inline">
-						<label for="Questions_${questionIndex}__AnswerOptions_${answerOptionIndex}__Content" class="control-label">Đáp án ${questionIndex + 1}</label>
+						<label for="Questions_${questionIndex}__AnswerOptions_${answerOptionIndex}__Content" class="control-label">Đáp án</label>
 						<input type="text" name="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].Content" class="form-control mw-450 ms-5" />
-						<button type="button" class="btn btn-danger delete-answer-option ms-2">X</button>
+						<button type="button" class="btn btn-danger delete-answer-option"><i class="fa-solid fa-trash"></i></button>
 						<span class="text-danger field-validation-valid" data-valmsg-for="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].Content" data-valmsg-replace="true"></span>
 					</div>
 					<div class="form-group form-check">

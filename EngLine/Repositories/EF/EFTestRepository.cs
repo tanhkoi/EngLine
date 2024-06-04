@@ -67,5 +67,14 @@ namespace EngLine.Repositories.EF
 			_context.Tests.Remove(test);
 			await _context.SaveChangesAsync();
 		}
+
+		public async Task<IEnumerable<Test>> GetAllTestByIdTeacherAsync(string id)
+		{
+			return await _context.Tests
+				.Where(c => c.TeacherId == id)
+				.Include(t => t.Questions)
+				.ThenInclude(q => q.AnswerOptions)
+				.ToListAsync();
+		}
 	}
 }
