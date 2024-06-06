@@ -1,6 +1,7 @@
 using EngLine.Models;
 using EngLine.Repositories;
 using EngLine.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -41,6 +42,7 @@ namespace EngLine.Controllers
 			return View();
 		}
 
+		[Authorize]
 		public async Task<IActionResult> Courses()
 		{
 			var courses = await _courseRepository.GetAllCourseAsync();
@@ -52,6 +54,7 @@ namespace EngLine.Controllers
 			return View();
 		}
 
+		[Authorize]
 		public async Task<IActionResult> CourseDetails(int id)
 		{
 			var course = await _courseRepository.GetCourseByIdAsync(id);
@@ -71,6 +74,7 @@ namespace EngLine.Controllers
 			return View(course);
 		}
 
+		[Authorize]
 		public async Task<IActionResult> Study(int courseId)
 		{
 			var course = await _courseRepository.GetCourseByIdAsync(courseId);
