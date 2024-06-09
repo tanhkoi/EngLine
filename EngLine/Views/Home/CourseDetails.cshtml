@@ -1,6 +1,5 @@
 ﻿@model EngLine.Models.Course;
 
-<!-- bradcam_area_start -->
 <div class="courses_details_banner">
 	<div class="container">
 		<div class="row">
@@ -16,7 +15,6 @@
 		</div>
 	</div>
 </div>
-<!-- bradcam_area_end -->
 
 <div class="courses_details_info">
 	<div class="container">
@@ -35,7 +33,7 @@
 								<div class="card">
 									<div class="card-header" id="heading_5">
 										<h5 class="mb-0">
-											<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse_5" aria-expanded="false" aria-controls="collapse_5">
+											<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse_@item.Id" aria-expanded="false" aria-controls="collapse_@item.Id">
 												<i class="fa fa-question-circle-o"></i>
 												<span>
 													@item.Name
@@ -43,7 +41,7 @@
 											</button>
 										</h5>
 									</div>
-									<div id="collapse_5" class="collapse" aria-labelledby="heading_5" data-parent="#accordion">
+									<div id="collapse_@item.Id" class="collapse" aria-labelledby="heading_5" data-parent="#accordion">
 										<div class="card-body">
 											@item.Description
 										</div>
@@ -76,7 +74,6 @@
 							</div>
 							<div class="name">
 								<h3>@ViewBag.Teacher.FirstName</h3>
-								@* <p>UI/UX Designer</p> *@
 							</div>
 						</div>
 						<p class="text_info">
@@ -90,26 +87,14 @@
 					</div>
 					@if (ViewBag.isBought == false)
 					{
-						<a asp-route-id="@Model.Id" asp-area="default" asp-action="Checkout" asp-controller="ShoppingCart" class="boxed_btn">Mua Khóa Học</a>
+						<a class="boxed_btn" id="showTestButton">Mua Khóa Học</a>
+						<a asp-route-id="@Model.Id" asp-area="default" asp-action="Checkout" asp-controller="ShoppingCart" style="display: none;" id="checkoutLink"></a>
+						<a asp-route-id="@Model.Id" asp-area="default" asp-action="TakeTest" asp-controller="Test" style="display: none;" id="testLink"></a>
 					}
 					else
 					{
 						<a asp-route-id="@Model.Id" asp-area="default" asp-action="Study" asp-controller="Home" class="boxed_btn">Vào học</a>
 					}
-					@* <div class="feedback_info">
-					<h3>Write your feedback</h3>
-					<p>Your rating</p>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-
-					<form action="#">
-					<textarea name="" id="" cols="30" rows="10" placeholder="Write your feedback"></textarea>
-					<button type="submit" class="boxed_btn">Submit</button>
-					</form>
-					</div> *@
 				</div>
 			</div>
 		</div>
@@ -141,5 +126,32 @@
 				});
 			</text>
 		}
+			function showTestPrompt() {
+				const checkoutLink = document.getElementById('checkoutLink').href;
+				const testLink = document.getElementById('testLink').href;
+				Swal.fire({
+					title: "Làm bài test?",
+					icon: "info",
+					html: `
+							Bạn có thể làm bài test đi kèm với khóa học để chắc chắn phù hợp với nó.
+						`,
+					showCloseButton: true,
+					showCancelButton: true,
+					focusConfirm: false,
+					cancelButtonText: `
+							<i class="fa-solid fa-cart-shopping"></i>
+						`,
+					confirmButtonText: `
+							<i class="fa fa-thumbs-up"></i> Great!
+						`,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = testLink;
+					} else if (result.dismiss === Swal.DismissReason.cancel) {
+						window.location.href = checkoutLink;
+					}
+				});
+			}
+		document.getElementById('showTestButton').addEventListener('click', showTestPrompt);
 	</script>
 }
