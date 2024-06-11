@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using EngLine.Models;
 using EngLine.Repositories;
+using EngLine.Repositories.EF;
 using EngLine.Utilitys;
 using EngLine.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -13,11 +14,19 @@ public class ManageController : Controller
 {
 	private readonly ITeacherRepository _teacherRepository;
 	private readonly ICourseRepository _courseRepository;
+	private readonly ITestRepository _testRepository;
+	private readonly CloudinaryService _cloudinaryService;
 
-	public ManageController(ITeacherRepository teacherRepository, ICourseRepository courseRepository)
+	public ManageController(
+		ITeacherRepository teacherRepository,
+		ICourseRepository courseRepository,
+		ITestRepository testRepository,
+		CloudinaryService cloudinaryService)
 	{
 		_teacherRepository = teacherRepository;
 		_courseRepository = courseRepository;
+		_testRepository = testRepository;
+		_cloudinaryService = cloudinaryService;
 	}
 
 	public async Task<IActionResult> Profile()
@@ -25,12 +34,13 @@ public class ManageController : Controller
 		var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (id == null)
 			return NotFound();
-		else
-		{
-			ViewBag.TeacherCourse = await _courseRepository.GetAllCourseByIdTeacherAsync(id);
-			var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
-			return View(teacher);
-		}
+
+		ViewBag.TeacherCourse = await _courseRepository.GetAllCourseByIdTeacherAsync(id);
+		ViewBag.TeacherTest = await _testRepository.GetAllTestByIdTeacherAsync(id);
+
+		var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+
+		return View(teacher);
 	}
 
 	public async Task<IActionResult> AddCertificates()
@@ -45,7 +55,63 @@ public class ManageController : Controller
 		}
 	}
 
-	public IActionResult AddCourse()
+	public async Task<IActionResult> AddCourse()
+	{
+		ViewBag.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		ViewBag.Test = await _testRepository.GetAllTestsAsync();
+		return View();
+	}
+
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> AddCourse(CreateCourseViewModel model, IFormFile coverPhotoFile, IFormFile[] lessonPhotoFiles, IFormFile[] lessonVideoFiles)
+	{
+		var course = new Course
+		{
+			TeacherId = model.TeacherId,
+			TestId = model.TestId,
+			Price = model.Price,
+			Description = model.Description,
+			MinScore = model.MinScore,
+			CourseName = model.CourseName,
+			CoverPhoto = null, // Placeholder
+			Lessons = model.Lessons.Select(lesson => new Lesson
+			{
+				Name = lesson.Name,
+				Description = lesson.Description,
+				Photo = null, // Placeholder
+				Video = null, // Placeholder
+				Content = lesson.Content
+			}).ToList()
+		};
+
+		string coverPhotoUrl = null;
+		if (coverPhotoFile != null)
+		{
+			coverPhotoUrl = _cloudinaryService.UploadImageAsync(coverPhotoFile);
+			course.CoverPhoto = coverPhotoUrl;
+		}
+
+		int index = 0;
+		foreach (var lesson in course.Lessons)
+		{
+			if (lessonPhotoFiles.Length > index && lessonPhotoFiles[index] != null)
+			{
+				lesson.Photo = _cloudinaryService.UploadImageAsync(lessonPhotoFiles[index]);
+			}
+			if (lessonVideoFiles.Length > index && lessonVideoFiles[index] != null)
+			{
+				lesson.Video = _cloudinaryService.UploadVideoAsync(lessonVideoFiles[index]);
+			}
+			index++;
+		}
+
+		await _courseRepository.AddCourseAsync(course);
+		return RedirectToAction(nameof(Profile));
+	}
+
+
+	public IActionResult AddTest()
 	{
 		ViewBag.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 		return View();
@@ -53,29 +119,30 @@ public class ManageController : Controller
 
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> AddCourse(CreateCourseViewModel model)
+	public async Task<IActionResult> AddTest(TestEditViewModel viewModel)
 	{
 		if (ModelState.IsValid)
 		{
-			var course = new Course
+			var test = new Test
 			{
-				TeacherId = model.TeacherId,
-				Price = model.Price,
-				Description = model.Description,
-				CourseName = model.CourseName,
-				CoverPhoto = model.CoverPhoto,
-				Lessons = model.Lessons.Select(l => new Lesson
+				Title = viewModel.Title,
+				TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+				TimeLimit = viewModel.TimeLimit,
+				Questions = viewModel.Questions.Select(q => new Question
 				{
-					Name = l.Name,
-					Description = l.Description,
-					Photo = l.Photo,
-					Video = l.Video,
-					Content = l.Content
+					Content = q.Content,
+					Point = q.Point,
+					AnswerOptions = q.AnswerOptions.Select(ao => new AnswerOption
+					{
+						Content = ao.Content,
+						IsCorrectOption = ao.IsCorrectOption
+					}).ToList()
 				}).ToList()
 			};
-			await _courseRepository.AddCourseAsync(course);
+
+			await _testRepository.AddTestAsync(test);
 			return RedirectToAction(nameof(Profile));
 		}
-		return View(model);
+		return View(viewModel);
 	}
 }

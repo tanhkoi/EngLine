@@ -3,6 +3,8 @@ using EngLine.Models;
 using EngLine.Utilitys;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EngLine.Repositories.EF
 {
@@ -19,18 +21,19 @@ namespace EngLine.Repositories.EF
 
 		public async Task<IEnumerable<Teacher>> GetAllTeacherAsync()
 		{
-			return await _context.Teachers.ToListAsync();
+			return await _context.Teachers.Where(t => t.IsActive).ToListAsync();
 		}
+
 		public async Task<Teacher> GetTeacherByIdAsync(string id)
 		{
-			return await _context.Teachers.FirstOrDefaultAsync(t => t.Id == id);
+			return await _context.Teachers.FirstOrDefaultAsync(t => t.Id == id && t.IsActive);
 		}
 
 		public async Task AddTeacherAsync(Teacher teacher)
 		{
 			_context.Teachers.Add(teacher);
 			await _context.SaveChangesAsync();
-			await _userManager.AddToRoleAsync(teacher, SD.Role_Student);
+			await _userManager.AddToRoleAsync(teacher, SD.Role_Teacher);
 		}
 
 		public async Task UpdateTeacherAsync(Teacher teacher)
@@ -42,7 +45,7 @@ namespace EngLine.Repositories.EF
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				if (teacher.Id != null)
+				if (!await TeacherExists(teacher.Id))
 				{
 					throw new KeyNotFoundException("Teacher update not found");
 				}
@@ -61,8 +64,14 @@ namespace EngLine.Repositories.EF
 				throw new KeyNotFoundException("Teacher delete not found");
 			}
 
-			_context.Teachers.Remove(teacher);
+			teacher.IsActive = false;
+			_context.Teachers.Update(teacher);
 			await _context.SaveChangesAsync();
+		}
+
+		private async Task<bool> TeacherExists(string id)
+		{
+			return await _context.Teachers.AnyAsync(e => e.Id == id);
 		}
 	}
 }

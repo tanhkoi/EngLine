@@ -55,6 +55,15 @@ namespace EngLine.Repositories.EF
 			return await _context.StudentResponses.FirstOrDefaultAsync(t => t.Id == id);
 		}
 
+		public async Task<decimal?> GetStudentTestScoreAsync(string studentId, int testId)
+		{
+			var maxScore = await _context.StudentResponses
+								 .Where(sr => sr.TestId == testId)
+								 .MaxAsync(sr => (decimal?)sr.Score); // Cast to nullable decimal to handle empty results
+
+			return maxScore; // Will return null if no scores are found
+		}
+
 		public async Task UpdateStudentResponseAsync(StudentResponse studentRes)
 		{
 			_context.StudentResponses.Update(studentRes);

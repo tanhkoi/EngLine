@@ -3,11 +3,12 @@ DBCC CHECKIDENT ('Tests', RESEED, 0);
 DBCC CHECKIDENT ('Questions', RESEED, 0);
 DBCC CHECKIDENT ('AnswerOptions', RESEED, 0);
 DBCC CHECKIDENT ('Courses', RESEED, 0);
+SET IDENTITY_INSERT Orders ON
 -- Insert into tests table
-INSERT INTO Tests (Title, TimeLimit)
-VALUES ('Sample Test 1', '2024-05-20 10:00:00'),
-    ('Sample Test 2', '2024-05-20 11:00:00');
--- Insert into questions table
+INSERT INTO Tests (Title, TimeLimit, TeacherId)
+VALUES ('Sample Test 1', 5, '02b83a50-870f-49c1-bc5d-4ba4bfcac68f'),
+    ('Sample Test 2', 5, '02b83a50-870f-49c1-bc5d-4ba4bfcac68f');
+-- Insert into questions table	
 INSERT INTO Questions (Content, TestId, Point)
 VALUES ('What is the capital of France?', 1, 10),
     ('What is 2 + 2?', 1, 10),

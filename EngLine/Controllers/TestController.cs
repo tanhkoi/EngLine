@@ -30,20 +30,25 @@ namespace EngLine.Controllers
 			_answerRepository = answerRepository;
 		}
 
-		public async Task<IActionResult> TakeTest(int testId = 1)
+		public async Task<IActionResult> TakeTest(int testId, int courseId)
 		{
 			var test = await _testRepository.GetTestByIdAsync(testId);
+			if (test == null)
+			{
+				return NotFound();
+			}
 
 			var viewModel = new TestViewModel
 			{
 				Test = test,
-				Questions = test.Questions.ToList()
+				Questions = test.Questions.ToList(),
+				CourseId = courseId
 			};
 			return View(viewModel);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> SubmitTest(IFormCollection form, int testId)
+		public async Task<IActionResult> SubmitTest(IFormCollection form, int testId, int courseId)
 		{
 			var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 			var response = new StudentResponse()
@@ -76,15 +81,7 @@ namespace EngLine.Controllers
 			response.Score = await _studentResponseRepository.CalculateScore(studentId, testId, response.Id);
 			await _studentResponseRepository.UpdateStudentResponseAsync(response);
 
-			// Redirect to a result page or confirmation page
-			return RedirectToAction("Result", new { id = response.Id });
+			return RedirectToAction("CourseDetails", "Home", new { id = courseId });
 		}
-
-		public async Task<IActionResult> Result(int id)
-		{
-			var response = await _studentResponseRepository.GetStudentResponseByIdAsync(id);
-			return View(response);
-		}
-
 	}
 }

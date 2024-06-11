@@ -47,7 +47,6 @@ namespace EngLine.Repositories.EF
 				.Where(c => c.TeacherId == id && !c.IsDelete)
 				.Include(c => c.Teacher)
 				.Include(c => c.Lessons)
-				.Take(5)
 				.ToListAsync();
 		}
 

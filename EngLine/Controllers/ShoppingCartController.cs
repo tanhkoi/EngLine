@@ -31,25 +31,21 @@ namespace EngLine.Controllers
 			_orderRepository = orderRepository;
 		}
 
-		public async Task<IActionResult> Checkout(int courseid)
+		public async Task<IActionResult> Checkout(int id)
 		{
 			var student = await _studentRepository.GetStudentByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
-			if (student == null)
-			{
-				return NotFound();
-			}
-
 			ViewBag.paymentMethod = await _paymentMethodRepository.GetAllPaymentMethodAsync();
 
-			var course = await _courseRepository.GetCourseByIdAsync(courseid);
+			var course = await _courseRepository.GetCourseByIdAsync(id);
 			return View(course);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Checkout(Order order, int paymentMethodId, double amount, int courseId)
+		public async Task<IActionResult> Checkout(int paymentMethodId, double amount, int courseId)
 		{
+			Order order = new Order();
 			order.CourseId = courseId;
-			order.Status = "Pendding";
+			order.Status = "Pending";
 			order.StudentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 			order.OrderTime = DateTime.Now;
 			order.Amount = amount;
@@ -77,7 +73,7 @@ namespace EngLine.Controllers
 			{
 
 				TempData["Message"] = $"Lỗi thanh toán VN Pay: {response.VnPayResponseCode}";
-				return RedirectToAction("PaymentFail");
+				return RedirectToAction("PaymentFail", new { orderId = response.OrderId });
 			}
 
 			TempData["Message"] = "Thanh toán Vnpay thành công";
@@ -90,14 +86,20 @@ namespace EngLine.Controllers
 			order.Status = "Success";
 			await _orderRepository.UpdateOrderAsync(order);
 
-			TempData["OrderSuccessMessage"] = "Thanh toán thành công!";
+			TempData["OrderSuccessMessage"] = "Payment success!";
 
 			return RedirectToAction("CourseDetails", "Home", new { id = order.CourseId });
 		}
 
-		public IActionResult PaymentFail()
+		public async Task<IActionResult> PaymentFailAsync(int orderId)
 		{
-			return View();
+			var order = await _orderRepository.GetOrderByIdAsync(orderId);
+			order.Status = "Failed";
+			await _orderRepository.UpdateOrderAsync(order);
+
+			TempData["OrderFailedMessage"] = "Payment fail!";
+
+			return RedirectToAction("CourseDetails", "Home", new { id = order.CourseId });
 		}
 	}
 }

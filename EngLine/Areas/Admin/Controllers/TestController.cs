@@ -6,6 +6,7 @@ using EngLine.DataAccess;
 using EngLine.ViewModels;
 using EngLine.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace EngLine.Areas.Admin.Controllers
 {
@@ -74,6 +75,7 @@ namespace EngLine.Areas.Admin.Controllers
 				var test = new Test
 				{
 					Title = viewModel.Title,
+					TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier),
 					TimeLimit = viewModel.TimeLimit,
 					Questions = viewModel.Questions.Select(q => new Question
 					{

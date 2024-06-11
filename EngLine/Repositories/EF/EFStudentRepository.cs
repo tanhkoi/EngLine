@@ -3,6 +3,8 @@ using EngLine.Models;
 using EngLine.Utilitys;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EngLine.Repositories.EF
 {
@@ -19,11 +21,12 @@ namespace EngLine.Repositories.EF
 
 		public async Task<IEnumerable<Student>> GetAllStudentAsync()
 		{
-			return await _context.Students.ToListAsync();
+			return await _context.Students.Where(s => s.IsActive).ToListAsync();
 		}
+
 		public async Task<Student> GetStudentByIdAsync(string id)
 		{
-			return await _context.Students.FirstOrDefaultAsync(t => t.Id == id);
+			return await _context.Students.FirstOrDefaultAsync(t => t.Id == id && t.IsActive);
 		}
 
 		public async Task AddStudentAsync(Student student)
@@ -41,13 +44,14 @@ namespace EngLine.Repositories.EF
 
 		public async Task DeleteStudentAsync(string id)
 		{
-			var Student = await _context.Students.FindAsync(id);
-			if (Student == null)
+			var student = await _context.Students.FindAsync(id);
+			if (student == null)
 			{
 				throw new KeyNotFoundException("Student delete not found");
 			}
 
-			_context.Students.Remove(Student);
+			student.IsActive = false;
+			_context.Students.Update(student);
 			await _context.SaveChangesAsync();
 		}
 	}
