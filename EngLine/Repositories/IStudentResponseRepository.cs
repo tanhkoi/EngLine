@@ -10,5 +10,6 @@ namespace EngLine.Repositories
 		Task UpdateStudentResponseAsync(StudentResponse studentRes);
 		Task DeleteStudentResponseAsync(int id);
 		Task<int> CalculateScore(string studentId, int testId, int responseId);
+		Task<decimal?> GetStudentTestScoreAsync(string studentId, int testId);
 	}
 }

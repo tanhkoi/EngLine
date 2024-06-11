@@ -1,4 +1,4 @@
-﻿@model EngLine.Models.Course;
+﻿@model EngLine.Models.Course
 
 <div class="courses_details_banner">
 	<div class="container">
@@ -89,7 +89,7 @@
 					{
 						<a class="boxed_btn" id="showTestButton">Mua Khóa Học</a>
 						<a asp-route-id="@Model.Id" asp-area="default" asp-action="Checkout" asp-controller="ShoppingCart" style="display: none;" id="checkoutLink"></a>
-						<a asp-route-id="@Model.Id" asp-area="default" asp-action="TakeTest" asp-controller="Test" style="display: none;" id="testLink"></a>
+						<a asp-route-testId="@Model.TestId" asp-route-courseId="@Model.Id" asp-area="default" asp-action="TakeTest" asp-controller="Test" style="display: none;" id="testLink"></a>
 					}
 					else
 					{
@@ -113,7 +113,7 @@
 					confirmButtonText: "OK"
 				});
 			</text>
-		}
+		};
 
 		@if (TempData["OrderFailedMessage"] != null)
 		{
@@ -125,25 +125,41 @@
 					confirmButtonText: "OK"
 				});
 			</text>
-		}
-			function showTestPrompt() {
-				const checkoutLink = document.getElementById('checkoutLink').href;
-				const testLink = document.getElementById('testLink').href;
+		};
+
+		const isTakenTestThisCourse = @Html.Raw(Json.Serialize(ViewBag.IsTakenTestThisCourse));
+		const score = @Html.Raw(Json.Serialize(ViewBag.Score));
+		const minScore = @Html.Raw(Json.Serialize(ViewBag.MinScore));
+
+		function showTestPrompt() {
+			const checkoutLink = document.getElementById('checkoutLink').href;
+			const testLink = document.getElementById('testLink').href;
+
+			if (isTakenTestThisCourse) {
 				Swal.fire({
-					title: "Làm bài test?",
 					icon: "info",
-					html: `
-							Bạn có thể làm bài test đi kèm với khóa học để chắc chắn phù hợp với nó.
-						`,
+					title: "Bạn đã hoàn thành bài test!",
+					text: `Điểm của bạn là: ${score}. Điểm gợi ý tối thiểu: ${minScore}`,
+					showCancelButton: true,
+					confirmButtonText: "Làm lại bài test",
+					cancelButtonText: "Mua khóa học",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = testLink; // Redirect to retake the test
+					} else if (result.dismiss === Swal.DismissReason.cancel) {
+						window.location.href = checkoutLink;
+					}
+				});
+			} else {
+				Swal.fire({
+					icon: "info",
+					title: "Làm bài test?",
+					text: `Bạn có thể làm bài test đi kèm với khóa học để chắc chắn phù hợp với nó.`,
 					showCloseButton: true,
 					showCancelButton: true,
 					focusConfirm: false,
-					cancelButtonText: `
-							<i class="fa-solid fa-cart-shopping"></i>
-						`,
-					confirmButtonText: `
-							<i class="fa fa-thumbs-up"></i> Great!
-						`,
+					cancelButtonText: `<i class="fa-solid fa-cart-shopping"></i>`,
+					confirmButtonText: `<i class="fa fa-thumbs-up"></i> Great!`,
 				}).then((result) => {
 					if (result.isConfirmed) {
 						window.location.href = testLink;
@@ -152,6 +168,8 @@
 					}
 				});
 			}
+		}
+
 		document.getElementById('showTestButton').addEventListener('click', showTestPrompt);
 	</script>
 }

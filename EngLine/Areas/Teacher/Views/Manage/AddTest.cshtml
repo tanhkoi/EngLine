@@ -77,8 +77,9 @@
 						<div class="card-body">
 							<div class="form-group form-inline">
 								<label for="Questions_${questionIndex}__Content" class="control-label">Câu hỏi ${questionIndex + 1}</label>
-								<input type="text" name="Questions[${questionIndex}].Content" class="form-control mw-450 ms-5" />
-								<button type="button" class="btn btn-danger delete-question"><i class="fa-solid fa-trash"></i></button>
+								<input type="text" name="Questions[${questionIndex}].Content" class="form-control ms-5" style="width: 70%;">
+								<input type="text" name="Questions[${questionIndex}].Point" class="form-control ms-5" style="width: 10%;">
+								<button type="button" class="btn btn-danger delete-question" style="margin-left: 5px;"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
 								<span class="text-danger field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Content" data-valmsg-replace="true"></span>
 							</div>
 							<h5>Đáp án</h5>

@@ -16,13 +16,15 @@ namespace EngLine.Controllers
 		private readonly IStudentRepository _studentRepository;
 		private readonly IOrderRepository _orderRepository;
 		private readonly ITeacherRepository _teacherRepository;
+		private readonly IStudentResponseRepository _studentResponseService;
 
 		public HomeController(
 			ILogger<HomeController> logger,
 			ICourseRepository courseRepository,
 			IStudentRepository studentRepository,
 			IOrderRepository orderRepository,
-			ITeacherRepository teacherRepository
+			ITeacherRepository teacherRepository,
+			IStudentResponseRepository studentResponseService
 		)
 		{
 			_logger = logger;
@@ -30,6 +32,7 @@ namespace EngLine.Controllers
 			_studentRepository = studentRepository;
 			_orderRepository = orderRepository;
 			_teacherRepository = teacherRepository;
+			_studentResponseService = studentResponseService;
 		}
 
 		public IActionResult Index()
@@ -63,16 +66,37 @@ namespace EngLine.Controllers
 				return NotFound();
 			}
 
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			// Assign course lessons to ViewBag
 			ViewBag.Lessons = course.Lessons;
 
-			ViewBag.isBought = await _orderRepository.isBought(User.FindFirstValue(ClaimTypes.NameIdentifier), id);
+			// Check if the user has bought the course
+			ViewBag.isBought = await _orderRepository.isBought(userId, id);
 
+			// Retrieve teacher details and assign to ViewBag
 			ViewBag.Teacher = await _teacherRepository.GetTeacherByIdAsync(course.TeacherId);
 
+			// Retrieve order success message from TempData if available
 			ViewBag.OrderSuccessMessage = TempData["OrderSuccessMessage"] as string;
+
+			// Initialize ViewBag property for test taken status
+			ViewBag.IsTakenTestThisCourse = false;
+
+			// Pass MinScore to the view
+			ViewBag.MinScore = course.MinScore;
+
+			// Check if the course has a test and the user has taken it
+			if (course.TestId != null && course.TestId > 0)
+			{
+				var score = await _studentResponseService.GetStudentTestScoreAsync(userId, course.TestId);
+				ViewBag.IsTakenTestThisCourse = true;
+				ViewBag.Score = score.Value;
+			}
 
 			return View(course);
 		}
+
 
 		[Authorize]
 		public async Task<IActionResult> Study(int courseId)
