@@ -40,14 +40,6 @@
 									<ul id="navigation" style="margin-left: 65px;">
 										<li><a asp-area="default" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
 										<li><a asp-area="default" asp-controller="Home" asp-action="Courses">Khóa học</a></li>
-										@* <li>
-										@Html.ActionLink("Pages", "", "Home", null, new { @class = "ti-angle-down" })
-										<ul class="submenu">
-										<li>@Html.ActionLink("course details", "CourseDetails", "Home")</li>
-										<li>@Html.ActionLink("elements", "Elements", "Home")</li>
-										</ul>
-										</li> *@
-										<li><a asp-area="default" asp-controller="Home" asp-action="About">Về chúng tôi</a></li>
 										<li><a asp-area="default" asp-controller="Home" asp-action="Contact">Liên hệ</a></li>
 										@{
 											if (User.IsInRole("Teacher") || User.IsInRole("Admin"))

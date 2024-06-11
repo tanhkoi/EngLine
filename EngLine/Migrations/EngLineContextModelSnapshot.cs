@@ -178,6 +178,9 @@ namespace EngLine.Migrations
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("MinScore")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 

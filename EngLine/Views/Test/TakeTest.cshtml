@@ -122,6 +122,7 @@
 	<div class="swiper-wrapper">
 		<form asp-action="SubmitTest" method="post" style="padding: 25px 50px;">
 			<input type="hidden" name="testId" value="@Model.Test.Id" />
+			<input type="hidden" name="courseId" value="@Model.CourseId" />
 			@{
 				int count = 1;
 				@foreach (var question in Model.Questions)
@@ -129,9 +130,8 @@
 					<!-- QUESTION CONTAINER START -->
 					<div class="swiper-slide question-container py-2">
 						<div class="question-number">
-							<span class="question-no">Q. @count</span>
+							<span class="question-no">C. @count</span>
 							<b class="text-success">+ @question.Point</b>
-							<b class="text-danger">- @question.Point</b>
 						</div>
 						<hr>
 						<div class="row">
@@ -145,7 +145,7 @@
 							<!-- OPTIONS -->
 							<div class="col-xs-12 col-sm-12 col-md-5 border-left">
 								<div class="question-option">
-									<h5>Options:</h5>
+									<h5>Đáp án:</h5>
 									@foreach (var option in question.AnswerOptions)
 									{
 										<div class="pretty p-icon p-round p-pulse">
@@ -164,7 +164,7 @@
 				}
 			}
 			<div class="d-flex justify-content-end">
-				<button type="submit" class="btn btn-primary">Submit Answers</button>
+				<button type="submit" class="btn btn-primary">Nộp bài</button>
 			</div>
 		</form>
 	</div>

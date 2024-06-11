@@ -72,6 +72,7 @@ public class ManageController : Controller
 			TestId = model.TestId,
 			Price = model.Price,
 			Description = model.Description,
+			MinScore = model.MinScore,
 			CourseName = model.CourseName,
 			CoverPhoto = null, // Placeholder
 			Lessons = model.Lessons.Select(lesson => new Lesson
@@ -130,6 +131,7 @@ public class ManageController : Controller
 				Questions = viewModel.Questions.Select(q => new Question
 				{
 					Content = q.Content,
+					Point = q.Point,
 					AnswerOptions = q.AnswerOptions.Select(ao => new AnswerOption
 					{
 						Content = ao.Content,
@@ -139,7 +141,7 @@ public class ManageController : Controller
 			};
 
 			await _testRepository.AddTestAsync(test);
-			return RedirectToAction(nameof(Index));
+			return RedirectToAction(nameof(Profile));
 		}
 		return View(viewModel);
 	}
