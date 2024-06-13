@@ -1,51 +1,89 @@
-﻿@model EngLine.Models.TeacherCertificate
+﻿@using EngLine.Utilities
+@model EngLine.Models.TeacherCertificate
 
-@{
-    ViewData["Title"] = "AddCertificates";
-}
+<div style="background-color: #6b2dae; width: 100%; height: 93px;"></div>
 
-<h1>AddCertificates</h1>
-
-<h4>TeacherCertificate</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="AddCertificates">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="TeacherId" class="control-label"></label>
-                <select asp-for="TeacherId" class ="form-control" asp-items="ViewBag.TeacherId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="CertificateId" class="control-label"></label>
-                <select asp-for="CertificateId" class ="form-control" asp-items="ViewBag.CertificateId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateObtained" class="control-label"></label>
-                <input asp-for="DateObtained" class="form-control" />
-                <span asp-validation-for="DateObtained" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Score" class="control-label"></label>
-                <input asp-for="Score" class="form-control" />
-                <span asp-validation-for="Score" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Photo" class="control-label"></label>
-                <input asp-for="Photo" class="form-control" />
-                <span asp-validation-for="Photo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div class="container mt-4">
+	<form asp-action="AddCertificates" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+		<div class="mb-3">
+			<label for="certificate" class="form-label">Chứng chỉ</label>
+			<select asp-for="CertificateId" class="form-select" id="certificate-select" required>
+				<option value="">Chọn chứng chỉ</option>
+				@foreach (var item in (List<CustomSelectListItem>)ViewBag.Certificates)
+				{
+					<option value="@item.Value" data-score-min="@item.DataScoreMin" data-score-max="@item.DataScoreMax">
+						@item.Text
+					</option>
+				}
+			</select>
+			<div class="invalid-feedback">
+				Vui lòng chọn một chứng chỉ.
+			</div>
+		</div>
+		<div class="mb-3">
+			<label for="dateObtained" class="form-label">Ngày đạt được</label>
+			<input asp-for="DateObtained" type="date" class="form-control" id="dateObtained" required />
+			<div class="invalid-feedback">
+				Vui lòng cung cấp ngày.
+			</div>
+		</div>
+		<div class="mb-3">
+			<label for="score" class="form-label">Điểm số</label>
+			<input asp-for="Score" type="number" class="form-control" id="score" required />
+			<div class="invalid-feedback" id="score-feedback">
+			</div>
+		</div>
+		<div class="mb-3">
+			<label for="photo" class="form-label">Ảnh</label>
+			<input class="form-control file-input" type="file" name="certificateImage" accept="image/*" id="photo" required>
+			<div class="invalid-feedback">
+				Vui lòng tải lên một bức ảnh.
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary">Thêm chứng chỉ</button>
+	</form>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var certificateSelect = document.getElementById('certificate-select');
+		var scoreInput = document.getElementById('score');
+		var scoreFeedback = document.getElementById('score-feedback');
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+		certificateSelect.addEventListener('change', function () {
+			var selectedOption = certificateSelect.options[certificateSelect.selectedIndex];
+			var scoreMin = selectedOption.getAttribute('data-score-min');
+			var scoreMax = selectedOption.getAttribute('data-score-max');
+
+			if (scoreMin && scoreMax) {
+				scoreInput.setAttribute('min', scoreMin);
+				scoreInput.setAttribute('max', scoreMax);
+				scoreInput.setAttribute('placeholder', `Điểm số (${scoreMin} - ${scoreMax})`);
+				scoreFeedback.textContent = `Vui lòng cung cấp điểm số trong khoảng từ ${scoreMin} đến ${scoreMax}.`;
+			} else {
+				scoreInput.removeAttribute('min');
+				scoreInput.removeAttribute('max');
+				scoreInput.removeAttribute('placeholder');
+				scoreFeedback.textContent = 'Vui lòng cung cấp điểm số.';
+			}
+		});
+
+		(function () {
+			'use strict'
+
+			var forms = document.querySelectorAll('.needs-validation')
+
+			Array.prototype.slice.call(forms)
+				.forEach(function (form) {
+					form.addEventListener('submit', function (event) {
+						if (!form.checkValidity()) {
+							event.preventDefault()
+							event.stopPropagation()
+						}
+
+						form.classList.add('was-validated')
+					}, false)
+				})
+		})();
+	});
+</script>

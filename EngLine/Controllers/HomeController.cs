@@ -11,23 +11,18 @@ namespace EngLine.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
 		private readonly ICourseRepository _courseRepository;
 		private readonly IStudentRepository _studentRepository;
 		private readonly IOrderRepository _orderRepository;
 		private readonly ITeacherRepository _teacherRepository;
 		private readonly IStudentResponseRepository _studentResponseService;
 
-		public HomeController(
-			ILogger<HomeController> logger,
-			ICourseRepository courseRepository,
+		public HomeController(ICourseRepository courseRepository,
 			IStudentRepository studentRepository,
 			IOrderRepository orderRepository,
 			ITeacherRepository teacherRepository,
-			IStudentResponseRepository studentResponseService
-		)
+			IStudentResponseRepository studentResponseService)
 		{
-			_logger = logger;
 			_courseRepository = courseRepository;
 			_studentRepository = studentRepository;
 			_orderRepository = orderRepository;
@@ -129,7 +124,6 @@ namespace EngLine.Controllers
 
 			return View(viewModel);
 		}
-
 
 		public IActionResult Elements()
 		{

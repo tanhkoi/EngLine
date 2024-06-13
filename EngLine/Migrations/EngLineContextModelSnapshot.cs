@@ -150,6 +150,12 @@ namespace EngLine.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("ScoreMax")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ScoreMin")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.ToTable("Certificates");
@@ -379,11 +385,12 @@ namespace EngLine.Migrations
                     b.Property<DateTime>("DateObtained")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("Photo")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Photo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
+                    b.Property<double>("Score")
+                        .HasColumnType("float");
 
                     b.Property<string>("TeacherId")
                         .IsRequired()
