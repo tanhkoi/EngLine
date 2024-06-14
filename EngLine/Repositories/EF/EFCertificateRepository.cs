@@ -24,6 +24,15 @@ namespace EngLine.Repositories.EF
 			await _context.SaveChangesAsync();
 		}
 
+		public async Task<ICollection<TeacherCertificate>> GetCertificatesByTeacherIdAsync(string teacherId)
+		{
+			return await _context.TeacherCertificates
+								 .Where(tc => tc.TeacherId == teacherId)
+								 .Include(tc => tc.Certificate)
+								 .ToListAsync() as ICollection<TeacherCertificate>;
+		}
+
+
 		// Implement other necessary methods
 	}
 }

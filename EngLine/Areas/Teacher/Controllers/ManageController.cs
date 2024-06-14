@@ -43,6 +43,7 @@ public class ManageController : Controller
 		ViewBag.TeacherTest = await _testRepository.GetAllTestByIdTeacherAsync(id);
 
 		var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+		teacher.TeacherCertificates = await _certificateRepository.GetCertificatesByTeacherIdAsync(id);
 
 		return View(teacher);
 	}

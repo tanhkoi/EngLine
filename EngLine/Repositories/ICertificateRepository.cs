@@ -7,7 +7,7 @@ namespace EngLine.Repositories
 		Task<IEnumerable<Certificate>> GetCertificatesAsync();
 		Task AddTeacherCertificateAsync(TeacherCertificate teacherCertificate);
 
-		Task<IEnumerable<Certificate>> GetCertificatesByTeacherIdAsync(string teacherId);
+		Task<ICollection<TeacherCertificate>> GetCertificatesByTeacherIdAsync(string teacherId);
 		// Add other necessary methods, such as updating or deleting certificates
 	}
 
