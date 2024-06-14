@@ -3,22 +3,23 @@
 @{
 	ViewData["Title"] = "Index";
 }
-<h1>Index</h1>
-
-<p>
-	<a asp-action="Create">Create New</a>
-</p>
-
+<h1>Danh sách tài khoản học sinh</h1>
 <table id="datatablesSimple">
 	<thead>
 		<tr>
-			<th>Username</th>
 			<th>Email</th>
-			<th>FirstName</th>
-			<th>LastName</th>
-			<th>PhoneNumber</th>
-			<th>IsActive</th>
-			<th>Action</th>
+			<th>
+				Họ và tên
+			</th>
+			<th>
+				Số điện thoại
+			</th>
+			<th>
+				Khả dụng?
+			</th>
+			<th>
+				Chức năng
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -26,27 +27,28 @@
 		{
 			<tr>
 				<td>
-					@Html.DisplayFor(modelItem => item.Username)
-				</td>
-				<td>
 					@Html.DisplayFor(modelItem => item.Email)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.FirstName)
-				</td>
-				<td>
 					@Html.DisplayFor(modelItem => item.LastName)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.PhoneNumber)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.IsActive)
+					@if (item.IsActive == true)
+					{
+						<p>Có</p>
+					}
+					else
+					{
+						<p>Không</p>
+					}
 				</td>
 				<td>
-					<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-					<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+					<a asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-pencil-alt"></i></a> |
+					<a asp-action="Delete" asp-route-id="@item.Id"><i class="far fa-trash-alt"></i></a>
 				</td>
 			</tr>
 		}

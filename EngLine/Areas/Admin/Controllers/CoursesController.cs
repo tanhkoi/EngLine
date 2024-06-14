@@ -100,7 +100,7 @@ namespace EngLine.Areas.Admin.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,TeacherId,Price,Description")] Course course)
+		public async Task<IActionResult> Edit(int id, Course course)
 		{
 			if (id != course.Id)
 			{

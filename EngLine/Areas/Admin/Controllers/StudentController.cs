@@ -132,30 +132,24 @@ namespace EngLine.Areas.Admin.Controllers
 				return NotFound();
 			}
 
-			if (ModelState.IsValid)
+			try
 			{
-				try
-				{
-					var Student = new Student
-					{
-						Id = model.Id,
-						UserName = model.Username,
-						Email = model.Email,
-						FirstName = model.FirstName,
-						LastName = model.LastName,
-						PhoneNumber = model.PhoneNumber,
-						IsActive = model.IsActive
-					};
+				var StudentToUpdate = await _studentRepository.GetStudentByIdAsync(model.Id);
+				StudentToUpdate.Id = model.Id;
+				StudentToUpdate.UserName = model.Email;
+				StudentToUpdate.Email = model.Email;
+				StudentToUpdate.FirstName = model.FirstName;
+				StudentToUpdate.LastName = model.LastName;
+				StudentToUpdate.PhoneNumber = model.PhoneNumber;
+				StudentToUpdate.IsActive = model.IsActive;
 
-					await _studentRepository.UpdateStudentAsync(Student);
-				}
-				catch (Exception ex)
-				{
-					ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-				}
-				return RedirectToAction(nameof(Index));
+				await _studentRepository.UpdateStudentAsync(StudentToUpdate);
 			}
-			return View(model);
+			catch (Exception ex)
+			{
+				ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+			}
+			return RedirectToAction(nameof(Index));
 		}
 
 

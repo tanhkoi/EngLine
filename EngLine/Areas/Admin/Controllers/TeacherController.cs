@@ -13,10 +13,12 @@ namespace EngLine.Areas.Admin.Controllers
 	public class TeacherController : Controller
 	{
 		private readonly ITeacherRepository _teacherRepository;
+		private readonly CloudinaryService _cloudinaryService;
 
-		public TeacherController(ITeacherRepository teacherRepository)
+		public TeacherController(ITeacherRepository teacherRepository, CloudinaryService cloudinaryService)
 		{
 			_teacherRepository = teacherRepository;
+			_cloudinaryService = cloudinaryService;
 		}
 
 		// GET: Teacher/Teacher
@@ -138,40 +140,39 @@ namespace EngLine.Areas.Admin.Controllers
 		// POST: Teacher/Teacher/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(string id, TeacherViewModel model)
+		public async Task<IActionResult> Edit(string id, TeacherViewModel model, IFormFile avatar)
 		{
 			if (id != model.Id)
 			{
 				return NotFound();
 			}
 
-			if (ModelState.IsValid)
+			try
 			{
-				try
+				// TODO: change logic
+				var updateTeacher = await _teacherRepository.GetTeacherByIdAsync(model.Id);
+				if (updateTeacher == null)
 				{
-					var teacher = new Teacher
-					{
-						Id = model.Id,
-						UserName = model.Username,
-						Email = model.Email,
-						FirstName = model.FirstName,
-						LastName = model.LastName,
-						PhoneNumber = model.PhoneNumber,
-						Description = model.Description,
-						Photo = model.Photo,
-						IsActive = model.IsActive
-					};
+					throw new Exception("Do not found the teacher for update");
+				}
+				updateTeacher.Id = model.Id;
+				updateTeacher.UserName = model.Email;
+				updateTeacher.Email = model.Email;
+				updateTeacher.FirstName = model.FirstName;
+				updateTeacher.LastName = model.LastName;
+				updateTeacher.PhoneNumber = model.PhoneNumber;
+				updateTeacher.Description = model.Description;
+				updateTeacher.Photo = _cloudinaryService.UploadImageAsync(avatar);
+				updateTeacher.IsActive = model.IsActive;
 
-					await _teacherRepository.UpdateTeacherAsync(teacher);
-				}
-				catch (Exception ex)
-				{
-					// Log the exception
-					ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-				}
-				return RedirectToAction(nameof(Index));
+				await _teacherRepository.UpdateTeacherAsync(updateTeacher);
 			}
-			return View(model);
+			catch (Exception ex)
+			{
+				// Log the exception
+				ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+			}
+			return RedirectToAction(nameof(Index));
 		}
 
 
