@@ -79,3 +79,13 @@ VALUES
 (5, 'Lesson 5.1', 'Description of Lesson 5.1', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 5.1'),
 (5, 'Lesson 5.2', 'Description of Lesson 5.2', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 5.2'),
 (5, 'Lesson 5.3', 'Description of Lesson 5.3', 'https://img.freepik.com/free-photo/young-asian-woman-lying-floor-home-with-laptop-with-small-pet-dog-beside_1098-20173.jpg?w=996&t=st=1717081476~exp=1717082076~hmac=43059ab343b9c0c945fea435e354d65b9d1dd07b5add7069be835b60602cd29c', 'https://videos.pexels.com/video-files/20325563/20325563-hd_1280_720_60fps.mp4', 'Content of Lesson 5.3');
+
+-- Insert into certificates table
+INSERT INTO Certificates(name)
+VALUES 
+('IELTS'),
+('TOEIC'),
+('TOEFL'),
+('Cambridge English'),
+('PTE Academic');
+
