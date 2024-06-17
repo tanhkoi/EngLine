@@ -10,15 +10,15 @@
 						@if (Model.Photo != null)
 						{
 							<img src="@Model.Photo" alt="avatar"
-								 class="rounded-circle img-fluid" style="width: 150px;">
+								 class="rounded-circle img-fluid" style="width: 150px;height: 150px;object-fit: cover;">
 						}
 						else
 						{
 							<img src="~/img/team/user-icon-removebg.png" alt="avatar"
-								 class="rounded-circle img-fluid" style="width: 150px;">
+								 class="rounded-circle img-fluid" style="width: 150px;height: 150px;object-fit: cover;">
 						}
 						<h5 class="my-3">@Model.FirstName @Model.LastName</h5>
-						<a asp-area="Admin" asp-controller="Teacher" asp-action="Edit" asp-route-id="@Model.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+						<a asp-area="Admin" asp-controller="Teacher" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mb-0">Chỉnh sửa thông tin</a>
 					</div>
 				</div>
 				<div class="card mb-4 mb-lg-0">

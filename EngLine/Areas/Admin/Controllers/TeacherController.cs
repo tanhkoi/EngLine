@@ -13,12 +13,16 @@ namespace EngLine.Areas.Admin.Controllers
 	public class TeacherController : Controller
 	{
 		private readonly ITeacherRepository _teacherRepository;
+		private readonly ICourseRepository _courseRepository;
 		private readonly CloudinaryService _cloudinaryService;
 
-		public TeacherController(ITeacherRepository teacherRepository, CloudinaryService cloudinaryService)
+		public TeacherController(ITeacherRepository teacherRepository, 
+			CloudinaryService cloudinaryService,
+			ICourseRepository courseRepository)
 		{
 			_teacherRepository = teacherRepository;
 			_cloudinaryService = cloudinaryService;
+			_courseRepository = courseRepository;
 		}
 
 		// GET: Teacher/Teacher
@@ -132,6 +136,8 @@ namespace EngLine.Areas.Admin.Controllers
 				Photo = teacher.Photo,
 				IsActive = teacher.IsActive
 			};
+
+			ViewBag.CoursesByTeacherId = await _courseRepository.GetCoursesByTeacherIdAsync(id);
 
 			return View(teacherViewModel);
 		}

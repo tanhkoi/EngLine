@@ -9,5 +9,6 @@ namespace EngLine.Repositories
 		Task AddStudentAsync(Student student);
 		Task UpdateStudentAsync(Student student);
 		Task DeleteStudentAsync(string id);
+		Task<IEnumerable<Order>> GetOrdersStudentBought(string studentId);
 	}
 }

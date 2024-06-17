@@ -9,6 +9,6 @@ namespace EngLine.Repositories
 		Task AddOrderAsync(Order order);
 		Task UpdateOrderAsync(Order order);
 		Task DeleteOrderAsync(int id);
-		Task<bool> isBought(string studentId, int courseId);
+		Task<bool> IsBought(string studentId, int courseId);
 	}
 }

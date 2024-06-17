@@ -19,5 +19,4 @@ namespace EngLine.Models
 		public ICollection<Lesson> Lessons { get; set; }
 		public ICollection<Order> Orders { get; set; }
 	}
-
 }

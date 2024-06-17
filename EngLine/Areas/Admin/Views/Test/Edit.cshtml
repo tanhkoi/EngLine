@@ -1,77 +1,102 @@
 ﻿@model EngLine.ViewModels.TestEditViewModel;
+<style>
+	.base {
+		max-width: 650px;
+		margin-left: auto;
+		margin-right: auto;
+	}
 
-@{
-	ViewData["Title"] = "Edit Test";
-}
+	.form-inline {
+		display: flex;
+		align-items: center;
+	}
 
-<h1>Edit Test</h1>
+	.mw-450 {
+		min-width: 450px;
+	}
 
-<h4>Test</h4>
-<hr />
-<div class="row">
-	<div class="col-md-12">
-		<form asp-action="Edit">
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<input type="hidden" asp-for="Id" />
-			<div class="form-group">
-				<label asp-for="Title" class="control-label"></label>
-				<input asp-for="Title" class="form-control" />
-				<span asp-validation-for="Title" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="TimeLimit" class="control-label"></label>
-				<input asp-for="TimeLimit" class="form-control" />
-				<span asp-validation-for="TimeLimit" class="text-danger"></span>
-			</div>
+	.ms-2 {
+		margin-left: 16px;
+	}
 
-			<h4>Questions</h4>
-			<hr />
-			<div id="questions-container">
-				@for (int i = 0; i < Model.Questions.Count; i++)
-				{
-					<div class="question-form" data-index="@i">
-						<input type="hidden" asp-for="Questions[i].Id" />
-						<input type="hidden" asp-for="Questions[i].IsDeleted" class="is-deleted" />
+	.ms-5 {
+		margin-left: 5px;
+	}
+
+	.w-700 {
+		width: 700px;
+	}
+
+</style>
+<div class="base">
+	<h1 class="text-center ">Chỉnh sửa bài test</h1>
+	<hr />
+	<div class="row">
+		<div class="col-md-12">
+			<form asp-action="Edit">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input type="hidden" asp-for="Id" />
+				<div class="card w-700">
+					<div class="card-body">
 						<div class="form-group">
-							<label asp-for="Questions[i].Content" class="control-label"></label>
-							<input asp-for="Questions[i].Content" class="form-control" />
-							<span asp-validation-for="Questions[i].Content" class="text-danger"></span>
+							<label asp-for="Title" class="control-label">Tên bài test</label>
+							<input asp-for="Title" class="form-control" />
+							<span asp-validation-for="Title" class="text-danger"></span>
 						</div>
 						<div class="form-group">
-							<label asp-for="Questions[i].Point" class="control-label"></label>
-							<input asp-for="Questions[i].Point" class="form-control" />
-							<span asp-validation-for="Questions[i].Point" class="text-danger"></span>
+							<label asp-for="TimeLimit" class="control-label">Thời gian làm bài (phút)</label>
+							<input asp-for="TimeLimit" type="number" class="form-control" />
+							<span asp-validation-for="TimeLimit" class="text-danger"></span>
 						</div>
-						<button type="button" class="btn btn-danger delete-question">Delete Question</button>
-
-						<h5>Answer Options</h5>
-						<div class="answer-options-container">
-							@for (int j = 0; j < Model.Questions[i].AnswerOptions.Count; j++)
+					</div>
+				</div>
+				<hr />
+				<div class="card w-700">
+					<div class="card-body">
+						<h4>Câu hỏi</h4>
+						<div id="questions-container">
+							@for (int i = 0; i < Model.Questions.Count; i++)
 							{
-								<div class="answer-option-form" data-index="@j">
-									<input type="hidden" asp-for="Questions[i].AnswerOptions[j].Id" />
-									<input type="hidden" asp-for="Questions[i].AnswerOptions[j].IsDeleted" class="is-deleted" />
-									<div class="form-group">
-										<label asp-for="Questions[i].AnswerOptions[j].Content" class="control-label"></label>
-										<input asp-for="Questions[i].AnswerOptions[j].Content" class="form-control" />
-										<span asp-validation-for="Questions[i].AnswerOptions[j].Content" class="text-danger"></span>
+								<div class="question-form" data-index="@i">
+									<div class="card mt-4">
+										<div class="card-body">
+											<div class="form-group form-inline">
+												<label asp-for="Questions[i].Content" class="control-label">Câu hỏi @(i + 1)</label>
+												<input type="text" asp-for="Questions[i].Content" class="form-control ms-5" style="width: 70%;">
+												<input type="text" asp-for="Questions[i].Point" class="form-control ms-5" style="width: 10%;">
+												<button type="button" class="btn btn-danger delete-question" style="margin-left: 5px;"><i class="fas fa-trash" aria-hidden="true"></i></button>
+												<span class="text-danger field-validation-valid" data-valmsg-for="Questions[i].Content" data-valmsg-replace="true"></span>
+											</div>
+											<h5>Đáp án</h5>
+											<div class="answer-options-container">
+												@for (int j = 0; j < Model.Questions[i].AnswerOptions.Count; j++)
+												{
+													<div class="answer-option-form" data-index="@j">
+														<div class="form-group form-inline">
+															<label asp-for="Questions[i].AnswerOptions[j].Content" class="control-label">Đáp án</label>
+															<input type="text" asp-for="Questions[i].AnswerOptions[j].Content" class="form-control mw-450 ms-5" />
+															<button type="button" class="btn btn-danger delete-answer-option" style="margin-left: 5px;"><i class="fas fa-trash"></i></button>
+															<span class="text-danger field-validation-valid" data-valmsg-for="Questions[i].AnswerOptions[j].Content" data-valmsg-replace="true"></span>
+														</div>
+														<div class="form-group form-check">
+															<input type="checkbox" asp-for="Questions[i].AnswerOptions[j].IsCorrectOption" value="true" class="form-check-input" />
+															<label asp-for="Questions[i].AnswerOptions[j].IsCorrectOption" class="form-check-label">Đáp án đúng?</label>
+														</div>
+													</div>
+												}
+											</div>
+											<button type="button" class="btn btn-secondary add-answer-option">Thêm đáp án</button>
+										</div>
 									</div>
-									<div class="form-group form-check">
-										<input asp-for="Questions[i].AnswerOptions[j].IsCorrectOption" class="form-check-input" value="true" />
-										<label asp-for="Questions[i].AnswerOptions[j].IsCorrectOption" class="form-check-label"></label>
-									</div>
-									<button type="button" class="btn btn-danger delete-answer-option">Delete Answer Option</button>
 								</div>
 							}
 						</div>
-						<button type="button" class="btn btn-secondary add-answer-option">Add Answer Option</button>
 					</div>
-				}
-			</div>
-			<button type="button" class="btn btn-secondary" id="add-question">Add Question</button>
-
-			<button type="submit" class="btn btn-primary">Save</button>
-		</form>
+					<button type="button" class="btn btn-secondary" id="add-question">Thêm câu hỏi</button>
+				</div>
+				<button type="submit" class="btn btn-primary">Lưu</button>
+			</form>
+		</div>
 	</div>
 </div>
 
@@ -79,29 +104,30 @@
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
-
 	<script>
 		$(document).ready(function () {
-			let questionIndex = @Model.Questions.Count;
+			let questionIndex = 0;
 
 			// Function to add a new question form
 			$('#add-question').click(function () {
 				const newQuestionForm = `
-									<div class="question-form" data-index="${questionIndex}">
-										<input type="hidden" name="Questions[${questionIndex}].Id" value="0" />
-										<input type="hidden" name="Questions[${questionIndex}].IsDeleted" value="false" class="is-deleted" />
-										<div class="form-group">
-											<label for="Questions_${questionIndex}__Content" class="control-label">Content</label>
-											<input type="text" name="Questions[${questionIndex}].Content" class="form-control" />
-											<span class="text-danger field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Content" data-valmsg-replace="true"></span>
+										<div class="question-form" data-index="${questionIndex}">
+											<div class="card mt-4">
+												<div class="card-body">
+													<div class="form-group form-inline">
+														<label for="Questions_${questionIndex}__Content" class="control-label">Câu hỏi ${questionIndex + 1}</label>
+														<input type="text" name="Questions[${questionIndex}].Content" class="form-control ms-5" style="width: 70%;">
+														<input type="text" name="Questions[${questionIndex}].Point" class="form-control ms-5" style="width: 10%;">
+														<button type="button" class="btn btn-danger delete-question" style="margin-left: 5px;"><i class="fas fa-trash" aria-hidden="true"></i></button>
+														<span class="text-danger field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Content" data-valmsg-replace="true"></span>
+													</div>
+													<h5>Đáp án</h5>
+													<div class="answer-options-container"></div>
+													<button type="button" class="btn btn-secondary add-answer-option">Thêm đáp án</button>
+												</div>
+											</div>
 										</div>
-										<button type="button" class="btn btn-danger delete-question">Delete Question</button>
-
-										<h5>Answer Options</h5>
-										<div class="answer-options-container"></div>
-										<button type="button" class="btn btn-secondary add-answer-option">Add Answer Option</button>
-									</div>
-								`;
+										`;
 				$('#questions-container').append(newQuestionForm);
 				questionIndex++;
 			});
@@ -114,36 +140,30 @@
 				const answerOptionIndex = answerOptionsContainer.children().length;
 
 				const newAnswerOptionForm = `
-									<div class="answer-option-form" data-index="${answerOptionIndex}">
-										<input type="hidden" name="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].Id" value="0" />
-										<input type="hidden" name="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].IsDeleted" value="false" class="is-deleted" />
-										<div class="form-group">
-											<label for="Questions_${questionIndex}__AnswerOptions_${answerOptionIndex}__Content" class="control-label">Content</label>
-											<input type="text" name="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].Content" class="form-control" />
-											<span class="text-danger field-validation-valid" data-valmsg-for="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].Content" data-valmsg-replace="true"></span>
-										</div>
-										<div class="form-group form-check">
-											<input type="checkbox" name="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].IsCorrectOption" value="true" class="form-check-input" />
-											<label for="Questions_${questionIndex}__AnswerOptions_${answerOptionIndex}__IsCorrectOption" class="form-check-label">Is Correct Option</label>
-										</div>
-										<button type="button" class="btn btn-danger delete-answer-option">Delete Answer Option</button>
-									</div>
-								`;
+											<div class="answer-option-form" data-index="${answerOptionIndex}">
+													<div class="form-group form-inline">
+													<label for="Questions_${questionIndex}__AnswerOptions_${answerOptionIndex}__Content" class="control-label">Đáp án</label>
+													<input type="text" name="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].Content" class="form-control mw-450 ms-5" />
+													<button type="button" class="btn btn-danger delete-answer-option" style="margin-left: 5px;"><i class="fas fa-trash"></i></button>
+													<span class="text-danger field-validation-valid" data-valmsg-for="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].Content" data-valmsg-replace="true"></span>
+												</div>
+												<div class="form-group form-check">
+													<input type="checkbox" name="Questions[${questionIndex}].AnswerOptions[${answerOptionIndex}].IsCorrectOption" value="true" class="form-check-input" />
+													<label for="Questions_${questionIndex}__AnswerOptions_${answerOptionIndex}__IsCorrectOption" class="form-check-label">Đáp án đúng?</label>
+												</div>
+											</div>
+											`;
 				answerOptionsContainer.append(newAnswerOptionForm);
 			});
 
-			// Function to mark a question for deletion
+			// Function to delete a question form
 			$(document).on('click', '.delete-question', function () {
-				const questionForm = $(this).closest('.question-form');
-				questionForm.find('.is-deleted').val('true');
-				questionForm.hide();
+				$(this).closest('.question-form').remove();
 			});
 
-			// Function to mark an answer option for deletion
+			// Function to delete an answer option formmw-450
 			$(document).on('click', '.delete-answer-option', function () {
-				const answerOptionForm = $(this).closest('.answer-option-form');
-				answerOptionForm.find('.is-deleted').val('true');
-				answerOptionForm.hide();
+				$(this).closest('.answer-option-form').remove();
 			});
 		});
 	</script>

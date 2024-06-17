@@ -1,46 +1,210 @@
 ﻿@model EngLine.Models.Course
-
 @{
-	ViewData["Title"] = "Edit";
+	var teacherId = ViewBag.TeacherId as string;
+	var tests = ViewBag.Test;
 }
+<style>
+	.base {
+		max-width: 800px;
+		margin-left: auto;
+		margin-right: auto;
+	}
 
-<h1>Edit</h1>
+	.form-inline {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 16px;
+	}
 
-<h4>Course</h4>
-<hr />
-<div class="row">
-	<div class="col-md-4">
-		<form asp-action="Edit">
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<input type="hidden" asp-for="Id" />
-			<div class="form-group">
-				<label asp-for="TeacherId" class="control-label"></label>
-				<select asp-for="TeacherId" class="form-control" asp-items="ViewBag.TeacherId"></select>
-				<span asp-validation-for="TeacherId" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Price" class="control-label"></label>
-				<input asp-for="Price" class="form-control" />
-				<span asp-validation-for="Price" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Description" class="control-label"></label>
-				<input asp-for="Description" class="form-control" />
-				<span asp-validation-for="Description" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<input type="submit" value="Save" class="btn btn-primary" />
-			</div>
-		</form>
-	</div>
-</div>
+	.mw-450 {
+		min-width: 450px;
+	}
 
-<div>
-	<a asp-action="Index">Back to List</a>
+	.ms-2 {
+		margin-left: 16px;
+	}
+
+	.ms-5 {
+		margin-left: 5px;
+	}
+
+	.preview {
+		margin-top: 10px;
+		max-width: 100%;
+	}
+</style>
+<div class="base">
+	<h1 class="text-center mt-2">Chỉnh sửa Khóa Học</h1>
+	<form asp-action="Edit" method="post" enctype="multipart/form-data" style="margin: 25px auto!important; width: 75%;">
+		<input type="hidden" asp-for="TeacherId" value="@teacherId" />
+		<input type="hidden" asp-for="Id" />
+		<select class="form-control" aria-label="Chọn bài kiểm tra đầu vào" asp-for="TestId">
+			<option selected>Chọn bài kiểm tra đầu vào</option>
+			@{
+				foreach (var item in tests)
+				{
+					<option value="@item.Id">@item.Title</option>
+				}
+			}
+		</select>
+		<div class="row">
+			<div class="col">
+				<label class="control-label" asp-for="CourseName">Tên Khóa Học</label>
+				<input class="form-control" asp-for="CourseName" />
+			</div>
+			<div class="col">
+				<label class="control-label" asp-for="Price">Giá</label>
+				<input type="number" min="1" max="9999999" class="form-control" asp-for="Price" />
+			</div>
+			<div class="col">
+				<label class="control-label" asp-for="MinScore">Điểm tối thiểu</label>
+				<input type="number" min="1" max="10" class="form-control" asp-for="MinScore" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" asp-for="CoverPhoto">Ảnh bìa</label>
+			<input class="form-control file-input" type="file" name="coverPhotoFile" accept="image/*">
+			<img class="preview" id="coverPhotoPreview" src="@Model.CoverPhoto" alt="Cover Photo Preview" />
+		</div>
+		<div class="form-group">
+			<label class="control-label" asp-for="Description">Mô Tả</label>
+			<textarea class="form-control" style="height: 200px;" asp-for="Description"></textarea>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div id="lessons">
+					@for (int i = 0; i < Model.Lessons.Count; i++)
+					{
+						<div class="lesson-form" data-index="@i">
+							<div class="card mt-4">
+								<div class="form-inline">
+									<h3>Bài Học @(i + 1)</h3>
+									<button class="btn btn-primary toggle-icon" type="button" data-toggle="collapse" data-target="#collapseExample-@i" aria-expanded="false" aria-controls="collapseExample-@i">
+										<i class="fas fa-caret-up"></i>
+									</button>
+								</div>
+								<div id="collapseExample-@i" class="card-body collapse show">
+									<div class="form-group">
+										<label class="control-label" asp-for="Lessons.ElementAt(i).Name">Tên Bài Học</label>
+										<input class="form-control" asp-for="Lessons.ElementAt(i).Name" />
+									</div>
+									<div class="form-group">
+										<label class="control-label" for="Lessons.ElementAt(i).Description">Mô tả</label>
+										<textarea style="height: 200px" class="form-control" asp-for="Lessons.ElementAt(i).Description"></textarea>
+									</div>
+									<div class="form-group">
+										<label class="control-label">Ảnh</label>
+										<input class="form-control file-input" type="file" name="lessonPhotoFiles" accept="image/*" />
+										<img class="preview" id="photoPreview_@i" src="@Model.Lessons.ElementAt(i).Photo" alt="Image Preview" />
+									</div>
+									<div class="form-group">
+										<label class="control-label">Video</label>
+										<input class="form-control file-input" type="file" name="lessonVideoFiles" accept="video/*" />
+										<video class="preview" id="videoPreview_@i" controls>
+											<source src="@Model.Lessons.ElementAt(i).Video" type="video/mp4">
+										</video>
+									</div>
+									<div class="form-group">
+										<label class="control-label" for="Lessons.ElementAt(i).Content">Nội dung</label>
+										<textarea style="height: 200px" class="form-control" asp-for="Lessons.ElementAt(i).Content"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+			<button type="button" class="btn btn-secondary" id="add-lesson-button">Thêm Bài Học</button>
+		</div>
+		<hr>
+		<button class="btn btn-primary" type="submit">Tạo</button>
+	</form>
 </div>
 
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
+	<script>
+		$(document).ready(function () {
+			let lessonIndex = 0;
+			$('#add-lesson-button').click(function () {
+				const newLesson = `
+										<div class="lesson-form" data-index="${lessonIndex}">
+											<div class="card mt-4">
+												<div class="form-inline">
+													<h3>Bài Học ${lessonIndex + 1}</h3>
+													<button class="btn btn-primary toggle-icon" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample-${lessonIndex}" aria-expanded="false" aria-controls="collapseExample-${lessonIndex}">
+														<i class="fas fa-caret-up"></i>
+													</button>
+												</div>
+												<div id="collapseExample-${lessonIndex}" class="card-body collapse show">
+													<div class="form-group">
+														<label class="control-label" for="Lessons_${lessonIndex}__Name">Tên Bài Học</label>
+														<input class="form-control" name="Lessons[${lessonIndex}].Name" />
+													</div>
+													<div class="form-group">
+														<label class="control-label" for="Lessons_${lessonIndex}__Description">Mô tả</label>
+														<textarea style="height: 200px" class="form-control" name="Lessons[${lessonIndex}].Description"></textarea>
+													</div>
+													<div class="form-group">
+														<label class="control-label">Ảnh</label>
+														<input class="form-control file-input" type="file" name="lessonPhotoFiles" accept="image/*" />
+														<img class="preview" id="photoPreview_${lessonIndex}" src="#" alt="Image Preview" style="display: none;"/>
+													</div>
+													<div class="form-group">
+														<label class="control-label">Video</label>
+														<input class="form-control file-input" type="file" name="lessonVideoFiles" accept="video/*" />
+														<video class="preview" id="videoPreview_${lessonIndex}" controls style="display: none;">
+															<source src="#" type="video/mp4">
+														</video>
+													</div>
+													<div class="form-group">
+														<label class="control-label" for="Lessons_${lessonIndex}__Content">Nội dung</label>
+														<textarea style="height: 200px" class="form-control" name="Lessons[${lessonIndex}].Content"></textarea>
+													</div>
+												</div>
+											</div>
+										</div>
+										`;
+				$('#lessons').append(newLesson);
+				lessonIndex++;
+			});
+
+			$(document).on('click', '.toggle-icon', function () {
+				$(this).find('i').toggleClass('fa-caret-up fa-caret-down');
+			});
+
+			$(document).on('change', '.file-input', function () {
+				const file = this.files[0];
+				const inputName = $(this).attr('name');
+				let previewElement;
+
+				if (inputName === 'coverPhotoFile') {
+					previewElement = $('#coverPhotoPreview');
+				} else if (inputName === 'lessonPhotoFiles') {
+					const lessonIndex = $(this).closest('.lesson-form').data('index');
+					previewElement = $(`#photoPreview_${lessonIndex}`);
+				} else if (inputName === 'lessonVideoFiles') {
+					const lessonIndex = $(this).closest('.lesson-form').data('index');
+					previewElement = $(`#videoPreview_${lessonIndex}`);
+				}
+
+				if (file && previewElement) {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						if (file.type.startsWith('image/')) {
+							previewElement.attr('src', e.target.result);
+							previewElement.show();
+						} else if (file.type.startsWith('video/')) {
+							previewElement.find('source').attr('src', e.target.result);
+							previewElement.show();
+							previewElement[0].load();
+						}
+					}
+					reader.readAsDataURL(file);
+				} else if (previewElement) {
+					previewElement.hide();
+				}
+			});
+		});
+	</script>
 }

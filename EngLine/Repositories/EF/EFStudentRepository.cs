@@ -54,5 +54,20 @@ namespace EngLine.Repositories.EF
 			_context.Students.Update(student);
 			await _context.SaveChangesAsync();
 		}
+
+		public async Task<IEnumerable<Order>> GetOrdersStudentBought(string studentId)
+		{
+			var orders = await _context.Orders
+				.Where(order => order.StudentId == studentId && order.Status == "Success")
+				.Include(order => order.Student)
+				.Include(order => order.Course)
+				.Include(order => order.Course.Teacher)
+				.ToListAsync();
+			
+			if (orders.Any())
+				return orders;
+			else
+				return null;
+		}
 	}
 }

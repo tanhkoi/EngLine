@@ -14,7 +14,10 @@ namespace EngLine.Repositories.EF
 
 		public async Task<IEnumerable<Test>> GetAllTestsAsync()
 		{
-			return await _context.Tests.ToListAsync();
+			return await _context.Tests
+				.Include(test => test.Teacher)
+				.Include(test => test.Questions)
+				.ToListAsync();
 		}
 
 		public async Task<Test> GetTestByIdAsync(int id)

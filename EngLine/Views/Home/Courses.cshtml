@@ -38,7 +38,7 @@
 											</a>
 										</div>
 										<div class="courses_info">
-											<span>@item.Teacher.FirstName</span>
+											<span>@item.Teacher.FirstName @item.Teacher.LastName</span>
 											<h3>
 												<a asp-route-id="@item.Id" asp-area="default" asp-action="CourseDetails" asp-controller="Home">
 													@item.CourseName

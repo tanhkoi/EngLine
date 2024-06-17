@@ -118,6 +118,8 @@ namespace EngLine.Areas.Admin.Controllers
 				IsActive = Student.IsActive
 			};
 
+			ViewBag.OrdersStudentBought = await _studentRepository.GetOrdersStudentBought(id);
+
 			return View(StudentViewModel);
 		}
 

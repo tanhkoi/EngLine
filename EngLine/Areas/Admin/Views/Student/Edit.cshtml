@@ -1,11 +1,12 @@
-﻿@model StudentViewModel
+﻿@using System.Globalization
+@model StudentViewModel
 
 <style>
 	body {
 		margin: 0;
 		color: #2e323c;
 		background: #f5f6fa;
-		position: relative;
+		Ngày mua: relative;
 		height: 100%;
 	}
 
@@ -27,7 +28,7 @@
 				border-radius: 100px;
 			}
 
-		.account-settings .user-profile h5.user-name {
+		.account-settings .user-profile h5.user-Tên khóa học {
 			margin: 0 0 0.5rem 0;
 		}
 
@@ -72,7 +73,6 @@
 	}
 </style>
 <div class="container">
-
 	<div class="row gutters">
 		<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
 			<div class="card h-100">
@@ -82,7 +82,7 @@
 							<div class="user-avatar">
 								<img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin">
 							</div>
-							<h5 class="user-name">@Model.FirstName @Model.LastName</h5>
+							<h5 class="user-Name">@Model.FirstName @Model.LastName</h5>
 							<h6 class="user-email">@Model.Email</h6>
 						</div>
 						<div class="about">
@@ -146,5 +146,33 @@
 				</div>
 			</form>
 		</div>
+	</div>
+</div>
+<div class="card-body">
+	<h4>Khóa học đã mua</h4>
+	<div class="table-responsive">
+		<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+			<thead>
+				<tr>
+					<th>Tên khóa học</th>
+					<th>Tên giáo viên</th>
+					<th>Ngày mua</th>
+					<th>Giá tiền</th>
+					<th>Điểm kiểm tra</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in ViewBag.OrdersStudentBought)
+				{
+					<tr>
+						<td><a asp-area="Admin" asp-controller="Courses" asp-action="Edit" asp-route-id="@item.Course.Id">@item.Course.CourseName</a></td>
+						<td>@item.Course.Teacher.FirstName @item.Course.Teacher.LastName</td>
+						<td>@item.OrderTime</td>
+						<td>@item.Amount.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+						<td>null</td>
+					</tr>
+				}
+			</tbody>
+		</table>
 	</div>
 </div>

@@ -39,7 +39,7 @@ public class ManageController : Controller
 		if (id == null)
 			return NotFound();
 
-		ViewBag.TeacherCourse = await _courseRepository.GetAllCourseByIdTeacherAsync(id);
+		ViewBag.TeacherCourse = await _courseRepository.GetCoursesByTeacherIdAsync(id);
 		ViewBag.TeacherTest = await _testRepository.GetAllTestByIdTeacherAsync(id);
 
 		var teacher = await _teacherRepository.GetTeacherByIdAsync(id);

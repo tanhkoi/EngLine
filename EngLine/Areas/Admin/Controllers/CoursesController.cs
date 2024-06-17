@@ -7,6 +7,8 @@ using EngLine.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using EngLine.Utilitys;
 using EngLine.Repositories;
+using EngLine.Repositories.EF;
+using System.Security.Claims;
 
 namespace EngLine.Areas.Admin.Controllers
 {
@@ -16,17 +18,21 @@ namespace EngLine.Areas.Admin.Controllers
 	{
 		private readonly ICourseRepository _courseRepository;
 		private readonly ITeacherRepository _teacherRepository;
+		private readonly ITestRepository _testRepository;
 
-		public CoursesController(ICourseRepository courseRepository, ITeacherRepository teacherRepository)
+		public CoursesController(ICourseRepository courseRepository,
+			ITeacherRepository teacherRepository,
+			ITestRepository testRepository)
 		{
 			_courseRepository = courseRepository;
 			_teacherRepository = teacherRepository;
+			_testRepository = testRepository;
 		}
 
 		// GET: Admin/Courses
 		public async Task<IActionResult> Index()
 		{
-			return View(await _courseRepository.GetAllCourseAsync());
+			return View(await _courseRepository.GetAllCoursesAsync());
 		}
 
 		// GET: Admin/Courses/Details/5
@@ -92,6 +98,8 @@ namespace EngLine.Areas.Admin.Controllers
 
 			var teachers = await _teacherRepository.GetAllTeacherAsync();
 			ViewData["TeacherId"] = new SelectList(teachers, "Id", "Id", course.TeacherId);
+			ViewBag.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			ViewBag.Test = await _testRepository.GetAllTestsAsync();
 			return View(course);
 		}
 
