@@ -14,14 +14,11 @@ namespace EngLine.DataAccess
 		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 		public DbSet<Teacher> Teachers { get; set; }
 		public DbSet<Student> Students { get; set; }
+		public DbSet<Admin> Admins { get; set; }
 		public DbSet<Certificate> Certificates { get; set; }
 		public DbSet<TeacherCertificate> TeacherCertificates { get; set; }
-		public DbSet<TutorLesson> TutorLessons { get; set; }
-		public DbSet<TimeSlot> TimeSlots { get; set; }
-		public DbSet<Booking> Bookings { get; set; }
 		public DbSet<PaymentMethod> PaymentMethods { get; set; }
 		public DbSet<OrderPayment> OrderPayments { get; set; }
-		public DbSet<BookingPayment> BookingPayments { get; set; }
 		public DbSet<Test> Tests { get; set; }
 		public DbSet<Question> Questions { get; set; }
 		public DbSet<AnswerOption> AnswerOptions { get; set; }

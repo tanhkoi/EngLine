@@ -11,5 +11,6 @@ namespace EngLine.Repositories
 		Task UpdateCourseAsync(Course updatedCourse);
 		Task DeleteCourseAsync(int courseId);
 		Task<IEnumerable<Course>> GetPopularCoursesAsync();
+		Task DeleteLessonsByCourseIdAsync(int courseId);
 	}
 }

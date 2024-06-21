@@ -208,10 +208,10 @@
 						<td>
 							<img src="@item.CoverPhoto" alt="@item.CourseName" class="profile-image">
 						</td>
-						<td>null</td>
+						<td>@item.Lessons.Count</td>
 						<td>@item.MinScore</td>
 						<td>@item.Price.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-						<td>null</td>
+						<td>1</td>
 						<td>@item.Test.Title</td>
 					</tr>
 				}

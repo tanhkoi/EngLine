@@ -84,5 +84,13 @@ namespace EngLine.Repositories.EF
 			return popularCourses;
 		}
 
+		public async Task DeleteLessonsByCourseIdAsync(int courseId)
+		{
+			var lessons = _context.Lessons.Where(l => l.CourseId == courseId).ToList();
+
+			_context.Lessons.RemoveRange(lessons);
+
+			await _context.SaveChangesAsync();
+		}
 	}
 }

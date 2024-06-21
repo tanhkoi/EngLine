@@ -7,24 +7,30 @@ using EngLine.ViewModels;
 using EngLine.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using EngLine.Utilitys;
+using EngLine.Repositories.EF;
+using Microsoft.Extensions.Logging;
 
 namespace EngLine.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[Authorize]
+	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Teacher)]
 	public class TestController : Controller
 	{
 		private readonly ITestRepository _testRepository;
 		private readonly IQuestionRepository _questionRepository;
 		private readonly IAnswerOptionRepository _answerOptionRepository;
+		private readonly ILogger<TestController> _logger;
 
 		public TestController(ITestRepository testRepository,
-		IQuestionRepository questionRepository,
-		IAnswerOptionRepository answerRepository)
+			IQuestionRepository questionRepository,
+			IAnswerOptionRepository answerRepository,
+			ILogger<TestController> logger)
 		{
 			_testRepository = testRepository;
 			_questionRepository = questionRepository;
 			_answerOptionRepository = answerRepository;
+			_logger = logger;
 		}
 
 		// GET: Admin/Test
@@ -40,6 +46,7 @@ namespace EngLine.Areas.Admin.Controllers
 			var test = await _testRepository.GetTestByIdAsync(id);
 			if (test == null)
 			{
+				_logger.LogWarning("Details: Test with ID {TestId} not found", id);
 				return NotFound();
 			}
 
@@ -49,6 +56,7 @@ namespace EngLine.Areas.Admin.Controllers
 				Questions = test.Questions.Select(q => new QuestionEditViewModel
 				{
 					Content = q.Content,
+					Point = q.Point,
 					AnswerOptions = q.AnswerOptions.Select(a => new AnswerOptionEditViewModel
 					{
 						Content = a.Content,
@@ -59,13 +67,13 @@ namespace EngLine.Areas.Admin.Controllers
 			return View(viewModel);
 		}
 
-		// GET:  Admin/Test/Create
+		// GET: Admin/Test/Create
 		public IActionResult Create()
 		{
 			return View(new TestEditViewModel());
 		}
 
-		// POST:  Admin/Test/Create
+		// POST: Admin/Test/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(TestEditViewModel viewModel)
@@ -80,6 +88,7 @@ namespace EngLine.Areas.Admin.Controllers
 					Questions = viewModel.Questions.Select(q => new Question
 					{
 						Content = q.Content,
+						Point = q.Point,
 						AnswerOptions = q.AnswerOptions.Select(ao => new AnswerOption
 						{
 							Content = ao.Content,
@@ -101,6 +110,7 @@ namespace EngLine.Areas.Admin.Controllers
 
 			if (test == null)
 			{
+				_logger.LogWarning("Edit: Test with ID {TestId} not found", id);
 				return NotFound();
 			}
 
@@ -113,6 +123,7 @@ namespace EngLine.Areas.Admin.Controllers
 				{
 					Id = q.Id,
 					Content = q.Content,
+					Point = q.Point,
 					AnswerOptions = q.AnswerOptions.Select(a => new AnswerOptionEditViewModel
 					{
 						Id = a.Id,
@@ -125,7 +136,6 @@ namespace EngLine.Areas.Admin.Controllers
 			return View(viewModel);
 		}
 
-		// POST: Admin/Test/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(int id, TestEditViewModel viewModel)
@@ -135,130 +145,91 @@ namespace EngLine.Areas.Admin.Controllers
 				return NotFound();
 			}
 
-			if (ModelState.IsValid)
+			var test = await _testRepository.GetTestByIdAsync(id);
+			if (test == null)
 			{
-				try
-				{
-					var test = await _testRepository.GetTestByIdAsync(id);
-
-					if (test == null)
-					{
-						return NotFound();
-					}
-
-					test.Title = viewModel.Title;
-					test.TimeLimit = viewModel.TimeLimit;
-
-					foreach (var questionVm in viewModel.Questions)
-					{
-						Question question;
-
-						if (questionVm.Id == 0)
-						{
-							question = new Question
-							{
-								Content = questionVm.Content,
-								AnswerOptions = questionVm.AnswerOptions.Select(a => new AnswerOption
-								{
-									Content = a.Content,
-									IsCorrectOption = a.IsCorrectOption
-								}).ToList()
-							};
-							test.Questions.Add(question);
-						}
-						else
-						{
-							question = test.Questions.FirstOrDefault(q => q.Id == questionVm.Id);
-							if (questionVm.IsDeleted)
-							{
-								if (question != null)
-								{
-									await _questionRepository.DeleteQuestionAsync(question.Id);
-								}
-							}
-							else
-							{
-								if (question != null)
-								{
-									question.Content = questionVm.Content;
-
-									foreach (var answerOptionVm in questionVm.AnswerOptions)
-									{
-										AnswerOption answerOption;
-
-										if (answerOptionVm.Id == 0)
-										{
-											answerOption = new AnswerOption
-											{
-												Content = answerOptionVm.Content,
-												IsCorrectOption = answerOptionVm.IsCorrectOption
-											};
-											question.AnswerOptions.Add(answerOption);
-										}
-										else
-										{
-											answerOption = question.AnswerOptions.FirstOrDefault(a => a.Id == answerOptionVm.Id);
-											if (answerOptionVm.IsDeleted)
-											{
-												if (answerOption != null)
-												{
-													await _answerOptionRepository.AddAnswerOptionAsync(answerOption);
-												}
-											}
-											else
-											{
-												if (answerOption != null)
-												{
-													answerOption.Content = answerOptionVm.Content;
-													answerOption.IsCorrectOption = answerOptionVm.IsCorrectOption;
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					if (!TestExists(viewModel.Id))
-					{
-						throw;
-					}
-					else
-					{
-						return NotFound();
-					}
-				}
-				return RedirectToAction(nameof(Index));
+				return NotFound();
 			}
-			return View(viewModel);
+
+			// Filter out deleted questions
+			viewModel.Questions = viewModel.Questions.Where(q => !q.IsDeleted).ToList();
+
+			// For each question, filter out deleted answers
+			foreach (var question in viewModel.Questions)
+			{
+				question.AnswerOptions = question.AnswerOptions.Where(a => !a.IsDeleted).ToList();
+			}
+
+			test.Title = viewModel.Title;
+			test.TimeLimit = viewModel.TimeLimit;
+
+			// Delete existing questions by test.Id
+			await _questionRepository.DeleteQuestionsByTestIdAsync(test.Id);
+
+			// Add or update questions from the viewModel
+			test.Questions = viewModel.Questions.Select(q => new Question
+			{
+				Id = q.Id,
+				Content = q.Content,
+				Point = q.Point,
+				TestId = test.Id,
+				AnswerOptions = q.AnswerOptions.Select(a => new AnswerOption
+				{
+					Id = a.Id,
+					Content = a.Content,
+					IsCorrectOption = a.IsCorrectOption
+				}).ToList()
+			}).ToList();
+
+			try
+			{
+				await _testRepository.UpdateTestAsync(test);
+			}
+			catch (DbUpdateConcurrencyException ex)
+			{
+				if (!await TestExists(viewModel.Id))
+				{
+					_logger.LogError(ex, "Edit: Concurrency error when updating test with ID {TestId}", viewModel.Id);
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			return RedirectToAction(nameof(Index));
 		}
 
 		// GET: Admin/Test/Delete/5
-		public async Task<ActionResult> Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			var result = await _testRepository.GetTestByIdAsync(id);
-			return View(result);
+			var test = await _testRepository.GetTestByIdAsync(id);
+			if (test == null)
+			{
+				_logger.LogWarning("Delete: Test with ID {TestId} not found", id);
+				return NotFound();
+			}
+
+			return View(test);
 		}
 
-		// POST: Admin/Test/Delete/5
-		[HttpPost]
+		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> Delete(int id, IFormCollection collection)
+		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			await _testRepository.DeleteTestAsync(id);
-			return View();
+			var test = await _testRepository.GetTestByIdAsync(id);
+			if (test != null)
+			{
+				await _testRepository.DeleteTestAsync(id);
+			}
+
+			return RedirectToAction(nameof(Index));
 		}
 
-		private bool TestExists(int id)
+		private async Task<bool> TestExists(int id)
 		{
-			var test = _testRepository.GetTestByIdAsync(id);
-			if (test != null)
-				return true;
-			else
-				return false;
+			return await _testRepository.GetTestByIdAsync(id) != null;
 		}
 	}
 }

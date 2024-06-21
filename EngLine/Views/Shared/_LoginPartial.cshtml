@@ -6,7 +6,10 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-	<a id="manage" class="login popup-with-form" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="fa-solid fa-user"></i></a>
+	@if (User.IsInRole("Student"))
+	{
+		<a id="manage" class="login popup-with-form" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="fa-solid fa-user"></i></a>
+	}
 	<form id="logoutForm" class="login popup-with-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
 		<button id="logout" type="submit" class="btn btn-light">Đăng xuất<i style="color: black !important; margin-left: 12px !important;" class="fa-solid fa-right-from-bracket"></i></button>
 	</form>

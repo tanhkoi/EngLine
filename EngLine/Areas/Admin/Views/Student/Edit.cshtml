@@ -162,15 +162,18 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var item in ViewBag.OrdersStudentBought)
+				@if (ViewBag.OrdersStudentBought != null)
 				{
-					<tr>
-						<td><a asp-area="Admin" asp-controller="Courses" asp-action="Edit" asp-route-id="@item.Course.Id">@item.Course.CourseName</a></td>
-						<td>@item.Course.Teacher.FirstName @item.Course.Teacher.LastName</td>
-						<td>@item.OrderTime</td>
-						<td>@item.Amount.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
-						<td>null</td>
-					</tr>
+					@foreach (var item in ViewBag.OrdersStudentBought)
+					{
+						<tr>
+							<td><a asp-area="Admin" asp-controller="Courses" asp-action="Edit" asp-route-id="@item.Course.Id">@item.Course.CourseName</a></td>
+							<td>@item.Course.Teacher.FirstName @item.Course.Teacher.LastName</td>
+							<td>@item.OrderTime</td>
+							<td>@item.Amount.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+							<td>null</td>
+						</tr>
+					}
 				}
 			</tbody>
 		</table>

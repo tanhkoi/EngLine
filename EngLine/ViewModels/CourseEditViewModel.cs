@@ -1,8 +1,8 @@
-﻿using CloudinaryDotNet.Actions;
+﻿using EngLine.Models;
 
-namespace EngLine.Models
+namespace EngLine.ViewModels
 {
-	public class Course
+	public class CourseEditViewModel
 	{
 		public int Id { get; set; }
 		public string TeacherId { get; set; }
@@ -16,7 +16,7 @@ namespace EngLine.Models
 
 		public Teacher Teacher { get; set; }
 		public Test Test { get; set; }
-		public List<Lesson> Lessons { get; set; }
-		public List<Order> Orders { get; set; }
+		public List<LessonEditViewModel> Lessons { get; set; }
+		public ICollection<Order> Orders { get; set; }
 	}
 }

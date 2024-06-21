@@ -87,7 +87,14 @@ namespace EngLine.Controllers
 			{
 				var score = await _studentResponseService.GetStudentTestScoreAsync(userId, course.TestId);
 				ViewBag.IsTakenTestThisCourse = true;
-				ViewBag.Score = score.Value;
+				if (score != null)
+				{
+					ViewBag.Score = score.Value;
+				}
+				else
+				{
+					ViewBag.Score = 0;
+				}
 			}
 
 			return View(course);

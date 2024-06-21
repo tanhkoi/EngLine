@@ -1,10 +1,13 @@
 ﻿using EngLine.Models;
 using EngLine.Repositories;
+using EngLine.Utilitys;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EngLine.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+	[Authorize(Roles = SD.Role_Admin + "," + SD.Role_Teacher)]
 	public class StudentController : Controller
 	{
 		private readonly IStudentRepository _studentRepository;
