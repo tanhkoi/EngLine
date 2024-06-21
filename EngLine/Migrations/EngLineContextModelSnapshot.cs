@@ -75,69 +75,6 @@ namespace EngLine.Migrations
                     b.ToTable("AnswerOptions");
                 });
 
-            modelBuilder.Entity("EngLine.Models.Booking", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("BookingTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TimeSlotId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("TimeSlotId");
-
-                    b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("EngLine.Models.BookingPayment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("PayTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PaymentMethodId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingId");
-
-                    b.HasIndex("PaymentMethodId");
-
-                    b.ToTable("BookingPayments");
-                });
-
             modelBuilder.Entity("EngLine.Models.Certificate", b =>
                 {
                     b.Property<int>("Id")
@@ -149,6 +86,12 @@ namespace EngLine.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("ScoreMax")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ScoreMin")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -379,11 +322,12 @@ namespace EngLine.Migrations
                     b.Property<DateTime>("DateObtained")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("Photo")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Photo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
+                    b.Property<double>("Score")
+                        .HasColumnType("float");
 
                     b.Property<string>("TeacherId")
                         .IsRequired()
@@ -406,6 +350,9 @@ namespace EngLine.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
                     b.Property<string>("TeacherId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -422,58 +369,6 @@ namespace EngLine.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Tests");
-                });
-
-            modelBuilder.Entity("EngLine.Models.TimeSlot", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TutorLessonId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TutorLessonId");
-
-                    b.ToTable("TimeSlots");
-                });
-
-            modelBuilder.Entity("EngLine.Models.TutorLesson", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("MaxScore")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MinScore")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("TeacherId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("TutorLessons");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -701,6 +596,13 @@ namespace EngLine.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
+            modelBuilder.Entity("EngLine.Models.Admin", b =>
+                {
+                    b.HasBaseType("EngLine.Models.ApplicationUser");
+
+                    b.HasDiscriminator().HasValue("Admin");
+                });
+
             modelBuilder.Entity("EngLine.Models.Student", b =>
                 {
                     b.HasBaseType("EngLine.Models.ApplicationUser");
@@ -742,44 +644,6 @@ namespace EngLine.Migrations
                         .IsRequired();
 
                     b.Navigation("Question");
-                });
-
-            modelBuilder.Entity("EngLine.Models.Booking", b =>
-                {
-                    b.HasOne("EngLine.Models.Student", "Student")
-                        .WithMany("Bookings")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EngLine.Models.TimeSlot", "TimeSlot")
-                        .WithMany("Bookings")
-                        .HasForeignKey("TimeSlotId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-
-                    b.Navigation("TimeSlot");
-                });
-
-            modelBuilder.Entity("EngLine.Models.BookingPayment", b =>
-                {
-                    b.HasOne("EngLine.Models.Booking", "Booking")
-                        .WithMany()
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EngLine.Models.PaymentMethod", "PaymentMethod")
-                        .WithMany()
-                        .HasForeignKey("PaymentMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-
-                    b.Navigation("PaymentMethod");
                 });
 
             modelBuilder.Entity("EngLine.Models.Course", b =>
@@ -910,28 +774,6 @@ namespace EngLine.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("EngLine.Models.TimeSlot", b =>
-                {
-                    b.HasOne("EngLine.Models.TutorLesson", "TutorLesson")
-                        .WithMany("TimeSlots")
-                        .HasForeignKey("TutorLessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TutorLesson");
-                });
-
-            modelBuilder.Entity("EngLine.Models.TutorLesson", b =>
-                {
-                    b.HasOne("EngLine.Models.Teacher", "Teacher")
-                        .WithMany("TutorLessons")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Teacher");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1012,20 +854,8 @@ namespace EngLine.Migrations
                     b.Navigation("StudentResponses");
                 });
 
-            modelBuilder.Entity("EngLine.Models.TimeSlot", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("EngLine.Models.TutorLesson", b =>
-                {
-                    b.Navigation("TimeSlots");
-                });
-
             modelBuilder.Entity("EngLine.Models.Student", b =>
                 {
-                    b.Navigation("Bookings");
-
                     b.Navigation("Orders");
 
                     b.Navigation("StudentResponses");
@@ -1038,8 +868,6 @@ namespace EngLine.Migrations
                     b.Navigation("TeacherCertificates");
 
                     b.Navigation("Tests");
-
-                    b.Navigation("TutorLessons");
                 });
 #pragma warning restore 612, 618
         }

@@ -52,5 +52,14 @@ namespace EngLine.Repositories.EF
 		{
 			throw new NotImplementedException();
 		}
+
+		public async Task DeleteQuestionsByTestIdAsync(int testId)
+		{
+			var questions = _context.Questions.Where(q => q.TestId == testId).ToList();
+
+			_context.Questions.RemoveRange(questions);
+
+			await _context.SaveChangesAsync();
+		}
 	}
 }

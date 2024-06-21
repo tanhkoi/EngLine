@@ -32,35 +32,64 @@ namespace EngLine.Repositories.EF
 			}
 		}
 
-		public async Task<IEnumerable<Course>> GetAllCourseAsync()
+		public async Task<IEnumerable<Course>> GetAllCoursesAsync()
 		{
 			return await _context.Courses
-				.Include(c => c.Teacher)
-				.Include(c => c.Lessons)
 				.Where(c => !c.IsDelete)
+				.Include(c => c.Teacher)
+				.Include(c => c.Lessons)
+				.Include(c => c.Test)
 				.ToListAsync();
 		}
 
-		public async Task<IEnumerable<Course>> GetAllCourseByIdTeacherAsync(string id)
+		public async Task<IEnumerable<Course>> GetCoursesByTeacherIdAsync(string teacherId)
 		{
 			return await _context.Courses
-				.Where(c => c.TeacherId == id && !c.IsDelete)
+				.Where(c => c.TeacherId == teacherId && !c.IsDelete)
 				.Include(c => c.Teacher)
 				.Include(c => c.Lessons)
+				.Include(c => c.Test)
 				.ToListAsync();
 		}
 
-		public async Task<Course> GetCourseByIdAsync(int id)
+		public async Task<Course> GetCourseByIdAsync(int courseId)
 		{
 			return await _context.Courses
 				.Include(c => c.Lessons)
 				.Include(c => c.Teacher)
-				.FirstOrDefaultAsync(c => c.Id == id && !c.IsDelete);
+				.FirstOrDefaultAsync(c => c.Id == courseId && !c.IsDelete);
 		}
 
 		public async Task UpdateCourseAsync(Course course)
 		{
 			_context.Courses.Update(course);
+			await _context.SaveChangesAsync();
+		}
+
+		public async Task<IEnumerable<Course>> GetPopularCoursesAsync()
+		{
+			var popularCourses = await _context.Courses
+				.Where(c => !c.IsDelete) // Exclude deleted courses
+				.Select(c => new
+				{
+					Course = c,
+					SuccessOrderCount = c.Orders.Count(o => o.Status == "Success")
+				})
+				.OrderByDescending(c => c.SuccessOrderCount)
+				.Select(c => c.Course)
+				.Include(c => c.Teacher)
+				.Include(c => c.Test)
+				.ToListAsync();
+
+			return popularCourses;
+		}
+
+		public async Task DeleteLessonsByCourseIdAsync(int courseId)
+		{
+			var lessons = _context.Lessons.Where(l => l.CourseId == courseId).ToList();
+
+			_context.Lessons.RemoveRange(lessons);
+
 			await _context.SaveChangesAsync();
 		}
 	}

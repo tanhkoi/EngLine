@@ -1,71 +1,231 @@
-﻿@model TeacherViewModel
+﻿@using System.Globalization
+@model TeacherViewModel
 
-@{
-	ViewData["Title"] = "Edit";
-}
+<style>
+	body {
+		margin: 0;
+		color: #2e323c;
+		background: #f5f6fa;
+		position: relative;
+		height: 100%;
+	}
 
-<h1>Edit</h1>
+	.account-settings .user-profile {
+		margin: 0 0 1rem 0;
+		padding-bottom: 1rem;
+		text-align: center;
+	}
 
-<h4>TeacherViewModel</h4>
-<hr />
-<div class="row">
-	<div class="col-md-4">
-		<form asp-action="Edit">
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<input type="hidden" asp-for="Id" />
-			<div class="form-group">
-				<label asp-for="Username" class="control-label"></label>
-				<input asp-for="Username" class="form-control" />
-				<span asp-validation-for="Username" class="text-danger"></span>
+		.account-settings .user-profile .user-avatar {
+			margin: 0 0 1rem 0;
+		}
+
+			.account-settings .user-profile .user-avatar img {
+				width: 90px;
+				height: 90px;
+				-webkit-border-radius: 100px;
+				-moz-border-radius: 100px;
+				border-radius: 100px;
+				object-fit: cover;
+			}
+
+		.account-settings .user-profile h5.user-name {
+			margin: 0 0 0.5rem 0;
+		}
+
+		.account-settings .user-profile h6.user-email {
+			margin: 0;
+			font-size: 0.8rem;
+			font-weight: 400;
+			color: #9fa8b9;
+		}
+
+	.account-settings .about {
+		margin: 2rem 0 0 0;
+		text-align: center;
+	}
+
+		.account-settings .about h5 {
+			margin: 0 0 15px 0;
+			color: #007ae1;
+		}
+
+		.account-settings .about p {
+			font-size: 0.825rem;
+		}
+
+	.form-control {
+		border: 1px solid #cfd1d8;
+		-webkit-border-radius: 2px;
+		-moz-border-radius: 2px;
+		border-radius: 2px;
+		font-size: .825rem;
+		background: #ffffff;
+		color: #2e323c;
+	}
+
+	.card {
+		background: #ffffff;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		border: 0;
+		margin-bottom: 1rem;
+	}
+
+	.profile-image {
+		height: 50px;
+		width: 50px; /* Ensures the image is a perfect square */
+		object-fit: cover; /* Ensures the image covers the entire area */
+		border-radius: 50%; /* Makes the image circular */
+	}
+
+	.description-column {
+		width: 300px; /* Adjust this value as needed */
+		white-space: normal;
+	}
+</style>
+<div class="container">
+	<form asp-controller="Teacher" asp-action="Edit" enctype="multipart/form-data">
+		<input type="hidden" asp-for="Id" />
+		<div class="row gutters">
+			<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+				<div class="card h-100">
+					<div class="card-body">
+						<div class="account-settings">
+							<div class="user-profile">
+								<div class="user-avatar">
+									@if (Model.Photo == null)
+									{
+										<img id="profileImage" name="avatar" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="@Model.FirstName">
+									}
+									else
+									{
+										<img id="profileImage" name="avatar" src="@Model.Photo" alt="@Model.FirstName">
+									}
+								</div>
+								<h5 class="user-name">@Model.FirstName @Model.LastName</h5>
+								<h6 class="user-email">@Model.Email</h6>
+							</div>
+							<div class="about">
+								<h5>Giới thiệu</h5>
+								<p>Tài khoản giáo viên EngLine</p>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="form-group">
-				<label asp-for="Email" class="control-label"></label>
-				<input asp-for="Email" class="form-control" />
-				<span asp-validation-for="Email" class="text-danger"></span>
+			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+				<div class="card h-100">
+					<div class="card-body">
+						<div class="row gutters">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<h6 class="mb-2 text-primary">Chi tiết cá nhân</h6>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="FirstName">Tên</label>
+									<input asp-for="FirstName" type="text" class="form-control" id="FirstName" placeholder="Nhập họ và tên">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="LastName">Họ, Tên đệm</label>
+									<input asp-for="LastName" type="text" class="form-control" id="LastName" placeholder="Nhập họ và tên">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="Email">Email</label>
+									<input asp-for="Email" type="email" class="form-control" id="eMail" placeholder="Nhập email">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="PhoneNumber">Điện thoại</label>
+									<input asp-for="PhoneNumber" type="text" class="form-control" id="PhoneNumber" placeholder="Nhập số điện thoại">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group form-check">
+									<label class="form-check-label">
+										<input class="form-check-input" asp-for="IsActive" />Khả dụng?
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="row gutters">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<h6 class="mt-3 mb-2 text-primary">Chi tiết thêm</h6>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="Description">Mô tả</label>
+									<textarea asp-for="Description" class="form-control" id="Description" placeholder="Nhập mô tả"></textarea>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="Photo">Đổi ảnh đại diện</label>
+									<input class="form-control file-input" type="file" name="avatar" accept="image/*" onchange="previewImage(event)">
+								</div>
+							</div>
+						</div>
+						<div class="row gutters">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<div class="text-right">
+									<a asp-action="Index" type="button" class="btn btn-secondary">Hủy</a>
+									<button type="submit" id="submit" name="submit" class="btn btn-primary">Cập nhật</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="form-group">
-				<label asp-for="FirstName" class="control-label"></label>
-				<input asp-for="FirstName" class="form-control" />
-				<span asp-validation-for="FirstName" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="LastName" class="control-label"></label>
-				<input asp-for="LastName" class="form-control" />
-				<span asp-validation-for="LastName" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="PhoneNumber" class="control-label"></label>
-				<input asp-for="PhoneNumber" class="form-control" />
-				<span asp-validation-for="PhoneNumber" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Description" class="control-label"></label>
-				<input asp-for="Description" class="form-control" />
-				<span asp-validation-for="Description" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Photo" class="control-label"></label>
-				<input asp-for="Photo" class="form-control" />
-				<span asp-validation-for="Photo" class="text-danger"></span>
-			</div>
-			<div class="form-group form-check">
-				<label class="form-check-label">
-					<input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
-				</label>
-			</div>
-			<div class="form-group">
-				<input type="submit" value="Save" class="btn btn-primary" />
-			</div>
-		</form>
+		</div>
+	</form>
+</div>
+<div class="card-body">
+	<h4>Khóa học đã tạo</h4>
+	<div class="table-responsive">
+		<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+			<thead>
+				<tr>
+					<th>Tên khóa học</th>
+					<th>Ảnh bìa</th>
+					<th>Số lượng bài học</th>
+					<th>Điểm chuẩn</th>
+					<th>Giá tiền</th>
+					<th>Số người mua</th>
+					<th>Điểm kiểm tra</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in ViewBag.CoursesByTeacherId)
+				{
+					<tr>
+						<td><a asp-area="Admin" asp-controller="Courses" asp-action="Edit" asp-route-id="@item.Id">@item.CourseName</a></td>
+						<td>
+							<img src="@item.CoverPhoto" alt="@item.CourseName" class="profile-image">
+						</td>
+						<td>@item.Lessons.Count</td>
+						<td>@item.MinScore</td>
+						<td>@item.Price.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+						<td>1</td>
+						<td>@item.Test.Title</td>
+					</tr>
+				}
+			</tbody>
+		</table>
 	</div>
 </div>
-
-<div>
-	<a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+<script>
+	function previewImage(event) {
+		const reader = new FileReader();
+		reader.onload = function () {
+			const output = document.getElementById('profileImage');
+			output.src = reader.result;
+		};
+		reader.readAsDataURL(event.target.files[0]);
 	}
-}
+</script>

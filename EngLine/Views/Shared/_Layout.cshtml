@@ -42,9 +42,13 @@
 										<li><a asp-area="default" asp-controller="Home" asp-action="Courses">Khóa học</a></li>
 										<li><a asp-area="default" asp-controller="Home" asp-action="Contact">Liên hệ</a></li>
 										@{
-											if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+											if (User.IsInRole("Teacher"))
 											{
-												<li><a asp-area="Teacher" asp-controller="Manage" asp-action="Profile">Quản lý(GV)</a></li>
+												<li><a asp-area="Teacher" asp-controller="Manage" asp-action="Profile">Teacher</a></li>
+											}
+											if (User.IsInRole("Admin"))
+											{
+												<li><a asp-area="Admin" asp-controller="Teacher" asp-action="Index">Admin</a></li>
 											}
 										}
 									</ul>
@@ -191,18 +195,18 @@
 			</div>
 		</div>
 		@* <div class="copy-right_text">
-			<div class="container">
-				<div class="footer_border"></div>
-				<div class="row">
-					<div class="col-xl-12">
-						<p class="copy_right text-center">
-							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-							Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Khôi & Tuấn </a>
-							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-						</p>
-					</div>
-				</div>
-			</div>
+		<div class="container">
+		<div class="footer_border"></div>
+		<div class="row">
+		<div class="col-xl-12">
+		<p class="copy_right text-center">
+		<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+		Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Khôi & Tuấn </a>
+		<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+		</p>
+		</div>
+		</div>
+		</div>
 		</div> *@
 	</footer>
 	<!-- form itself end-->

@@ -11,23 +11,18 @@ namespace EngLine.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
 		private readonly ICourseRepository _courseRepository;
 		private readonly IStudentRepository _studentRepository;
 		private readonly IOrderRepository _orderRepository;
 		private readonly ITeacherRepository _teacherRepository;
 		private readonly IStudentResponseRepository _studentResponseService;
 
-		public HomeController(
-			ILogger<HomeController> logger,
-			ICourseRepository courseRepository,
+		public HomeController(ICourseRepository courseRepository,
 			IStudentRepository studentRepository,
 			IOrderRepository orderRepository,
 			ITeacherRepository teacherRepository,
-			IStudentResponseRepository studentResponseService
-		)
+			IStudentResponseRepository studentResponseService)
 		{
-			_logger = logger;
 			_courseRepository = courseRepository;
 			_studentRepository = studentRepository;
 			_orderRepository = orderRepository;
@@ -35,8 +30,9 @@ namespace EngLine.Controllers
 			_studentResponseService = studentResponseService;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
+			ViewBag.PopularCourses = await _courseRepository.GetPopularCoursesAsync();
 			return View();
 		}
 
@@ -48,7 +44,7 @@ namespace EngLine.Controllers
 		[Authorize]
 		public async Task<IActionResult> Courses()
 		{
-			var courses = await _courseRepository.GetAllCourseAsync();
+			var courses = await _courseRepository.GetAllCoursesAsync();
 			return View(courses);
 		}
 
@@ -72,7 +68,7 @@ namespace EngLine.Controllers
 			ViewBag.Lessons = course.Lessons;
 
 			// Check if the user has bought the course
-			ViewBag.isBought = await _orderRepository.isBought(userId, id);
+			ViewBag.isBought = await _orderRepository.IsBought(userId, id);
 
 			// Retrieve teacher details and assign to ViewBag
 			ViewBag.Teacher = await _teacherRepository.GetTeacherByIdAsync(course.TeacherId);
@@ -91,7 +87,14 @@ namespace EngLine.Controllers
 			{
 				var score = await _studentResponseService.GetStudentTestScoreAsync(userId, course.TestId);
 				ViewBag.IsTakenTestThisCourse = true;
-				ViewBag.Score = score.Value;
+				if (score != null)
+				{
+					ViewBag.Score = score.Value;
+				}
+				else
+				{
+					ViewBag.Score = 0;
+				}
 			}
 
 			return View(course);
@@ -129,7 +132,6 @@ namespace EngLine.Controllers
 
 			return View(viewModel);
 		}
-
 
 		public IActionResult Elements()
 		{

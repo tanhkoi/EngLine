@@ -2,10 +2,12 @@
 using EngLine.Models;
 using EngLine.Repositories;
 using EngLine.Repositories.EF;
+using EngLine.Utilities;
 using EngLine.Utilitys;
 using EngLine.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 [Area("Teacher")]
@@ -16,17 +18,19 @@ public class ManageController : Controller
 	private readonly ICourseRepository _courseRepository;
 	private readonly ITestRepository _testRepository;
 	private readonly CloudinaryService _cloudinaryService;
+	private readonly ICertificateRepository _certificateRepository;
 
-	public ManageController(
-		ITeacherRepository teacherRepository,
+	public ManageController(ITeacherRepository teacherRepository,
 		ICourseRepository courseRepository,
 		ITestRepository testRepository,
-		CloudinaryService cloudinaryService)
+		CloudinaryService cloudinaryService,
+		ICertificateRepository certificateRepository)
 	{
 		_teacherRepository = teacherRepository;
 		_courseRepository = courseRepository;
 		_testRepository = testRepository;
 		_cloudinaryService = cloudinaryService;
+		_certificateRepository = certificateRepository;
 	}
 
 	public async Task<IActionResult> Profile()
@@ -35,23 +39,64 @@ public class ManageController : Controller
 		if (id == null)
 			return NotFound();
 
-		ViewBag.TeacherCourse = await _courseRepository.GetAllCourseByIdTeacherAsync(id);
+		ViewBag.TeacherCourse = await _courseRepository.GetCoursesByTeacherIdAsync(id);
 		ViewBag.TeacherTest = await _testRepository.GetAllTestByIdTeacherAsync(id);
 
 		var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
+		teacher.TeacherCertificates = await _certificateRepository.GetCertificatesByTeacherIdAsync(id);
 
 		return View(teacher);
 	}
 
+	[HttpGet]
 	public async Task<IActionResult> AddCertificates()
 	{
-		var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		if (id == null)
-			return NotFound();
+		var certificates = await _certificateRepository.GetCertificatesAsync();
+		var selectList = certificates.Select(c => new CustomSelectListItem
+		{
+			Value = c.Id.ToString(),
+			Text = c.Name,
+			DataScoreMin = c.ScoreMin,
+			DataScoreMax = c.ScoreMax
+		}).ToList();
+
+		ViewBag.Certificates = selectList;
+		return View();
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> AddCertificates(TeacherCertificate model, IFormFile certificateImage)
+	{
+		if (IsScoreValid(model.CertificateId, model.Score))
+		{
+			model.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			model.Photo = _cloudinaryService.UploadImageAsync(certificateImage);
+
+			await _certificateRepository.AddTeacherCertificateAsync(model);
+		}
 		else
 		{
-			var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
-			return View(teacher);
+			ModelState.AddModelError("Score", "Invalid score for the selected certificate.");
+		}
+		return RedirectToAction(nameof(Profile));
+	}
+
+	private bool IsScoreValid(int certificateId, double score)
+	{
+		// Add your certificate-specific score validation logic here
+		// Example:
+		switch (certificateId)
+		{
+			case 1: // IELTS
+				return score >= 0 && score <= 9;
+			case 2: // TOEIC
+				return score >= 0 && score <= 990;
+			case 3: // TOEFL
+				return score >= 0 && score <= 120;
+			// Add more cases as needed
+			default:
+				return false;
 		}
 	}
 
@@ -109,7 +154,6 @@ public class ManageController : Controller
 		await _courseRepository.AddCourseAsync(course);
 		return RedirectToAction(nameof(Profile));
 	}
-
 
 	public IActionResult AddTest()
 	{

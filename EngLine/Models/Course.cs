@@ -16,8 +16,7 @@ namespace EngLine.Models
 
 		public Teacher Teacher { get; set; }
 		public Test Test { get; set; }
-		public ICollection<Lesson> Lessons { get; set; }
-		public ICollection<Order> Orders { get; set; }
+		public List<Lesson> Lessons { get; set; }
+		public List<Order> Orders { get; set; }
 	}
-
 }

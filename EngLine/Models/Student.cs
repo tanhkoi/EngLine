@@ -6,7 +6,6 @@ namespace EngLine.Models
 	public class Student : ApplicationUser
 	{
 		public ICollection<StudentResponse> StudentResponses { get; set; }
-		public ICollection<Booking> Bookings { get; set; }
 		public ICollection<Order> Orders { get; set; }
 	}
 

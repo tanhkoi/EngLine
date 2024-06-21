@@ -26,6 +26,7 @@ builder.Services.AddScoped<ICourseRepository, EFCourseRepository>();
 builder.Services.AddScoped<IStudentRepository, EFStudentRepository>();
 builder.Services.AddScoped<ITeacherRepository, EFTeacherRepository>();
 builder.Services.AddScoped<IQuestionRepository, EFQuestionRepository>();
+builder.Services.AddScoped<ICertificateRepository, EFCertificateRepository>();
 builder.Services.AddScoped<IAnswerOptionRepository, EFAnswerOptionRepository>();
 builder.Services.AddScoped<IPaymentMethodRepository, EFPaymentMethodRepository>();
 builder.Services.AddScoped<IStudentResponseRepository, EFStudentResponseRepository>();

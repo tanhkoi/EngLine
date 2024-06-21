@@ -7,6 +7,9 @@ using EngLine.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using EngLine.Utilitys;
 using EngLine.Repositories;
+using EngLine.Repositories.EF;
+using System.Security.Claims;
+using CloudinaryDotNet;
 
 namespace EngLine.Areas.Admin.Controllers
 {
@@ -16,17 +19,24 @@ namespace EngLine.Areas.Admin.Controllers
 	{
 		private readonly ICourseRepository _courseRepository;
 		private readonly ITeacherRepository _teacherRepository;
+		private readonly ITestRepository _testRepository;
+		private readonly CloudinaryService _cloudinaryService;
 
-		public CoursesController(ICourseRepository courseRepository, ITeacherRepository teacherRepository)
+		public CoursesController(ICourseRepository courseRepository,
+			ITeacherRepository teacherRepository,
+			ITestRepository testRepository,
+			CloudinaryService cloudinaryService)
 		{
 			_courseRepository = courseRepository;
 			_teacherRepository = teacherRepository;
+			_testRepository = testRepository;
+			_cloudinaryService = cloudinaryService;
 		}
 
 		// GET: Admin/Courses
 		public async Task<IActionResult> Index()
 		{
-			return View(await _courseRepository.GetAllCourseAsync());
+			return View(await _courseRepository.GetAllCoursesAsync());
 		}
 
 		// GET: Admin/Courses/Details/5
@@ -90,9 +100,36 @@ namespace EngLine.Areas.Admin.Controllers
 				return NotFound();
 			}
 
+			var courseVM = new CourseEditViewModel
+			{
+				Id = id,
+				TeacherId = course.TeacherId,
+				TestId = course.TestId,
+				CourseName = course.CourseName,
+				CoverPhoto = course.CoverPhoto,
+				Price = course.Price,
+				Description = course.Description,
+				MinScore = course.MinScore,
+				IsDelete = course.IsDelete,
+				Lessons = course.Lessons.Select(l => new LessonEditViewModel
+				{
+					Name = l.Name,
+					Description = l.Description,
+					Photo = l.Photo,
+					Video = l.Video,
+					Content = l.Content
+				}).ToList()
+			};
+
 			var teachers = await _teacherRepository.GetAllTeacherAsync();
+
 			ViewData["TeacherId"] = new SelectList(teachers, "Id", "Id", course.TeacherId);
-			return View(course);
+
+			ViewBag.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			ViewBag.Test = await _testRepository.GetAllTestsAsync();
+
+			return View(courseVM);
 		}
 
 		// POST: Admin/Courses/Edit/5
@@ -100,37 +137,79 @@ namespace EngLine.Areas.Admin.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,TeacherId,Price,Description")] Course course)
+		public async Task<IActionResult> Edit(int id, CourseEditViewModel courseVM, IFormFile coverPhotoFile, IFormFile[] lessonPhotoFiles, IFormFile[] lessonVideoFiles)
 		{
-			if (id != course.Id)
+			if (id != courseVM.Id)
 			{
 				return NotFound();
 			}
 
-			if (ModelState.IsValid)
+			var updateCourse = await _courseRepository.GetCourseByIdAsync(id);
+			if (updateCourse == null)
 			{
-				try
-				{
-					await _courseRepository.UpdateCourseAsync(course);
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					var isExist = await _courseRepository.GetCourseByIdAsync(id);
-					if (isExist == null)
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
-				}
-				return RedirectToAction(nameof(Index));
+				return NotFound();
 			}
-			var teachers = await _teacherRepository.GetAllTeacherAsync();
 
-			ViewData["TeacherId"] = new SelectList(teachers, "Id", "Id", course.TeacherId);
-			return View(course);
+			// Filter out deleted questions
+			courseVM.Lessons = courseVM.Lessons.Where(l => !l.IsDeleted).ToList();
+
+			updateCourse.CourseName = courseVM.CourseName;
+			updateCourse.TeacherId = courseVM.TeacherId;
+			updateCourse.TestId = courseVM.TestId;
+			if (coverPhotoFile != null)
+			{
+				updateCourse.CoverPhoto = _cloudinaryService.UploadImageAsync(coverPhotoFile);
+			}
+			updateCourse.Price = courseVM.Price;
+			updateCourse.Description = courseVM.Description;
+			updateCourse.MinScore = courseVM.MinScore;
+
+			await _courseRepository.DeleteLessonsByCourseIdAsync(updateCourse.Id);
+
+			updateCourse.Lessons = courseVM.Lessons.Select(l => new Lesson
+			{
+				Id = l.Id,
+				Name = l.Name,
+				Description = l.Description,
+				Content = l.Content,
+			}).ToList();
+
+			int index = 0;
+			foreach (var lesson in updateCourse.Lessons)
+			{
+				if (lessonPhotoFiles.Length > index && lessonPhotoFiles[index] != null)
+				{
+					lesson.Photo = _cloudinaryService.UploadImageAsync(lessonPhotoFiles[index]);
+				}
+				if (lessonVideoFiles.Length > index && lessonVideoFiles[index] != null)
+				{
+					lesson.Video = _cloudinaryService.UploadVideoAsync(lessonVideoFiles[index]);
+				}
+				index++;
+			}
+
+			try
+			{
+				await _courseRepository.UpdateCourseAsync(updateCourse);
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				var IsExist = await _courseRepository.GetCourseByIdAsync(id);
+				if (IsExist == null)
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
+			return RedirectToAction(nameof(Index));
+
+			var teachers = await _teacherRepository.GetAllTeacherAsync();
+			ViewData["TeacherId"] = new SelectList(teachers, "Id", "Id", updateCourse.TeacherId);
+
+			return View(updateCourse);
 		}
 
 		// GET: Admin/Courses/Delete/5
@@ -139,7 +218,7 @@ namespace EngLine.Areas.Admin.Controllers
 			var course = await _courseRepository.GetCourseByIdAsync(id);
 			if (course == null)
 			{
-				return NotFound();
+				throw new Exception("Course not found");
 			}
 
 			return View(course);

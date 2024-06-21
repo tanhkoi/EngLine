@@ -9,5 +9,6 @@ namespace EngLine.Repositories
 		Task AddQuestionAsync(Question question);
 		Task UpdateQuestionAsync(Question question);
 		Task DeleteQuestionAsync(int id);
+		Task DeleteQuestionsByTestIdAsync(int testId);
 	}
 }

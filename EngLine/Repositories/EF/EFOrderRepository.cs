@@ -47,7 +47,7 @@ namespace EngLine.Repositories.EF
 		}
 
 
-		public async Task<bool> isBought(string studentId, int courseId)
+		public async Task<bool> IsBought(string studentId, int courseId)
 		{
 			var order = await _context.Orders
 									.FirstOrDefaultAsync(o => o.StudentId == studentId
